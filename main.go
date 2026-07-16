@@ -1,9 +1,8 @@
 package main
 
-const port = 3000
+import "hosting_login_page/server"
 
 func main() {
-
-	setAPIendpoint()
-	setMDNSserver()
+	server.SetAPIendpoint()
+	server.SetMDNSserver()
 }

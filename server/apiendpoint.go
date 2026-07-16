@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func setAPIendpoint() {
+func SetAPIendpoint() {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./hosted/build"))
 

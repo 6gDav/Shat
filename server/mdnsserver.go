@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -11,7 +11,9 @@ import (
 	"github.com/hashicorp/mdns"
 )
 
-func setMDNSserver() {
+const port = 3000
+
+func SetMDNSserver() {
 	ipAddress, err := getIPAddress()
 	if err != nil {
 		log.Fatalf("Error occurred while trying to fetch IP address: %v", err)
