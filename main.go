@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,20 +14,8 @@ import (
 const port = 3000
 
 func main() {
-	mux := http.NewServeMux()
-	fileServer := http.FileServer(http.Dir("./hosted/build"))
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fileServer.ServeHTTP(w, r)
-	})
-
-	go func() {
-		fmt.Printf("Server is running on port %d\n", port)
-		err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
-		if err != nil {
-			log.Fatalf("Error occurred while trying to start the server: %v", err)
-		}
-	}()
+	setAPIendpoint()
 
 	ipAddress, err := getIPAddress()
 	if err != nil {
