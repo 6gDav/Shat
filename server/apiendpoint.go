@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+var HttpServer *http.Server
+
 func SetAPIendpoint() {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./hosted/build"))
@@ -14,11 +16,15 @@ func SetAPIendpoint() {
 		fileServer.ServeHTTP(w, r)
 	})
 
+	HttpServer = &http.Server{
+		Addr:    fmt.Sprintf(":%d", port),
+		Handler: mux,
+	}
+
 	go func() {
 		fmt.Printf("Server is running on port %d\n", port)
-		err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
-		if err != nil {
-			log.Fatalf("Error occurred while trying to start the server: %v", err)
+		if err := HttpServer.ListenAndServe(); err != http.ErrServerClosed {
+			log.Printf("Error occurred while trying to start the server: %v", err)
 		}
 	}()
 }

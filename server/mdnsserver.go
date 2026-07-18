@@ -10,6 +10,8 @@ import (
 
 const port = 3000
 
+var MdnsServer *mdns.Server
+
 func SetMDNSserver() {
 	ipAddress, err := getIPAddress()
 	if err != nil {
@@ -29,11 +31,11 @@ func SetMDNSserver() {
 		log.Fatalf("Establish mDNS service is unsuccessful: %v", err)
 	}
 
-	server, err := mdns.NewServer(&mdns.Config{Zone: service})
-	if err != nil {
-		log.Fatalf("Error occurred while trying to start the mDNS server: %v", err)
+	var errServer error
+	MdnsServer, errServer = mdns.NewServer(&mdns.Config{Zone: service})
+	if errServer != nil {
+		log.Fatalf("Error occurred while trying to start the mDNS server: %v", errServer)
 	}
-	defer server.Shutdown()
 
 	fmt.Printf("Web page is here: http://loginpage.local:%d\n", port)
 
