@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/hashicorp/mdns"
 )
@@ -40,8 +37,8 @@ func SetMDNSserver() {
 
 	fmt.Printf("Web page is here: http://loginpage.local:%d\n", port)
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	<-sigChan
-	fmt.Println("\nShutting down server...")
+	// sigChan := make(chan os.Signal, 1)
+	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	// <-sigChan
+	// fmt.Println("\nShutting down server...")
 }
