@@ -6,6 +6,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+
+	"hosting_login_page/chat"
 )
 
 var HttpServer *http.Server
@@ -34,9 +36,15 @@ func SetAPIendpoint() {
 		}
 		defer r.Body.Close()
 
+		if _, letezik := chat.Users[ip]; !letezik {
+			chat.Users[ip] = string(body)
+		}
+
 		w.WriteHeader(http.StatusOK)
 		fmt.Println("Your ip adress " + ip)
 		fmt.Println("Your name " + string(body))
+
+		fmt.Printf("%+v\n", chat.Users)
 	})
 
 	HttpServer = &http.Server{
