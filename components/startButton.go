@@ -21,6 +21,7 @@ func StartButtonElement() *widget.Button {
 		if clicked {
 			clicked = false
 			button.SetText("Start")
+			stopServer()
 		} else {
 			clicked = true
 			button.SetText("Stop")
@@ -40,7 +41,7 @@ func stopServer() {
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
-		fmt.Println("mDNS szerver sikeresen leállítva.")
+		fmt.Println("mDNS server sucessfully stopped")
 	}
 
 	if server.HttpServer != nil {
@@ -48,9 +49,9 @@ func stopServer() {
 		defer cancel()
 
 		if err := server.HttpServer.Shutdown(ctx); err != nil {
-			log.Printf("Hiba a HTTP szerver leállításakor: %v", err)
+			log.Printf("Error occured while trying to stop the server: %v", err)
 		} else {
-			fmt.Println("HTTP szerver sikeresen leállítva.")
+			fmt.Println("HTTP server sucessfully stopped")
 		}
 		server.HttpServer = nil
 	}
