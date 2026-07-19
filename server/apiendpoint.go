@@ -21,14 +21,13 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Post hapend")
 		//Ip adress fetch
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 
 			ip = r.RemoteAddr
 		}
-		fmt.Println("Ip adress" + ip)
+
 		//Name fetch
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
