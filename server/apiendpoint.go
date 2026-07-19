@@ -12,9 +12,12 @@ func SetAPIendpoint() {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./hosted/build"))
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fileServer.ServeHTTP(w, r)
+	})
+
+	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "POST request processed")
 	})
 
 	HttpServer = &http.Server{
