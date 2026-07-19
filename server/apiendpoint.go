@@ -2,7 +2,9 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net"
 	"net/http"
 )
 
@@ -17,7 +19,24 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("POST requerst processed")
+		fmt.Println("Post hapend")
+		//Ip adress fetch
+		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+
+			ip = r.RemoteAddr
+		}
+		fmt.Println("Ip adress" + ip)
+		//Name fetch
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			log.Printf("Failed to read the name")
+		}
+		defer r.Body.Close()
+
+		w.WriteHeader(http.StatusOK)
+		fmt.Println("Your ip adress " + ip)
+		fmt.Println("Your name " + string(body))
 	})
 
 	HttpServer = &http.Server{

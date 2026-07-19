@@ -2,8 +2,8 @@
     
     let nameText = $state<string>()
 
-    function registrateName() {
-        console.log("Hello Wolrd" + nameText)
+    async function registrateName() {
+
     }
 </script>
 
