@@ -17,7 +17,7 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "POST request processed")
+		fmt.Println("POST requerst processed")
 	})
 
 	HttpServer = &http.Server{
