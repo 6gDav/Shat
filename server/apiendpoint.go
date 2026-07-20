@@ -70,6 +70,15 @@ func SetAPIendpoint() {
 	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
 		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
+		chat.ClientsMu.Lock()
+		client, exists := chat.Clients[ip]
+		chat.ClientsMu.Unlock()
+
+		if !exists {
+			http.Error(w, "Please submit your name first", http.StatusUnauthorized)
+			return
+		}
+
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println("Upgrade error:", err)
@@ -77,12 +86,10 @@ func SetAPIendpoint() {
 		}
 
 		chat.ClientsMu.Lock()
-		if client, exists := chat.Clients[ip]; exists {
-			client.Conn = conn
-		}
+		client.Conn = conn
 		chat.ClientsMu.Unlock()
 
-		fmt.Println("WebSocket connected to the ip adress: ", ip)
+		fmt.Println("WebSocket connected for IP:", ip)
 
 		defer func() {
 			conn.Close()

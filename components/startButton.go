@@ -9,14 +9,13 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2/widget"
+	"github.com/gorilla/websocket"
 )
 
-var clicked bool = false
-
 func StartButtonElement() *widget.Button {
-	//initialText := "Start"
-
+	var clicked bool = false
 	var button *widget.Button
+	//initialText := "Start"
 
 	button = widget.NewButton("Start", func() {
 		if clicked {
@@ -47,19 +46,36 @@ func stopServer() {
 	}
 
 	//Closing WebSocket connections
+
+	// chat.ClientsMu.Lock()
+	// for _, client := range chat.Clients {
+	// 	if client.Conn != nil {
+	// 		client.Conn.Close()
+	// 		client.Conn = nil
+	// 	}
+	// 	fmt.Println("All WebSocket connections closed")
+	// }
+	// chat.ClientsMu.Unlock()
+
 	chat.ClientsMu.Lock()
-	for _, client := range chat.Clients {
+	for ip, client := range chat.Clients {
 		if client.Conn != nil {
+
+			client.Conn.WriteControl(
+				websocket.CloseMessage,
+				websocket.FormatCloseMessage(websocket.CloseGoingAway, "Server shutting down"),
+				time.Now().Add(time.Second),
+			)
 			client.Conn.Close()
 			client.Conn = nil
+			fmt.Println("WS close:", ip)
 		}
 	}
 	chat.ClientsMu.Unlock()
-	fmt.Println("All WebSocket connections closed")
 
 	//Closing HTTP connections
 	if server.HttpServer != nil {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
 
 		if err := server.HttpServer.Shutdown(ctx); err != nil {
