@@ -3,6 +3,7 @@ package components
 import (
 	"context"
 	"fmt"
+	"hosting_login_page/chat"
 	"hosting_login_page/server"
 	"log"
 	"time"
@@ -38,12 +39,25 @@ func startServer() {
 }
 
 func stopServer() {
+	//Closing mDNS service
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
 		fmt.Println("mDNS server sucessfully stopped")
 	}
 
+	//Closing WebSocket connections
+	chat.ClientsMu.Lock()
+	for _, client := range chat.Clients {
+		if client.Conn != nil {
+			client.Conn.Close()
+			client.Conn = nil
+		}
+	}
+	chat.ClientsMu.Unlock()
+	fmt.Println("All WebSocket connections closed")
+
+	//Closing HTTP connections
 	if server.HttpServer != nil {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()

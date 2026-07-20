@@ -83,6 +83,27 @@ func SetAPIendpoint() {
 		chat.ClientsMu.Unlock()
 
 		fmt.Println("WebSocket connected to the ip adress: ", ip)
+
+		defer func() {
+			conn.Close()
+
+			chat.ClientsMu.Lock()
+			if client, exists := chat.Clients[ip]; exists {
+				client.Conn = nil
+			}
+			chat.ClientsMu.Unlock()
+
+			fmt.Println("The conection was interrupted:", ip)
+		}()
+
+		for {
+			var msg map[string]string
+			err := conn.ReadJSON(&msg)
+			if err != nil {
+				fmt.Println("Cliend disconected")
+				break
+			}
+		}
 	})
 
 	HttpServer = &http.Server{
