@@ -35,15 +35,26 @@ func SetAPIendpoint() {
 		}
 		defer r.Body.Close()
 
-		if _, letezik := chat.Users[ip]; !letezik {
-			chat.Users[ip] = string(body)
+		if _, exists := chat.Clients[ip]; !exists {
+			name := string(body)
+
+			chat.ClientsMu.Lock()
+			chat.Clients[ip] = &chat.Client{
+				IP:   ip,
+				Name: name,
+				Conn: nil,
+			}
+			chat.ClientsMu.Unlock()
 		}
 
 		w.WriteHeader(http.StatusOK)
 		fmt.Println("Your ip adress " + ip)
 		fmt.Println("Your name " + string(body))
 
-		fmt.Printf("%+v\n", chat.Users)
+		chat.ClientsMu.RLock()
+		fmt.Println("Heres the HashMap")
+		fmt.Printf("%+v\n", chat.Clients)
+		chat.ClientsMu.RUnlock()
 	})
 
 	HttpServer = &http.Server{
