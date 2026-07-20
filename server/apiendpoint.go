@@ -2,13 +2,22 @@ package server
 
 import (
 	"fmt"
+	"hosting_login_page/chat"
 	"io"
 	"log"
 	"net"
 	"net/http"
 
-	"hosting_login_page/chat"
+	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 var HttpServer *http.Server
 
@@ -55,6 +64,25 @@ func SetAPIendpoint() {
 		fmt.Println("Heres the HashMap")
 		fmt.Printf("%+v\n", chat.Clients)
 		chat.ClientsMu.RUnlock()
+	})
+
+	//HandShaking
+	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
+		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println("Upgrade error:", err)
+			return
+		}
+
+		chat.ClientsMu.Lock()
+		if client, exists := chat.Clients[ip]; exists {
+			client.Conn = conn
+		}
+		chat.ClientsMu.Unlock()
+
+		fmt.Println("WebSocket connected to the ip adress: ", ip)
 	})
 
 	HttpServer = &http.Server{
