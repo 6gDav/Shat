@@ -25,10 +25,12 @@ func SetAPIendpoint() {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./hosted/build"))
 
+	//webpage
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fileServer.ServeHTTP(w, r)
 	})
 
+	//submit user name
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
