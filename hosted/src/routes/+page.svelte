@@ -35,19 +35,23 @@
 </script>
 
 <main>
-    <div class="container">
-        <div class:loading={runActivityIndicator}>
-            <h1>Hello in the Login page</h1>
-            <input
-                type="text"
-                placeholder="Enter your user name here"
-                bind:value={nameText}
-                disabled={runActivityIndicator}
-            />
-            <br /> <br />
-            <button onclick={registrateName} disabled={runActivityIndicator}
-                >Registrate</button
-            >
+    <div class="container login-container">
+        <div class="container">
+            <div class="form-box" class:loading={runActivityIndicator}>
+                <h1>Registration page</h1>
+                <input
+                    type="text"
+                    placeholder="Enter your user name here"
+                    bind:value={nameText}
+                    disabled={runActivityIndicator}
+                />
+                <button
+                    onclick={registrateName}
+                    disabled={runActivityIndicator}
+                >
+                    Registration
+                </button>
+            </div>
         </div>
 
         {#if runActivityIndicator}
@@ -59,8 +63,49 @@
 </main>
 
 <style>
+    :global(body) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #485e82;
+    }
+
     .container {
         position: relative;
+    }
+
+    .form-box {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .form-box input,
+    .form-box button {
+        padding: 10px 14px;
+        font-size: 16px;
+        box-sizing: border-box;
+        border-radius: 25px;
+        border: 2px solid #e2e8f0;
+        transition:
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .form-box input:hover,
+    .form-box button:hover {
+        border-color: #485e82;
+    }
+
+    .login-container {
+        background: linear-gradient(to bottom, #002169 20%, #ffffff 80%);
+        padding: 100px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        color: white;
     }
 
     div.loading {
