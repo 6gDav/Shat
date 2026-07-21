@@ -1,10 +1,13 @@
 <script lang="ts">
-    import { Spinner } from "$lib/components/ui/spinner/index.js";
     import "../app.css";
+    import ActivityIndicator from "./components/activityindicator.svelte";
 
     let nameText = $state<string>();
+    let runActivityIndicator = $state<boolean>(false);
 
     async function registrateName() {
+        runActivityIndicator = true;
+
         try {
             const response = await fetch("http://loginpage.local:3000/submit", {
                 method: "POST",
@@ -25,37 +28,59 @@
             console.error(
                 "Error occured why trying to send your name: " + error,
             );
+        } finally {
+            runActivityIndicator = false;
         }
     }
 </script>
 
-<h1>Hello in the Login page</h1>
-<input
-    type="text"
-    placeholder="Enter your user name here"
-    bind:value={nameText}
-/>
-<br /> <br />
-<button onclick={registrateName}>Registrate</button>
+<main>
+    <div class="container">
+        <div class:loading={runActivityIndicator}>
+            <h1>Hello in the Login page</h1>
+            <input
+                type="text"
+                placeholder="Enter your user name here"
+                bind:value={nameText}
+                disabled={runActivityIndicator}
+            />
+            <br /> <br />
+            <button onclick={registrateName} disabled={runActivityIndicator}
+                >Registrate</button
+            >
+        </div>
 
-<div class="loader"></div>
+        {#if runActivityIndicator}
+            <div class="overlay">
+                <ActivityIndicator />
+            </div>
+        {/if}
+    </div>
+</main>
 
 <style>
-    .loader {
-        border: 16px solid #f3f3f3; /* Light grey */
-        border-top: 16px solid #3498db; /* Blue */
-        border-radius: 50%;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
+    .container {
+        position: relative;
     }
 
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
+    div.loading {
+        filter: blur(4px);
+        opacity: 0.6;
+        pointer-events: none;
+        transition:
+            filter 0.3s ease,
+            opacity 0.3s ease;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
     }
 </style>
