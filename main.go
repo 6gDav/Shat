@@ -21,7 +21,7 @@ func main() {
 		components.StartButtonElement(),
 		layout.NewSpacer(),
 		widget.NewLabel("Create QR code"),
-		components.QRCodeButtonElement(),
+		components.QRCodeButtonElement(myApp),
 	)
 
 	midofpage := container.New(layout.NewGridWrapLayout(fyne.NewSize(300, 140)), main_elemts)

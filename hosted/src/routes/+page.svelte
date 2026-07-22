@@ -74,6 +74,7 @@
 
     .container {
         position: relative;
+        transform: scale(1.3);
     }
 
     .form-box {
@@ -93,11 +94,12 @@
         transition:
             border-color 0.3s ease,
             box-shadow 0.3s ease;
+        border: 2px solid black;
     }
 
     .form-box input:hover,
     .form-box button:hover {
-        border-color: #485e82;
+        box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.519);
     }
 
     .login-container {
