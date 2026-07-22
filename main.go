@@ -11,22 +11,22 @@ import (
 )
 
 func main() {
-	myApp := app.New()
-	myWindow := myApp.NewWindow("ChatApp")
+	mainApp := app.New()
+	mainWindow := mainApp.NewWindow("ChatApp")
 
 	header := components.TitleElement()
 
-	main_elemts := container.NewVBox(
+	main_elements := container.NewVBox(
 		widget.NewLabel("Start Servers"),
 		components.StartButtonElement(),
 		layout.NewSpacer(),
 		widget.NewLabel("Create QR code"),
-		components.QRCodeButtonElement(myApp),
+		components.QRCodeButtonElement(mainApp),
 	)
 
-	midofpage := container.New(layout.NewGridWrapLayout(fyne.NewSize(300, 140)), main_elemts)
+	midOfPage := container.New(layout.NewGridWrapLayout(fyne.NewSize(300, 140)), main_elements)
 
-	centeringElements := container.NewHBox(layout.NewSpacer(), midofpage, layout.NewSpacer())
+	centeringElements := container.NewHBox(layout.NewSpacer(), midOfPage, layout.NewSpacer())
 
 	buttons := container.NewHBox(
 		layout.NewSpacer(),
@@ -36,8 +36,8 @@ func main() {
 
 	endDesign := container.NewPadded(mainDesign)
 
-	myWindow.SetContent(endDesign)
-	myWindow.Resize(fyne.NewSize(400, 300))
-	myWindow.ShowAndRun()
+	mainWindow.SetContent(endDesign)
+	mainWindow.Resize(fyne.NewSize(400, 300))
+	mainWindow.ShowAndRun()
 
 }
