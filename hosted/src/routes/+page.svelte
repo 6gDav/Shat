@@ -74,7 +74,18 @@
 
     .container {
         position: relative;
-        transform: scale(1.3);
+    }
+
+    @media (min-width: 768px) {
+        .container {
+            transform: scale(1.3);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            transform: scale(0.9);
+        }
     }
 
     .form-box {
