@@ -6,13 +6,23 @@ import (
 	"hosting_login_page/chat"
 	"hosting_login_page/server"
 	"log"
+	"strconv"
 	"time"
 
 	"fyne.io/fyne/v2/widget"
 	"github.com/gorilla/websocket"
 )
 
+var Port int
+
 func StartButtonElement() *widget.Button {
+
+	val, err := strconv.Atoi(portInput.Text)
+	if err != nil {
+		log.Fatalf("Post input is not valid")
+	}
+	Port = val
+
 	var clicked bool = false
 	var button *widget.Button
 	//initialText := "Start"

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/mdns"
 )
 
-const port = 3000
+var Port int = 3000
 
 var MdnsServer *mdns.Server
 
@@ -23,7 +23,7 @@ func SetMDNSserver() {
 		"_http._tcp",
 		"local.",
 		"loginpage.local.",
-		port,
+		Port,
 		[]net.IP{ipAddress},
 		[]string{"txtv=1"},
 	)
@@ -37,7 +37,7 @@ func SetMDNSserver() {
 		log.Fatalf("Error occurred while trying to start the mDNS server: %v", errServer)
 	}
 
-	fmt.Printf("Web page is here: http://loginpage.local:%d\n", port)
+	fmt.Printf("Web page is here: http://loginpage.local:%d\n", Port)
 
 	// sigChan := make(chan os.Signal, 1)
 	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

@@ -16,12 +16,9 @@ func main() {
 
 	header := components.TitleElement()
 
-	portInput := widget.NewEntry()
-	portInput.SetPlaceHolder("Write the port here")
-
 	main_elements := container.NewVBox(
 		widget.NewLabel("Intended port (3001, 8000, 8080 recommended)"),
-		portInput,
+		components.PortElement(),
 		widget.NewLabel("Start Servers"),
 		components.StartButtonElement(),
 		widget.NewLabel("Create QR code"),
