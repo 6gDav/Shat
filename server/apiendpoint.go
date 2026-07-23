@@ -71,49 +71,7 @@ func SetAPIendpoint() {
 	//HandShaking
 	//! Refactor this to the chat folder and solve the error problem (HTTP required WS)
 	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
-
-		chat.ClientsMu.Lock()
-		client, exists := chat.Clients[ip]
-		chat.ClientsMu.Unlock()
-
-		if !exists {
-			http.Error(w, "Please submit your name first", http.StatusUnauthorized)
-			return
-		}
-
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println("Upgrade error:", err)
-			return
-		}
-
-		chat.ClientsMu.Lock()
-		client.Conn = conn
-		chat.ClientsMu.Unlock()
-
-		fmt.Println("WebSocket connected for IP:", ip)
-
-		defer func() {
-			conn.Close()
-
-			chat.ClientsMu.Lock()
-			if client, exists := chat.Clients[ip]; exists {
-				client.Conn = nil
-			}
-			chat.ClientsMu.Unlock()
-
-			fmt.Println("The conection was interrupted:", ip)
-		}()
-
-		for {
-			var msg map[string]string
-			err := conn.ReadJSON(&msg)
-			if err != nil {
-				fmt.Println("Cliend disconected")
-				break
-			}
-		}
+		chat.HandShake(w, r, &upgrader)
 	})
 
 	HttpServer = &http.Server{
