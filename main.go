@@ -16,28 +16,28 @@ func main() {
 
 	header := components.TitleElement()
 
+	portInput := widget.NewEntry()
+	portInput.SetPlaceHolder("Write the port here")
+
 	main_elements := container.NewVBox(
+		widget.NewLabel("Intended port (3001, 8000, 8080 recommended)"),
+		portInput,
 		widget.NewLabel("Start Servers"),
 		components.StartButtonElement(),
-		layout.NewSpacer(),
 		widget.NewLabel("Create QR code"),
 		components.QRCodeButtonElement(mainApp),
 	)
 
-	midOfPage := container.New(layout.NewGridWrapLayout(fyne.NewSize(300, 140)), main_elements)
-
-	centeringElements := container.NewHBox(layout.NewSpacer(), midOfPage, layout.NewSpacer())
+	centeringElements := container.NewHBox(layout.NewSpacer(), main_elements, layout.NewSpacer())
 
 	buttons := container.NewHBox(
 		layout.NewSpacer(),
 	)
 
 	mainDesign := container.NewBorder(header, buttons, nil, nil, centeringElements)
-
 	endDesign := container.NewPadded(mainDesign)
 
 	mainWindow.SetContent(endDesign)
-	mainWindow.Resize(fyne.NewSize(400, 300))
+	mainWindow.Resize(fyne.NewSize(400, 350))
 	mainWindow.ShowAndRun()
-
 }
