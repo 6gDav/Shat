@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"hosting_login_page/logs"
+	"net/url"
 
 	"net"
 
@@ -39,8 +40,11 @@ func SetMDNSserver() {
 	}
 
 	//fmt.Printf("Web page is here: http://loginpage.local:%d\n", Port)
-	msg := fmt.Sprintf("Web page is available on this link: http://%s.local:%d", domainName, Port)
-	logs.Logs.Add(widget.NewLabel(msg))
+	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, Port)
+	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
+
+	parsedURL, _ := url.Parse(vuildedURL)
+	logs.Logs.Add(widget.NewHyperlink("Click to navigate to the page: ", parsedURL))
 
 	// sigChan := make(chan os.Signal, 1)
 	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
