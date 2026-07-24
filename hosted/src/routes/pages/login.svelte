@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import ActivityIndicator from "../components/activityindicator.svelte";
 
     let nameText = $state<string>();
@@ -13,16 +14,14 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: nameText,
+                body: nameText ,
             });
 
             if (!response.ok) {
                 throw new Error("POST resoult is not Ok");
-            } else {
-                console.log("Registration is succesfull");
-                //The registration is succes full. We will navigate to a nother file
-                //Navigation logic here
             }
+            console.log("Registration is succesfull");
+            goto("/pages/Dasboard");
         } catch (error) {
             console.error(
                 "Error occured why trying to send your name: " + error,
