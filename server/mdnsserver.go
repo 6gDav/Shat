@@ -2,13 +2,12 @@ package server
 
 import (
 	"fmt"
+
 	"log"
 	"net"
 
 	"github.com/hashicorp/mdns"
 )
-
-var Port int = 3000
 
 var MdnsServer *mdns.Server
 
