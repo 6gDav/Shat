@@ -74,15 +74,17 @@ func SetAPIendpoint() {
 		chat.HandShake(w, r, &upgrader)
 	})
 
-	HttpServer = &http.Server{
-		Addr:    fmt.Sprintf(":%d", Port),
-		Handler: mux,
-	}
-
-	go func() {
-		fmt.Printf("Server is running on port %d\n", Port)
-		if err := HttpServer.ListenAndServe(); err != http.ErrServerClosed {
-			log.Printf("Error occurred while trying to start the server: %v", err)
-		}
-	}()
+	PortStart(mux)
 }
+
+// HttpServer = &http.Server{
+// 	Addr:    fmt.Sprintf(":%d", Port),
+// 	Handler: mux,
+// }
+
+// go func() {
+// 	fmt.Printf("Server is running on port %d\n", Port)
+// 	if err := HttpServer.ListenAndServe(); err != http.ErrServerClosed {
+// 		log.Printf("Error occurred while trying to start the server: %v", err)
+// 	}
+// }()
