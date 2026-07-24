@@ -3,11 +3,12 @@ package server
 import (
 	"fmt"
 	"hosting_login_page/chat"
+	"hosting_login_page/logs"
 	"io"
-	"log"
 	"net"
 	"net/http"
 
+	"fyne.io/fyne/v2/widget"
 	"github.com/gorilla/websocket"
 )
 
@@ -42,7 +43,7 @@ func SetAPIendpoint() {
 		//Name fetch
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			log.Printf("Failed to read the name")
+			logs.Logs.Add(widget.NewLabel("Faild to read the name on this IP address " + ip))
 		}
 		defer r.Body.Close()
 
@@ -59,12 +60,10 @@ func SetAPIendpoint() {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		fmt.Println("Your ip adress " + ip)
-		fmt.Println("Your name " + string(body))
 
 		chat.ClientsMu.RLock()
-		fmt.Println("Heres the HashMap")
-		fmt.Printf("%+v\n", chat.Clients)
+		logMsg := fmt.Sprintf("%+v\n", chat.Clients)
+		logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
 		chat.ClientsMu.RUnlock()
 	})
 
