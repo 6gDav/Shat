@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"hosting_login_page/chat"
+	"hosting_login_page/logs"
 	"hosting_login_page/server"
 	"time"
 
@@ -18,12 +19,12 @@ func StartButtonElement() *widget.Button {
 
 	button = widget.NewButton("Start", func() {
 		if clicked {
-			Logs.Add(widget.NewLabel("Servers stopped..."))
+			logs.Logs.Add(widget.NewLabel("Servers stopped..."))
 			clicked = false
 			button.SetText("Start")
 			stopServer()
 		} else {
-			Logs.Add(widget.NewLabel("Servers started..."))
+			logs.Logs.Add(widget.NewLabel("Servers started..."))
 			clicked = true
 			button.SetText("Stop")
 			startServer()
@@ -43,7 +44,7 @@ func stopServer() {
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
-		Logs.Add(widget.NewLabel("mDNS Server successfully shot down..."))
+		logs.Logs.Add(widget.NewLabel("mDNS Server successfully shot down..."))
 	}
 
 	//Closing WebSocket connections
@@ -69,7 +70,7 @@ func stopServer() {
 			)
 			client.Conn.Close()
 			client.Conn = nil
-			Logs.Add(widget.NewLabel("Closing WebSocket connection on this ip adress: " + ip))
+			logs.Logs.Add(widget.NewLabel("Closing WebSocket connection on this ip adress: " + ip))
 		}
 	}
 	chat.ClientsMu.Unlock()
@@ -81,9 +82,9 @@ func stopServer() {
 
 		if err := server.HttpServer.Shutdown(ctx); err != nil {
 			errMsg := fmt.Sprintf("Error occured while trying to stop the server: %v", err)
-			Logs.Add(widget.NewLabel(errMsg))
+			logs.Logs.Add(widget.NewLabel(errMsg))
 		} else {
-			Logs.Add(widget.NewLabel("HTTP serves succesfully shot down..  "))
+			logs.Logs.Add(widget.NewLabel("HTTP serves succesfully shot down..  "))
 		}
 		server.HttpServer = nil
 	}
