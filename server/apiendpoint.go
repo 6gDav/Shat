@@ -69,7 +69,6 @@ func SetAPIendpoint() {
 	})
 
 	//HandShaking
-	//! Refactor this to the chat folder and solve the error problem (HTTP required WS)
 	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
 		chat.HandShake(w, r, &upgrader)
 	})

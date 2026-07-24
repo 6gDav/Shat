@@ -17,14 +17,24 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	client, exists := Clients[ip]
 	ClientsMu.Unlock()
 
-	if !exists {
-		http.Error(w, "Please submit your name first", http.StatusUnauthorized)
-		return
-	}
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
+		return
+	}
+
+	if !exists {
+		errPayload := map[string]string{
+			"type":    "error",
+			"message": "Please submit your name first",
+		}
+		_ = conn.WriteJSON(errPayload)
+
+		conn.WriteMessage(
+			websocket.CloseMessage,
+			websocket.FormatCloseMessage(4001, "Unauthorized"),
+		)
+		conn.Close()
 		return
 	}
 
