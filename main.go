@@ -16,23 +16,31 @@ func main() {
 
 	header := components.TitleElement()
 
-	main_elements := container.NewVBox(
+	controllElemets := container.NewVBox(
 		widget.NewLabel("Start Servers"),
 		components.StartButtonElement(),
 		widget.NewLabel("Create QR code"),
 		components.QRCodeButtonElement(mainApp),
 	)
 
-	centeringElements := container.NewHBox(layout.NewSpacer(), main_elements, layout.NewSpacer())
-
 	buttons := container.NewHBox(
+		layout.NewSpacer(),
+		controllElemets,
 		layout.NewSpacer(),
 	)
 
-	mainDesign := container.NewBorder(header, buttons, nil, nil, centeringElements)
+	content := container.NewBorder(
+		buttons,
+		nil,
+		nil,
+		nil,
+		components.LogContainer(),
+	)
+
+	mainDesign := container.NewBorder(header, nil, nil, nil, content)
 	endDesign := container.NewPadded(mainDesign)
 
 	mainWindow.SetContent(endDesign)
-	mainWindow.Resize(fyne.NewSize(400, 350))
+	mainWindow.Resize(fyne.NewSize(400, 450))
 	mainWindow.ShowAndRun()
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"hosting_login_page/chat"
 	"hosting_login_page/server"
-	"log"
 	"time"
 
 	"fyne.io/fyne/v2/widget"
@@ -19,10 +18,12 @@ func StartButtonElement() *widget.Button {
 
 	button = widget.NewButton("Start", func() {
 		if clicked {
+			Logs.Add(widget.NewLabel("Servers stopped..."))
 			clicked = false
 			button.SetText("Start")
 			stopServer()
 		} else {
+			Logs.Add(widget.NewLabel("Servers started..."))
 			clicked = true
 			button.SetText("Stop")
 			startServer()
@@ -42,7 +43,7 @@ func stopServer() {
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
-		fmt.Println("mDNS server sucessfully stopped")
+		Logs.Add(widget.NewLabel("mDNS Server successfully shot down..."))
 	}
 
 	//Closing WebSocket connections
@@ -68,7 +69,7 @@ func stopServer() {
 			)
 			client.Conn.Close()
 			client.Conn = nil
-			fmt.Println("WS close:", ip)
+			Logs.Add(widget.NewLabel("Closing WebSocket connection on this ip adress: " + ip))
 		}
 	}
 	chat.ClientsMu.Unlock()
@@ -79,9 +80,10 @@ func stopServer() {
 		defer cancel()
 
 		if err := server.HttpServer.Shutdown(ctx); err != nil {
-			log.Printf("Error occured while trying to stop the server: %v", err)
+			errMsg := fmt.Sprintf("Error occured while trying to stop the server: %v", err)
+			Logs.Add(widget.NewLabel(errMsg))
 		} else {
-			fmt.Println("HTTP server sucessfully stopped")
+			Logs.Add(widget.NewLabel("HTTP serves succesfully shot down..  "))
 		}
 		server.HttpServer = nil
 	}
