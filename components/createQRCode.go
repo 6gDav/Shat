@@ -2,7 +2,7 @@ package components
 
 import (
 	"bytes"
-	"log"
+	"hosting_login_page/logs"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -18,7 +18,7 @@ func QRCodeButtonElement(fyneApp fyne.App) *widget.Button {
 
 		image, err := qrcode.Encode(link, qrcode.Medium, 256)
 		if err != nil {
-			log.Fatalf("Error occured while trying to create QR code: %v", err)
+			logs.Logs.Add(widget.NewLabel("Error occured while trying to create QR code: " + err.Error()))
 		}
 
 		qrCodeWindow := fyneApp.NewWindow("QR Code")

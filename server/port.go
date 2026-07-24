@@ -3,9 +3,11 @@ package server
 import (
 	"errors"
 	"fmt"
-	"log"
+	"hosting_login_page/logs"
 	"net"
 	"net/http"
+
+	"fyne.io/fyne/v2/widget"
 )
 
 var Port int = 3000
@@ -20,22 +22,24 @@ func PortStart(muxInstance *http.ServeMux) {
 				Handler: muxInstance,
 			}
 
-			log.Printf("Trying to start the server %d \n", currentPort)
+			msg := fmt.Sprintf("Trying to start the server on this port: %d \n", currentPort)
+			logs.Logs.Add(widget.NewLabel(msg))
 
 			err := HttpServer.ListenAndServe()
 
 			if err != nil && isPortInUse(err) {
-				log.Printf("This port is occupied %d ", currentPort)
+				msg := fmt.Sprintf("This port is occupied %d ", currentPort)
+				logs.Logs.Add(widget.NewLabel(msg))
 				continue
 			}
 
 			if errors.Is(err, http.ErrServerClosed) {
-				log.Println("Http server is stoped")
+				logs.Logs.Add(widget.NewLabel("HTTP server shot down"))
 				break
 			}
 
 			if err != nil {
-				log.Printf("Server error: %v\n", err)
+				logs.Logs.Add(widget.NewLabel("Error occured: " + err.Error()))
 				break
 			}
 		}
