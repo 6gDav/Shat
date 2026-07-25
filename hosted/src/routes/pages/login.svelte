@@ -8,6 +8,12 @@
     async function registrateName() {
         runActivityIndicator = true;
 
+        if (!nameText?.trim()) {
+            alert("Please add a valid user name.");
+            runActivityIndicator = false;
+            return; 
+        }
+
         try {
             const response = await fetch("http://loginpage.local:3000/submit", {
                 method: "POST",
