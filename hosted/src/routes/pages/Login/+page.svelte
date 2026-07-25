@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import ActivityIndicator from "../components/activityindicator.svelte";
+    import ActivityIndicator from "../../components/activityindicator.svelte";
 
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
@@ -11,7 +11,7 @@
         if (!nameText?.trim()) {
             alert("Please add a valid user name.");
             runActivityIndicator = false;
-            return; 
+            return;
         }
 
         try {
@@ -62,12 +62,16 @@
 </div>
 
 <style>
+    :global(html, body) {
+        height: 100%;
+        margin: 0;
+    }
+
     :global(body) {
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        margin: 0;
         background-color: #485e82;
     }
 

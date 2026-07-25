@@ -1,6 +1,6 @@
 <script lang="ts">
     import "../app.css";
-    import LoginPage from "./pages/login.svelte"
+    import LoginPage from "./pages/Login/+page.svelte"
 </script>
 
 <main>
