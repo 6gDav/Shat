@@ -1,14 +1,22 @@
-<div class="sidebar">
-    <div class="sidebar-header">
-        <h2>Dashboard</h2>
-    </div>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dashboard</h2>
+        </div>
 
-    <nav class="sidebar-nav">
-        <a href="#" class="nav-item active"> Főoldal</a>
-    </nav>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">User</a>
+        </nav>
+    </aside>
 </div>
 
 <style>
+    .layout-container {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
     .sidebar {
         width: 260px;
         height: 100vh;
@@ -18,10 +26,6 @@
         flex-direction: column;
         padding: 1.5rem 1rem;
         box-sizing: border-box;
-        font-family:
-            system-ui,
-            -apple-system,
-            sans-serif;
     }
 
     .sidebar-header {

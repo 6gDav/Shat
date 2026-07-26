@@ -8,9 +8,9 @@ import (
 )
 
 type Client struct {
-	IP   string
-	Name string
-	Conn *websocket.Conn
+	IP   string          `json:"ip"`
+	Name string          `json:"name"`
+	Conn *websocket.Conn `json:"-"`
 }
 
 func (c *Client) String() string {

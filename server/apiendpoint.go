@@ -72,6 +72,17 @@ func SetAPIendpoint() {
 		chat.HandShake(w, r, &upgrader)
 	})
 
+	mux.HandleFunc("GET /getusers", func(w http.ResponseWriter, r *http.Request) {
+		// type ClientResponse struct {
+		// 	IP   string `json:"ip"`
+		// 	Name string `json:"name"`
+		// }
+
+		// chat.ClientsMu.Lock()
+
+		// users := make([]ClientResponse, 0, len(chat.Clients))
+	})
+
 	PortStart(mux)
 }
 
