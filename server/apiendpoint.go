@@ -103,7 +103,7 @@ func SetAPIendpoint() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	PortStart(mux)
+	portStart(mux)
 }
 
 // HttpServer = &http.Server{

@@ -12,7 +12,7 @@ import (
 
 var Port int = 3000
 
-func PortStart(muxInstance *http.ServeMux) {
+func portStart(muxInstance *http.ServeMux) {
 	go func() {
 		for i := 0; i < 10; i++ {
 			currentPort := Port + i
