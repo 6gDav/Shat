@@ -36,7 +36,6 @@ func SetAPIendpoint() {
 		//Ip adress fetch
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
-
 			ip = r.RemoteAddr
 		}
 
@@ -101,6 +100,7 @@ func SetAPIendpoint() {
 		chat.ClientsMu.Unlock()
 
 		w.WriteHeader(http.StatusNoContent)
+		logs.Logs.Add(widget.NewLabel("User disconnected via closing the page. ip: " + ip))
 	})
 
 	portStart(mux)
