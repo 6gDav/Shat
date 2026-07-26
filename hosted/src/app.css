@@ -109,9 +109,6 @@ html {
 }
 
 body {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	background-color: #485e82;
+    background-color: #485e82;
+    min-height: 100vh; 
 }
