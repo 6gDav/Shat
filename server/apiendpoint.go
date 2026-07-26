@@ -96,7 +96,9 @@ func SetAPIendpoint() {
 		}
 
 		chat.ClientsMu.Lock()
-		delete(chat.Clients, ip)
+		if _, exists := chat.Clients[ip]; !exists {
+			delete(chat.Clients, ip)
+		}
 		chat.ClientsMu.Unlock()
 
 		w.WriteHeader(http.StatusNoContent)

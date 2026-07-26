@@ -1,4 +1,7 @@
+import { browser } from '$app/environment';
+
 export function deleteUserOnClose(){
+    if (!browser) return;
 
     $effect(() => {
         const handleUnload = () => {
