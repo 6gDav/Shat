@@ -90,6 +90,19 @@ func SetAPIendpoint() {
 		}
 	})
 
+	mux.HandleFunc("DELETE /disconnect", func(w http.ResponseWriter, r *http.Request) {
+		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			ip = r.RemoteAddr
+		}
+
+		chat.ClientsMu.Lock()
+		delete(chat.Clients, ip)
+		chat.ClientsMu.Unlock()
+
+		w.WriteHeader(http.StatusNoContent)
+	})
+
 	PortStart(mux)
 }
 
