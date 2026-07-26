@@ -20,7 +20,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name: nameText }),
+                body:  nameText ,
             });
 
             if (!response.ok) {

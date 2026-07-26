@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"hosting_login_page/chat"
 	"hosting_login_page/logs"
@@ -73,14 +74,15 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("GET /getusers", func(w http.ResponseWriter, r *http.Request) {
-		// type ClientResponse struct {
-		// 	IP   string `json:"ip"`
-		// 	Name string `json:"name"`
-		// }
 
-		// chat.ClientsMu.Lock()
+		chat.ClientsMu.Lock()
+		err := json.NewEncoder(w).Encode(chat.Clients)
+		chat.ClientsMu.Unlock()
 
-		// users := make([]ClientResponse, 0, len(chat.Clients))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the user data: " + err.Error()))
+		}
 	})
 
 	PortStart(mux)
