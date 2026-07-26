@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"hosting_login_page/chat"
 	"hosting_login_page/logs"
-	"io"
 	"net"
 	"net/http"
 
@@ -42,26 +41,32 @@ func SetAPIendpoint() {
 		}
 
 		//Name fetch
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			logs.Logs.Add(widget.NewLabel("Faild to read the name on this IP address " + ip))
+		var data struct {
+			Name string `json:"name"`
+		}
+
+		errdecode := json.NewDecoder(r.Body).Decode(&data)
+		if errdecode != nil {
+			logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
+			http.Error(w, "Bad request", http.StatusBadRequest)
+			return
 		}
 		defer r.Body.Close()
 
+		chat.ClientsMu.Lock()
 		if _, exists := chat.Clients[ip]; !exists {
-			name := string(body)
-
-			chat.ClientsMu.Lock()
 			chat.Clients[ip] = &chat.Client{
 				IP:   ip,
-				Name: name,
+				Name: data.Name,
 				Conn: nil,
 			}
-			chat.ClientsMu.Unlock()
 		}
+		chat.ClientsMu.Unlock()
 
+		//Return 200 (Ok)
 		w.WriteHeader(http.StatusOK)
 
+		//Loging out
 		chat.ClientsMu.RLock()
 		logMsg := fmt.Sprintf("%+v\n", chat.Clients)
 		logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
