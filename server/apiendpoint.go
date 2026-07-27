@@ -59,6 +59,8 @@ func SetAPIendpoint() {
 				Name: data.Name,
 				Conn: nil,
 			}
+			logMsg := fmt.Sprintf("%+v\n", chat.Clients)
+			logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
 		}
 		chat.ClientsMu.Unlock()
 
@@ -66,10 +68,7 @@ func SetAPIendpoint() {
 		w.WriteHeader(http.StatusOK)
 
 		//Loging out
-		chat.ClientsMu.RLock()
-		logMsg := fmt.Sprintf("%+v\n", chat.Clients)
-		logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
-		chat.ClientsMu.RUnlock()
+
 	})
 
 	//HandShaking
