@@ -59,6 +59,7 @@ func SetAPIendpoint() {
 				Name: data.Name,
 				Conn: nil,
 			}
+			//Loging out
 			logMsg := fmt.Sprintf("%+v\n", chat.Clients)
 			logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
 		}
@@ -66,8 +67,6 @@ func SetAPIendpoint() {
 
 		//Return 200 (Ok)
 		w.WriteHeader(http.StatusOK)
-
-		//Loging out
 
 	})
 
@@ -86,22 +85,6 @@ func SetAPIendpoint() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the user data: " + err.Error()))
 		}
-	})
-
-	mux.HandleFunc("DELETE /disconnect", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			ip = r.RemoteAddr
-		}
-
-		chat.ClientsMu.Lock()
-		if _, exists := chat.Clients[ip]; !exists {
-			delete(chat.Clients, ip)
-		}
-		chat.ClientsMu.Unlock()
-
-		w.WriteHeader(http.StatusNoContent)
-		logs.Logs.Add(widget.NewLabel("User disconnected via closing the page. ip: " + ip))
 	})
 
 	portStart(mux)
