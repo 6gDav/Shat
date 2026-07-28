@@ -1,11 +1,38 @@
+<script>
+    let isOpen = $state(false);
+
+    function toggleSidebar() {
+        isOpen = !isOpen;
+    }
+
+    function closeSidebar() {
+        isOpen = false;
+    }
+</script>
+
 <div class="layout-container">
-    <aside class="sidebar">
+    <button 
+        class="hamburger" 
+        onclick={toggleSidebar}
+        aria-label="Toggle navigation"
+    >
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+
+    {#if isOpen}
+        <div class="overlay" onclick={toggleSidebar}></div>
+    {/if}
+
+    <aside class="sidebar" class:open={isOpen}>
         <div class="sidebar-header">
             <h2>Dashboard</h2>
+            <button class="close-btn" onclick={closeSidebar} aria-label="Close menu">&times;</button>
         </div>
 
         <nav class="sidebar-nav">
-            <a href="#" class="nav-item active">User</a>
+            <a href="#" class="nav-item active" onclick={toggleSidebar}>User</a>
         </nav>
     </aside>
 </div>
@@ -16,7 +43,9 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
+        position: relative;
     }
+
     .sidebar {
         width: 260px;
         height: 100vh;
@@ -26,12 +55,17 @@
         flex-direction: column;
         padding: 1.5rem 1rem;
         box-sizing: border-box;
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
     }
 
     .sidebar-header {
         padding-bottom: 1.5rem;
         margin-bottom: 1rem;
         border-bottom: 1px solid #2d2d3f;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .sidebar-header h2 {
@@ -68,5 +102,71 @@
         background-color: #6366f1;
         color: #ffffff;
         font-weight: 500;
+    }
+
+    .hamburger {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 90;
+        background: #002169;
+        border: none;
+        padding: 0.6rem;
+        border-radius: 6px;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .hamburger .bar {
+        width: 22px;
+        height: 2px;
+        background-color: #ffffff;
+        border-radius: 2px;
+    }
+
+    .close-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: #ffffff;
+        font-size: 1.75rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .overlay {
+        display: none;
+    }
+
+    @media (max-width: 765px) {
+        .hamburger {
+            display: flex;
+        }
+
+        .close-btn {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%); 
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.open {
+            transform: translateX(0); 
+        }
+
+        .overlay {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 95;
+        }
     }
 </style>
