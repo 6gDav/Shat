@@ -24,22 +24,25 @@ var HttpServer *http.Server
 
 func SetAPIendpoint() {
 	mux := http.NewServeMux()
+	fileServer := http.FileServer(http.Dir("./hosted/build"))
 
-	//webpage
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("GET /", fileServer)
 
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 			ip = r.RemoteAddr
 		}
 
-		chat.ClientsMu.Lock()
-		if _, exists := chat.Clients[ip]; exists {
-			http.Redirect(w, r, "/pages/Dasboard", http.StatusSeeOther)
-		}
-		chat.ClientsMu.Unlock()
+		chat.ClientsMu.RLock()
+		_, exists := chat.Clients[ip]
+		chat.ClientsMu.RUnlock()
 
-		fileServer := http.FileServer(http.Dir("./hosted/build"))
+		if exists {
+			http.Redirect(w, r, "/pages/Dasboard/", http.StatusSeeOther)
+			return
+		}
+
 		fileServer.ServeHTTP(w, r)
 	})
 
