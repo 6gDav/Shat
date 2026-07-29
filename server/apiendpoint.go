@@ -30,6 +30,19 @@ func SetAPIendpoint() {
 		fileServer.ServeHTTP(w, r)
 	})
 
+	mux.HandleFunc("GET /redirectuser", func(w http.ResponseWriter, r *http.Request) {
+		ip, _, _ := getIpAdress(r)
+
+		if _, exists := chat.Clients[ip]; exists {
+			err := json.NewEncoder(w).Encode(true)
+			if err != nil {
+				return
+			}
+		}
+
+		logs.Logs.Add(widget.NewLabel("User redirected to dashboard ip: " + ip))
+	})
+
 	//submit user name
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
