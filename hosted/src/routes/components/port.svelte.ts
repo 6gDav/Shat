@@ -1,0 +1,1 @@
+export let port = window.location.port;

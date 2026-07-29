@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import ActivityIndicator from "../../components/activityindicator.svelte";
+    import { port } from "../../components/port.svelte.ts";
 
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
@@ -15,12 +16,12 @@
         }
 
         try {
-            const response = await fetch("http://loginpage.local:3000/submit", {
+            const response = await fetch(`http://loginpage.local:${port}/submit`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body:  JSON.stringify({ name: nameText }) ,
+                body: JSON.stringify({ name: nameText }),
             });
 
             if (!response.ok) {
