@@ -1,1 +1,3 @@
-export let port = window.location.port;
+import { browser } from '$app/environment';
+
+export let port = browser ? window.location.port : "3000";
