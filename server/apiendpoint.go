@@ -33,10 +33,7 @@ func SetAPIendpoint() {
 	//submit user name
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
-		ip, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			ip = r.RemoteAddr
-		}
+		ip, _, _ := getIpAdress(r)
 
 		//Name fetch
 		var data struct {
@@ -87,6 +84,15 @@ func SetAPIendpoint() {
 	})
 
 	portStart(mux)
+}
+
+func getIpAdress(r *http.Request) (string, string, error) {
+	ip, port, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		ip = r.RemoteAddr
+	}
+
+	return ip, port, err
 }
 
 // HttpServer = &http.Server{
