@@ -1,7 +1,9 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
     import ActivityIndicator from "../../components/activityindicator.svelte";
     import { port } from "../../components/port.svelte.ts";
+    //import checkRedirect from "../../components/redirect.svelte.ts";
 
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
@@ -16,13 +18,16 @@
         }
 
         try {
-            const response = await fetch(`http://loginpage.local:${port}/submit`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            const response = await fetch(
+                `http://loginpage.local:${port}/submit`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ name: nameText }),
                 },
-                body: JSON.stringify({ name: nameText }),
-            });
+            );
 
             if (!response.ok) {
                 throw new Error("POST resoult is not Ok");
@@ -37,6 +42,21 @@
             runActivityIndicator = false;
         }
     }
+
+    onMount(async () => {
+        try {
+            let response = await fetch(
+                `http://loginpage.local:${port}/redirectuser`,
+            );
+            let shouldRedirect = await response.json();
+
+            if (shouldRedirect) {
+                goto("/pages/Dasboard");
+            }
+        } catch (error) {
+            console.error("Hiba az átirányítás ellenőrzésekor:", error);
+        }
+    });
 </script>
 
 <div class="container login-container">

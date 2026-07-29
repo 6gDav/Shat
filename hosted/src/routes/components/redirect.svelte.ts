@@ -4,19 +4,20 @@ import { goto } from "$app/navigation";
 
 let loading = true;
 
-onMount(async () => {
+async function checkRedirect() {
+    loading = true;
     try {
         let response = await fetch(`http://loginpage.local:${port}/redirectuser`);
-
         let shouldRedirect = await response.json();
 
         if (shouldRedirect) {
-            //window.location.href = `http://loginpage.local:${port}/dasboard`;
-            goto("/pages/Dasboard")
+            goto("/pages/Dasboard");
         }
     } catch (error) {
         console.error("Hiba az átirányítás ellenőrzésekor:", error);
     } finally {
         loading = false;
     }
-});
+}
+
+export default checkRedirect
