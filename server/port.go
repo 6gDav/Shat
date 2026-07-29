@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -23,23 +24,31 @@ func portStart(muxInstance *http.ServeMux) {
 			}
 
 			msg := fmt.Sprintf("Trying to start the server on this port: %d \n", currentPort)
-			logs.Logs.Add(widget.NewLabel(msg))
+			fyne.Do(func() {
+				logs.Logs.Add(widget.NewLabel(msg))
+			})
 
 			err := HttpServer.ListenAndServe()
 
 			if err != nil && isPortInUse(err) {
 				msg := fmt.Sprintf("This port is occupied %d ", currentPort)
-				logs.Logs.Add(widget.NewLabel(msg))
+				fyne.Do(func() {
+					logs.Logs.Add(widget.NewLabel(msg))
+				})
 				continue
 			}
 
 			if errors.Is(err, http.ErrServerClosed) {
-				logs.Logs.Add(widget.NewLabel("HTTP server shot down"))
+				fyne.Do(func() {
+					logs.Logs.Add(widget.NewLabel("HTTP server shot down"))
+				})
 				break
 			}
 
 			if err != nil {
-				logs.Logs.Add(widget.NewLabel("Error occured: " + err.Error()))
+				fyne.Do(func() {
+					logs.Logs.Add(widget.NewLabel("Error occured: " + err.Error()))
+				})
 				break
 			}
 		}
