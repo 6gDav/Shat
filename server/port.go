@@ -16,14 +16,14 @@ var Port int = 3000
 func portStart(muxInstance *http.ServeMux) {
 	go func() {
 		for i := 0; i < 10; i++ {
-			currentPort := Port + i
+			Port = Port + i
 
 			HttpServer = &http.Server{
-				Addr:    fmt.Sprintf(":%d", currentPort),
+				Addr:    fmt.Sprintf(":%d", Port),
 				Handler: muxInstance,
 			}
 
-			msg := fmt.Sprintf("Trying to start the server on this port: %d \n", currentPort)
+			msg := fmt.Sprintf("Trying to start the server on this port: %d \n", Port)
 			fyne.Do(func() {
 				logs.Logs.Add(widget.NewLabel(msg))
 			})
@@ -31,7 +31,7 @@ func portStart(muxInstance *http.ServeMux) {
 			err := HttpServer.ListenAndServe()
 
 			if err != nil && isPortInUse(err) {
-				msg := fmt.Sprintf("This port is occupied %d ", currentPort)
+				msg := fmt.Sprintf("This port is occupied %d ", Port)
 				fyne.Do(func() {
 					logs.Logs.Add(widget.NewLabel(msg))
 				})
