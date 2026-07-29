@@ -31,16 +31,24 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("GET /redirectuser", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, _ := getIpAdress(r)
-
-		if _, exists := chat.Clients[ip]; exists {
-			err := json.NewEncoder(w).Encode(true)
-			if err != nil {
-				return
-			}
+		ip, _, err := getIpAdress(r)
+		if err != nil {
+			return
 		}
 
-		logs.Logs.Add(widget.NewLabel("User redirected to dashboard ip: " + ip))
+		chat.ClientsMu.Lock()
+		if _, exists := chat.Clients[ip]; exists {
+			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
+
+			if err := json.NewEncoder(w).Encode(true); err != nil {
+				http.Error(w, "JSON kodolasi hiba", http.StatusInternalServerError)
+				return
+			}
+			return
+		}
+		chat.ClientsMu.Unlock()
+
+		json.NewEncoder(w).Encode(false)
 	})
 
 	//submit user name
@@ -85,7 +93,6 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("GET /getusers", func(w http.ResponseWriter, r *http.Request) {
-
 		chat.ClientsMu.Lock()
 		err := json.NewEncoder(w).Encode(chat.Clients)
 		chat.ClientsMu.Unlock()
