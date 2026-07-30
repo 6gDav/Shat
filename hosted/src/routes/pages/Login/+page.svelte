@@ -53,7 +53,7 @@
             let shouldRedirect = await response.json();
 
             if (shouldRedirect) {
-                goto("/pages/Dasboard");
+                goto("/pages/Dashboard");
             }
         } catch (error) {
             console.error("Error occured while trying to redirect.", error);
