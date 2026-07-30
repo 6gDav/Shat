@@ -85,7 +85,35 @@ func SetAPIendpoint() {
 
 		//Return 200 (Ok)
 		w.WriteHeader(http.StatusOK)
+	})
 
+	mux.HandleFunc("POST /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
+		//Ip adress fetch
+		ip, _, _ := getIpAdress(r)
+
+		//Name fetch
+		var data struct {
+			Name string `json:"name"`
+		}
+
+		errdecode := json.NewDecoder(r.Body).Decode(&data)
+		if errdecode != nil {
+			logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
+			http.Error(w, "Bad request", http.StatusBadRequest)
+			return
+		}
+		defer r.Body.Close()
+
+		chat.ClientsMu.Lock()
+		if _, exists := chat.Clients[ip]; !exists {
+			chat.Clients[ip].Name = data.Name
+			logMessage := fmt.Sprintf("User name change on IP %s: The new name is: %s", ip, data.Name)
+			logs.Logs.Add(widget.NewLabel(logMessage))
+		}
+		chat.ClientsMu.Unlock()
+
+		//Return 200 (Ok)
+		w.WriteHeader(http.StatusOK)
 	})
 
 	//HandShaking
