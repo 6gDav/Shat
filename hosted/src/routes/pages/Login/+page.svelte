@@ -37,9 +37,7 @@
             console.log("Registration is succesfull");
             goto("/pages/Dashboard");
         } catch (error) {
-            console.error(
-                "Error occured why trying to send your name: " + error,
-            );
+            alert("Error occured why trying to send your name: " + error)
         } finally {
             runActivityIndicator = false;
         }

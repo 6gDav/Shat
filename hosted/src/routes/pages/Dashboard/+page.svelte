@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
+    import { port } from "$lib/components/port.svelte";
     import { user } from "$lib/components/userName.svelte";
 
     let isOpen = $state(false);
-    let newName = $state("")
+    let newName = $state("");
 
     function toggleSidebar() {
         isOpen = !isOpen;
@@ -12,17 +13,30 @@
         isOpen = false;
     }
 
-    function changeName() {
+    async function changeName() {
         try {
             if (newName && newName != user.userName) {
+                const response = await fetch(
+                    `http://loginpage.local:${port}/submit`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ name: newName }),
+                    },
+                );
 
+                if (!response.ok) {
+                    throw new Error("Cannot change username");
+                }
+            } else {
+                alert(
+                    "Please give a valid input if you want to cahnge your user name.",
+                );
             }
-            else {
-                alert("Please give a valid input if you want to cahnge your user name.")
-            }
-        }
-        catch (error) {
-            console.log("Error occured while trying to change the username " + error)
+        } catch (error) {
+            alert("Error occured while trying to change the username " + error)
         }
     }
 </script>
@@ -45,7 +59,12 @@
     <aside class="sidebar" class:open={isOpen}>
         <h1 id="title">Dashboard</h1>
         <div class="username-div">
-            <input type="text" placeholder="No name typed here" defaultValue={user.userName} bind:value={newName}/>
+            <input
+                type="text"
+                placeholder="No name typed here"
+                defaultValue={user.userName}
+                bind:value={newName}
+            />
             <button onchange={changeName}>Change Usermame</button>
         </div>
         <div class="sidebar-header">
