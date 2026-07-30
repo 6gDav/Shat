@@ -37,6 +37,8 @@ func SetAPIendpoint() {
 		}
 
 		chat.ClientsMu.Lock()
+		defer chat.ClientsMu.Unlock()
+
 		if _, exists := chat.Clients[ip]; exists {
 			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
 
@@ -46,7 +48,6 @@ func SetAPIendpoint() {
 			}
 			return
 		}
-		chat.ClientsMu.Unlock()
 
 		json.NewEncoder(w).Encode(false)
 	})
