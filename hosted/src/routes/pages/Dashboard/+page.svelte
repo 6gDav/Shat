@@ -17,7 +17,7 @@
         try {
             if (newName && newName != user.userName) {
                 const response = await fetch(
-                    `http://loginpage.local:${port}/submit`,
+                    `http://loginpage.local:${port}/submitnewusername`,
                     {
                         method: "POST",
                         headers: {

@@ -30,7 +30,7 @@
             );
 
             if (!response.ok) {
-                throw new Error("POST resoult is not Ok");
+                throw new Error("Submit user name is unsuccesfull.");
             }
             user.userName = nameText
 
@@ -50,8 +50,8 @@
             );
             let shouldRedirect = await response.json();
 
-            if (shouldRedirect.Redirect && shouldRedirect.UserName) {
-                user.userName = shouldRedirect.UserName
+            if (shouldRedirect.redirect && shouldRedirect.userName) {
+                user.userName = shouldRedirect.userName
                 goto("/pages/Dashboard");
             }
         } catch (error) {
