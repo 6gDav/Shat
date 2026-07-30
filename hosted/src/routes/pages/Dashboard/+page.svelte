@@ -2,6 +2,7 @@
     import { user } from "$lib/components/userName.svelte";
 
     let isOpen = $state(false);
+    let newName = $state("")
 
     function toggleSidebar() {
         isOpen = !isOpen;
@@ -9,6 +10,20 @@
 
     function closeSidebar() {
         isOpen = false;
+    }
+
+    function changeName() {
+        try {
+            if (newName && newName != user.userName) {
+
+            }
+            else {
+                alert("Please give a valid input if you want to cahnge your user name.")
+            }
+        }
+        catch (error) {
+            console.log("Error occured while trying to change the username " + error)
+        }
     }
 </script>
 
@@ -30,8 +45,8 @@
     <aside class="sidebar" class:open={isOpen}>
         <h1 id="title">Dashboard</h1>
         <div class="username-div">
-            <input type="text" placeholder={user.userName} />
-            <button>Change Usermame</button>
+            <input type="text" placeholder="No name typed here" defaultValue={user.userName} bind:value={newName}/>
+            <button onchange={changeName}>Change Usermame</button>
         </div>
         <div class="sidebar-header">
             <button
