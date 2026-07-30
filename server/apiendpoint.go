@@ -43,7 +43,7 @@ func SetAPIendpoint() {
 			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
 
 			if err := json.NewEncoder(w).Encode(true); err != nil {
-				http.Error(w, "JSON kodolasi hiba", http.StatusInternalServerError)
+				http.Error(w, "JSON endcode in error", http.StatusInternalServerError)
 				return
 			}
 			return
@@ -115,15 +115,3 @@ func getIpAdress(r *http.Request) (string, string, error) {
 
 	return ip, port, err
 }
-
-// HttpServer = &http.Server{
-// 	Addr:    fmt.Sprintf(":%d", Port),
-// 	Handler: mux,
-// }
-
-// go func() {
-// 	fmt.Printf("Server is running on port %d\n", Port)
-// 	if err := HttpServer.ListenAndServe(); err != http.ErrServerClosed {
-// 		log.Printf("Error occurred while trying to start the server: %v", err)
-// 	}
-// }()

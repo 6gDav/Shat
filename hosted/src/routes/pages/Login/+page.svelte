@@ -1,9 +1,9 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import ActivityIndicator from "../../components/activityindicator.svelte";
-    import { port } from "../../components/port.svelte.ts";
-    //import checkRedirect from "../../components/redirect.svelte.ts";
+    import ActivityIndicator from "$lib/components/activityindicator.svelte";
+    import { port } from "$lib/components/port.svelte";
+    import { user } from "$lib/components/userName.svelte";
 
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
@@ -32,6 +32,8 @@
             if (!response.ok) {
                 throw new Error("POST resoult is not Ok");
             }
+            user.userName = nameText
+
             console.log("Registration is succesfull");
             goto("/pages/Dasboard");
         } catch (error) {
@@ -54,7 +56,7 @@
                 goto("/pages/Dasboard");
             }
         } catch (error) {
-            console.error("Hiba az átirányítás ellenőrzésekor:", error);
+            console.error("Error occured while trying to redirect.", error);
         }
     });
 </script>

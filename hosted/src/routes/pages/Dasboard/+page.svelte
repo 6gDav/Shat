@@ -1,4 +1,7 @@
 <script>
+
+    import { user } from "$lib/components/userName.svelte";
+
     let isOpen = $state(false);
 
     function toggleSidebar() {
@@ -11,6 +14,7 @@
 </script>
 
 <div class="layout-container">
+    <h1>{user.userName}</h1>
     <button 
         class="hamburger" 
         onclick={toggleSidebar}
