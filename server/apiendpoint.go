@@ -123,7 +123,7 @@ func SetAPIendpoint() {
 		defer r.Body.Close()
 
 		chat.ClientsMu.Lock()
-		if _, exists := chat.Clients[ip]; !exists {
+		if _, exists := chat.Clients[ip]; exists {
 			chat.Clients[ip].Name = data.Name
 			logMessage := fmt.Sprintf("User name change on IP %s: The new name is: %s", ip, data.Name)
 			logs.Logs.Add(widget.NewLabel(logMessage))

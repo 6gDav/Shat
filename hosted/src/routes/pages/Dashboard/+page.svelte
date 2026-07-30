@@ -3,7 +3,13 @@
     import { user } from "$lib/components/userName.svelte";
 
     let isOpen = $state(false);
-    let newName = $state("");
+    let newName = $state(user.userName ?? "");
+
+    $effect(() => {
+        if (user.userName && !newName) {
+            newName = user.userName;
+        }
+    });
 
     function toggleSidebar() {
         isOpen = !isOpen;
@@ -30,6 +36,8 @@
                 if (!response.ok) {
                     throw new Error("Cannot change username");
                 }
+                user.userName = newName;
+                alert("Succresfull name change");
             } else {
                 alert(
                     "Please give a valid input if you want to cahnge your user name.",
@@ -65,7 +73,7 @@
                 defaultValue={user.userName}
                 bind:value={newName}
             />
-            <button onchange={changeName}>Change Usermame</button>
+            <button onclick={changeName}>Change Usermame</button>
         </div>
         <div class="sidebar-header">
             <button
