@@ -33,23 +33,41 @@ func SetAPIendpoint() {
 	mux.HandleFunc("GET /redirectuser", func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := getIpAdress(r)
 		if err != nil {
+			http.Error(w, "Invalid IP address", http.StatusBadRequest)
 			return
 		}
+
+		type RedirectResponse struct {
+			Redirect bool   `json:"redirect"`
+			UserName string `json:"userName,omitempty"`
+		}
+
+		var response RedirectResponse
 
 		chat.ClientsMu.Lock()
-		defer chat.ClientsMu.Unlock()
-
-		if _, exists := chat.Clients[ip]; exists {
-			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
-
-			if err := json.NewEncoder(w).Encode(true); err != nil {
-				http.Error(w, "JSON endcode in error", http.StatusInternalServerError)
-				return
+		client, exists := chat.Clients[ip]
+		if exists {
+			response = RedirectResponse{
+				Redirect: true,
+				UserName: client.Name,
 			}
-			return
+		} else {
+			response = RedirectResponse{
+				Redirect: false,
+			}
+		}
+		chat.ClientsMu.Unlock()
+
+		if response.Redirect {
+			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
 		}
 
-		json.NewEncoder(w).Encode(false)
+		w.Header().Set("Content-Type", "application/json")
+
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
+			return
+		}
 	})
 
 	//submit user name

@@ -50,7 +50,8 @@
             );
             let shouldRedirect = await response.json();
 
-            if (shouldRedirect) {
+            if (shouldRedirect.Redirect && shouldRedirect.UserName) {
+                user.userName = shouldRedirect.UserName
                 goto("/pages/Dashboard");
             }
         } catch (error) {
