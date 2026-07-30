@@ -1,5 +1,4 @@
 <script>
-
     import { user } from "$lib/components/userName.svelte";
 
     let isOpen = $state(false);
@@ -14,9 +13,8 @@
 </script>
 
 <div class="layout-container">
-    <h1>{user.userName}</h1>
-    <button 
-        class="hamburger" 
+    <button
+        class="hamburger"
         onclick={toggleSidebar}
         aria-label="Toggle navigation"
     >
@@ -30,9 +28,17 @@
     {/if}
 
     <aside class="sidebar" class:open={isOpen}>
+        <h1 id="title">Dashboard</h1>
+        <div class="username-div">
+            <input type="text" placeholder={user.userName} />
+            <button>Change Usermame</button>
+        </div>
         <div class="sidebar-header">
-            <h2>Dashboard</h2>
-            <button class="close-btn" onclick={closeSidebar} aria-label="Close menu">&times;</button>
+            <button
+                class="close-btn"
+                onclick={closeSidebar}
+                aria-label="Close menu">&times;</button
+            >
         </div>
 
         <nav class="sidebar-nav">
@@ -51,7 +57,7 @@
     }
 
     .sidebar {
-        width: 260px;
+        width: 350px;
         height: 100vh;
         background: linear-gradient(to bottom, #002169 20%, #ffffff 80%);
         color: #ffffff;
@@ -144,6 +150,38 @@
         display: none;
     }
 
+    .username-div {
+        background-color: #ffffff;
+        color: #2d2d3f;
+        padding: 2%;
+        border-radius: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .username-div > input {
+        color: #2d2d3f;
+        font-size: 25px;
+        width: 55%;
+        border-radius: 25px;
+    }
+    .username-div > button {
+        border-radius: 25px;
+        background-color: #002169;
+        color: #ffffff;
+        height: 50px;
+        padding: 15px;
+    }
+
+    #title {
+        font-size: 50px;
+        display: flex;
+        justify-content: center;
+    }
+
     @media (max-width: 765px) {
         .hamburger {
             display: flex;
@@ -157,12 +195,12 @@
             position: fixed;
             top: 0;
             left: 0;
-            transform: translateX(-100%); 
+            transform: translateX(-100%);
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar.open {
-            transform: translateX(0); 
+            transform: translateX(0);
         }
 
         .overlay {
