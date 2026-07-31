@@ -1,26 +1,11 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import { onMount } from "svelte";
-    import { port } from "$lib/components/port.svelte";
-    import { user } from "$lib/components/userName.svelte";
-
     import Registration from "$lib/components/registration.svelte";
-
-    onMount(async () => {
-        try {
-            let response = await fetch(
-                `http://loginpage.local:${port}/redirectuser`,
-            );
-            let shouldRedirect = await response.json();
-
-            if (shouldRedirect.redirect && shouldRedirect.userName) {
-                user.userName = shouldRedirect.userName;
-                goto("/pages/Dashboard");
-            }
-        } catch (error) {
-            console.error("Error occured while trying to redirect.", error);
-        }
-    });
+    import redirectUser from "$lib/components/redirectuser.svelte"
+    import { onMount } from "svelte";
+    
+    onMount(() => {
+        redirectUser()
+    })
 </script>
 
 <div class="container login-container">
