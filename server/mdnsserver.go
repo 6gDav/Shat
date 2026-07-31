@@ -13,6 +13,7 @@ import (
 
 var MdnsServer *mdns.Server
 var domainName string = "loginpage"
+var URL string
 
 func SetMDNSserver() {
 	ipAddress, err := getIPAddress()
@@ -25,7 +26,7 @@ func SetMDNSserver() {
 		"_http._tcp",
 		"local.",
 		"loginpage.local.",
-		Port,
+		port,
 		[]net.IP{ipAddress},
 		[]string{"txtv=1"},
 	)
@@ -40,7 +41,8 @@ func SetMDNSserver() {
 	}
 
 	//fmt.Printf("Web page is here: http://loginpage.local:%d\n", Port)
-	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, Port)
+	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, port)
+	URL = vuildedURL
 	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
 
 	parsedURL, _ := url.Parse(vuildedURL)

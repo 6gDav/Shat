@@ -3,12 +3,12 @@ package components
 import (
 	"bytes"
 	"hosting_login_page/logs"
+	"hosting_login_page/qrcode"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/skip2/go-qrcode"
 )
 
 var link string = "http://loginpage.local:3000"
@@ -16,7 +16,7 @@ var link string = "http://loginpage.local:3000"
 func QRCodeButtonElement(fyneApp fyne.App) *widget.Button {
 	button := widget.NewButton("Create QR code", func() {
 
-		image, err := qrcode.Encode(link, qrcode.Medium, 256)
+		image, err := qrcode.CreateQRCode()
 		if err != nil {
 			logs.Logs.Add(widget.NewLabel("Error occured while trying to create QR code: " + err.Error()))
 		}
