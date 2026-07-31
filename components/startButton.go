@@ -2,7 +2,7 @@ package components
 
 import (
 	"hosting_login_page/logs"
-	runmanagger "hosting_login_page/runManagger"
+	"hosting_login_page/runmanager"
 
 	"fyne.io/fyne/v2/widget"
 )
@@ -17,12 +17,12 @@ func StartButtonElement() *widget.Button {
 			logs.Logs.Add(widget.NewLabel("Servers stopped..."))
 			clicked = false
 			button.SetText("Start")
-			runmanagger.StopServer()
+			runmanager.StopServer()
 		} else {
 			logs.Logs.Add(widget.NewLabel("Servers started..."))
 			clicked = true
 			button.SetText("Stop")
-			runmanagger.StartServer()
+			runmanager.StartServer()
 		}
 	})
 

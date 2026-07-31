@@ -1,4 +1,4 @@
-package runmanagger
+package runmanager
 
 import (
 	"context"
