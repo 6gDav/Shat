@@ -11,8 +11,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var link string = "http://loginpage.local:3000"
-
 func QRCodeButtonElement(fyneApp fyne.App) *widget.Button {
 	button := widget.NewButton("Create QR code", func() {
 
