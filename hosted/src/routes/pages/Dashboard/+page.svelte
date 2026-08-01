@@ -1,6 +1,8 @@
 <script lang="ts">
     import { user } from "$lib/components/userName.svelte";
     import ChangeUserName from "$lib/components/changeName.svelte";
+    import { onMount } from "svelte";
+    import { port } from "$lib/components/port.svelte";
 
     let isOpen = $state(false);
 
@@ -11,6 +13,28 @@
     function closeSidebar() {
         isOpen = false;
     }
+
+    let chat: WebSocket;
+
+    onMount(() => {
+        chat = new WebSocket(`ws://loginpage.local:${port}/setws`);
+
+        chat.onopen = () => {
+            console.log("Chat tube is opened");
+        };
+
+        chat.onclose = () => {
+            console.log("Chat tube is closed");
+        };
+
+        chat.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        return () => {
+            chat.close();
+        };
+    });
 </script>
 
 <div class="layout-container">

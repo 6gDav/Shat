@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/gorilla/websocket"
 )
@@ -19,7 +20,9 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		logs.Logs.Add(widget.NewLabel("Erro occured while trying to set the Upgrader: " + err.Error()))
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("Erro occured while trying to set the Upgrader: " + err.Error()))
+		})
 		return
 	}
 
@@ -42,7 +45,9 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	client.Conn = conn
 	ClientsMu.Unlock()
 
-	logs.Logs.Add(widget.NewLabel("Client connected on this IP adderess: " + ip))
+	fyne.Do(func() {
+		logs.Logs.Add(widget.NewLabel("Client connected on this IP adderess: " + ip))
+	})
 
 	defer func() {
 		conn.Close()
@@ -53,14 +58,18 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		}
 		ClientsMu.Unlock()
 
-		logs.Logs.Add(widget.NewLabel("The conection was interrupted on this IP adderess: " + ip))
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("The conection was interrupted on this IP adderess: " + ip))
+		})
 	}()
 
 	for {
 		var msg map[string]string
 		err := conn.ReadJSON(&msg)
 		if err != nil {
-			logs.Logs.Add(widget.NewLabel("Client diesconected on this IP adderess: " + ip))
+			fyne.Do(func() {
+				logs.Logs.Add(widget.NewLabel("Client diesconected on this IP adderess: " + ip))
+			})
 			break
 		}
 	}
