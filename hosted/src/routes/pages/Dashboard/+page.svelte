@@ -93,9 +93,9 @@
         </div>
 
         <nav class="sidebar-nav">
-            {#each usersList as userEL (userEL.ip)}
+            {#each usersList as userEL}
                 <a href="#" class="nav-item" onclick={toggleSidebar}>
-                    {userEL.name} asvdfgjasv
+                    {userEL.name}
                 </a>
             {/each}
         </nav>
@@ -144,7 +144,7 @@
     .sidebar-nav {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.8rem;
         flex-grow: 1;
     }
 
