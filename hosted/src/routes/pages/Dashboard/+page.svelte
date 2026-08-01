@@ -1,7 +1,7 @@
 <script lang="ts">
     import { user } from "$lib/components/userName.svelte";
     import ChangeUserName from "$lib/components/changeName.svelte";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { port } from "$lib/components/port.svelte";
 
     let isOpen = $state(false);
@@ -16,7 +16,7 @@
 
     let chat: WebSocket;
 
-    onMount(() => {
+    function startHandShake() {
         chat = new WebSocket(`ws://loginpage.local:${port}/setws`);
 
         chat.onopen = () => {
@@ -30,10 +30,39 @@
         chat.onerror = (error) => {
             console.error("WebSocket error:", error);
         };
+    }
 
-        return () => {
-            chat.close();
-        };
+    interface Users {
+        ip: string;
+        name: string;
+    }
+
+    let usersList = $state<Users[]>([]);
+
+    async function fetchUserDatas() {
+        try {
+            const response = await fetch(
+                `http://loginpage.local:${port}/getusers`,
+            );
+
+            const data: Users[] = await response.json();
+            
+            usersList = data;
+        } catch (err) {
+            alert("Failed to fetch users " + err);
+        }
+    }
+
+    onMount(async () => {
+        //fetch user datas
+        fetchUserDatas();
+
+        //chat
+        startHandShake();
+    });
+
+    onDestroy(() => {
+        chat.close();
     });
 </script>
 
