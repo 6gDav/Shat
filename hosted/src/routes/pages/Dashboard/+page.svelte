@@ -46,8 +46,8 @@
             );
 
             const data: Users[] = await response.json();
-            
-            usersList = data;
+
+            usersList = Object.values(data);
         } catch (err) {
             alert("Failed to fetch users " + err);
         }
@@ -92,11 +92,13 @@
             >
         </div>
 
-        {#each usersList as userEL}    
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" onclick={toggleSidebar}>{userEL.name}</a>
-            </nav>
-        {/each}
+        <nav class="sidebar-nav">
+            {#each usersList as userEL (userEL.ip)}
+                <a href="#" class="nav-item" onclick={toggleSidebar}>
+                    {userEL.name} asvdfgjasv
+                </a>
+            {/each}
+        </nav>
     </aside>
     <main>{user.userName}</main>
 </div>
@@ -151,11 +153,12 @@
         align-items: center;
         gap: 0.75rem;
         padding: 0.75rem 1rem;
-        color: #a2a3b7;
+        color: #ffffff;
         text-decoration: none;
         border-radius: 8px;
         font-size: 0.95rem;
         transition: all 0.2s ease;
+        background-color: #002169;
     }
 
     .nav-item:hover {
