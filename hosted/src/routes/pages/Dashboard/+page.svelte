@@ -62,7 +62,7 @@
     });
 
     onDestroy(() => {
-        chat.close();
+        chat?.close();
     });
 </script>
 
@@ -92,9 +92,11 @@
             >
         </div>
 
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" onclick={toggleSidebar}>User</a>
-        </nav>
+        {#each usersList as userEL}    
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick={toggleSidebar}>{userEL.name}</a>
+            </nav>
+        {/each}
     </aside>
     <main>{user.userName}</main>
 </div>
