@@ -82,8 +82,6 @@
     {/if}
 
     <aside class="sidebar" class:open={isOpen}>
-        <h1 id="title">Dashboard</h1>
-        <ChangeUserName />
         <div class="sidebar-header">
             <button
                 class="close-btn"
@@ -91,6 +89,8 @@
                 aria-label="Close menu">&times;</button
             >
         </div>
+        <h1 id="title">Dashboard</h1>
+        <ChangeUserName />
 
         <nav class="sidebar-nav">
             {#each usersList as userEL}
@@ -194,7 +194,8 @@
     }
 
     .close-btn {
-        display: none;
+        display: block; 
+        margin-left: auto;
         background: none;
         border: none;
         color: #ffffff;
