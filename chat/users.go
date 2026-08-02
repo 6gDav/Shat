@@ -17,7 +17,7 @@ func (c *Client) String() string {
 	if c == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("{IP:%s, Name:%s}", c.IP, c.Name)
+	return fmt.Sprintf("{IP: %s, Name: %s}", c.IP, c.Name)
 }
 
 var (

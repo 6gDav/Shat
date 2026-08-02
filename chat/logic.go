@@ -12,19 +12,22 @@ import (
 )
 
 func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgrader) {
-	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
-
-	ClientsMu.Lock()
-	client, exists := Clients[ip]
-	ClientsMu.Unlock()
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return
+	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("Erro occured while trying to set the Upgrader: " + err.Error()))
+			logs.Logs.Add(widget.NewLabel("Error occurred while trying to set the Upgrader: " + err.Error()))
 		})
 		return
 	}
+
+	ClientsMu.Lock()
+	client, exists := Clients[ip]
+	ClientsMu.Unlock()
 
 	if !exists {
 		errPayload := map[string]string{
@@ -38,6 +41,7 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 			websocket.FormatCloseMessage(4001, "Unauthorized"),
 		)
 		conn.Close()
+
 		return
 	}
 
@@ -46,20 +50,20 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	ClientsMu.Unlock()
 
 	fyne.Do(func() {
-		logs.Logs.Add(widget.NewLabel("Client connected on this IP adderess: " + ip))
+		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + ip))
 	})
 
 	defer func() {
 		conn.Close()
 
 		ClientsMu.Lock()
-		if client, exists := Clients[ip]; exists {
-			client.Conn = nil
+		if c, ok := Clients[ip]; ok && c.Conn == conn {
+			c.Conn = nil
 		}
 		ClientsMu.Unlock()
 
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("The conection was interrupted on this IP adderess: " + ip))
+			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
 		})
 	}()
 
@@ -68,7 +72,7 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		err := conn.ReadJSON(&msg)
 		if err != nil {
 			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Client diesconected on this IP adderess: " + ip))
+				logs.Logs.Add(widget.NewLabel("Client disconnected on this IP address: " + ip))
 			})
 			break
 		}
