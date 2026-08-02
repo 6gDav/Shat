@@ -29,6 +29,14 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	client, exists := Clients[ip]
 	ClientsMu.Unlock()
 
+	if !validateClientExistence(exists, conn) {
+		return
+	}
+	validateClientExistence(exists, conn)
+	manageConnection(client, conn, ip)
+}
+
+func validateClientExistence(exists bool, conn *websocket.Conn) bool {
 	if !exists {
 		errPayload := map[string]string{
 			"type":    "error",
@@ -42,9 +50,12 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		)
 		conn.Close()
 
-		return
+		return false
 	}
+	return true
+}
 
+func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 	ClientsMu.Lock()
 	client.Conn = conn
 	ClientsMu.Unlock()
