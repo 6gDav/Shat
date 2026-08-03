@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"encoding/json"
 	"hosting_login_page/logs"
 
 	"fyne.io/fyne/v2"
@@ -36,6 +37,7 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + ip))
 	})
 
+	sendUserNameList(conn)
 	defer func() {
 		conn.Close()
 
@@ -48,6 +50,7 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 		fyne.Do(func() {
 			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
 		})
+		sendUserNameList(conn)
 	}()
 
 	for {
@@ -59,5 +62,41 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 			})
 			break
 		}
+	}
+}
+
+func sendUserNameList(conn *websocket.Conn) {
+	var names []string
+
+	ClientsMu.RLock()
+	for _, val := range Clients {
+		names = append(names, val.Name)
+	}
+	ClientsMu.RUnlock()
+
+	payload := WSResponse{
+		Type: "USER_NAME_LIST",
+		Data: names,
+	}
+
+	namesData, err := json.Marshal(payload)
+
+	if err != nil {
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("Error occred while tryng to convert to JSON " + err.Error()))
+		})
+		errMsg := []byte("ERROR: Failed to serialize name list")
+		_ = conn.WriteMessage(websocket.TextMessage, errMsg)
+
+		return
+	}
+
+	err = conn.WriteMessage(websocket.TextMessage, namesData)
+	if err != nil {
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the name list: " + err.Error()))
+		})
+		conn.Close()
+		return
 	}
 }

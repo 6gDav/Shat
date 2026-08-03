@@ -1,7 +1,6 @@
 package chat
 
 import (
-	"encoding/json"
 	"hosting_login_page/logs"
 
 	"net"
@@ -30,8 +29,6 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		})
 		return
 	}
-	//Return names
-	sendUserNameList(conn)
 
 	//managger
 	ClientsMu.Lock()
@@ -41,40 +38,7 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	if !validateClientExistence(exists, conn) {
 		return
 	}
+
+	//start and shotdown connection
 	manageConnection(client, conn, ip)
-}
-
-func sendUserNameList(conn *websocket.Conn) {
-	var names []string
-
-	ClientsMu.RLock()
-	for _, val := range Clients {
-		names = append(names, val.Name)
-	}
-	ClientsMu.RUnlock()
-
-	payload := WSResponse{
-		Type: "USER_NAME_LIST",
-		Data: names,
-	}
-
-	namesData, err := json.Marshal(payload)
-	if err != nil {
-		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("Error occred while tryng to convert to JSON " + err.Error()))
-		})
-		errMsg := []byte("ERROR: Failed to serialize name list")
-		_ = conn.WriteMessage(websocket.TextMessage, errMsg)
-
-		return
-	}
-
-	err = conn.WriteMessage(websocket.TextMessage, namesData)
-	if err != nil {
-		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the name list: " + err.Error()))
-		})
-		conn.Close()
-		return
-	}
 }
