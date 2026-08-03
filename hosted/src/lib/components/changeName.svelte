@@ -16,7 +16,7 @@
                 const response = await fetch(
                     `http://loginpage.local:${port}/submitnewusername`,
                     {
-                        method: "POST",
+                        method: "PATCH",
                         headers: {
                             "Content-Type": "application/json",
                         },
@@ -28,7 +28,7 @@
                     throw new Error("Cannot change username");
                 }
                 user.userName = newName;
-                alert("Succresfull name change");
+                alert("Successful name change");
             } else {
                 alert(
                     "Please give a valid input if you want to cahnge your user name.",

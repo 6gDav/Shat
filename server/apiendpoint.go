@@ -105,14 +105,21 @@ func SetAPIendpoint() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	mux.HandleFunc("POST /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("PATCH /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
-		ip, _, _ := getIpAdress(r)
+		ip, _, err := getIpAdress(r)
+
+		if err != nil {
+			logMsg := fmt.Sprintf("Error occurred while this user %s tried to change username: %v", ip, err)
+			logs.Logs.Add(widget.NewLabel(logMsg))
+		}
 
 		//Name fetch
 		var data struct {
 			Name string `json:"name"`
 		}
+
+		defer r.Body.Close()
 
 		errdecode := json.NewDecoder(r.Body).Decode(&data)
 		if errdecode != nil {
@@ -120,11 +127,10 @@ func SetAPIendpoint() {
 			http.Error(w, "Bad request", http.StatusBadRequest)
 			return
 		}
-		defer r.Body.Close()
 
 		chat.ClientsMu.Lock()
-		if _, exists := chat.Clients[ip]; exists {
-			chat.Clients[ip].Name = data.Name
+		if client, exists := chat.Clients[ip]; exists {
+			client.Name = data.Name
 			logMessage := fmt.Sprintf("User name change on IP %s: The new name is: %s", ip, data.Name)
 			logs.Logs.Add(widget.NewLabel(logMessage))
 		}
