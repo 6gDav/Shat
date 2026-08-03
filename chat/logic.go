@@ -12,6 +12,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type WSResponse struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
+
 func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgrader) {
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
@@ -25,8 +30,21 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		})
 		return
 	}
-
 	//Return names
+	sendUserNameList(conn)
+
+	//managger
+	ClientsMu.Lock()
+	client, exists := Clients[ip]
+	ClientsMu.Unlock()
+
+	if !validateClientExistence(exists, conn) {
+		return
+	}
+	manageConnection(client, conn, ip)
+}
+
+func sendUserNameList(conn *websocket.Conn) {
 	var names []string
 
 	ClientsMu.RLock()
@@ -35,7 +53,12 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	}
 	ClientsMu.RUnlock()
 
-	namesData, err := json.Marshal(names)
+	payload := WSResponse{
+		Type: "USER_NAME_LIST",
+		Data: names,
+	}
+
+	namesData, err := json.Marshal(payload)
 	if err != nil {
 		fyne.Do(func() {
 			logs.Logs.Add(widget.NewLabel("Error occred while tryng to convert to JSON " + err.Error()))
@@ -54,25 +77,4 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		conn.Close()
 		return
 	}
-
-	//managger
-	ClientsMu.Lock()
-	client, exists := Clients[ip]
-	ClientsMu.Unlock()
-
-	if !validateClientExistence(exists, conn) {
-		return
-	}
-	manageConnection(client, conn, ip)
 }
-
-/*
-err = conn.WriteMessage(websocket.TextMessage, []byte("Üdvözöllek a szerveren!"))
-    if err != nil {
-        fyne.Do(func() {
-            logs.Logs.Add(widget.NewLabel("Üzenet küldése sikertelen: " + err.Error()))
-        })
-        conn.Close()
-        return
-    }
-*/

@@ -39,7 +39,7 @@
 
     let usersList = $state<Users[]>([]);
 
-    async function fetchUserDatas() {
+    async function fetchUserNames() {
         try {
             const response = await fetch(
                 `http://loginpage.local:${port}/getusers`,
@@ -55,7 +55,7 @@
 
     onMount(async () => {
         //fetch user datas
-        fetchUserDatas();
+        fetchUserNames();
 
         //chat
         startHandShake();
