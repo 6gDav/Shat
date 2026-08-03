@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"encoding/json"
 	"hosting_login_page/logs"
 
 	"net"
@@ -25,6 +26,36 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		return
 	}
 
+	//Return names
+	var names []string
+
+	ClientsMu.RLock()
+	for _, val := range Clients {
+		names = append(names, val.Name)
+	}
+	ClientsMu.RUnlock()
+
+	namesData, err := json.Marshal(names)
+	if err != nil {
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("Error occred while tryng to convert to JSON " + err.Error()))
+		})
+		errMsg := []byte("ERROR: Failed to serialize name list")
+		_ = conn.WriteMessage(websocket.TextMessage, errMsg)
+
+		return
+	}
+
+	err = conn.WriteMessage(websocket.TextMessage, namesData)
+	if err != nil {
+		fyne.Do(func() {
+			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the name list: " + err.Error()))
+		})
+		conn.Close()
+		return
+	}
+
+	//managger
 	ClientsMu.Lock()
 	client, exists := Clients[ip]
 	ClientsMu.Unlock()
@@ -32,6 +63,16 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	if !validateClientExistence(exists, conn) {
 		return
 	}
-	validateClientExistence(exists, conn)
 	manageConnection(client, conn, ip)
 }
+
+/*
+err = conn.WriteMessage(websocket.TextMessage, []byte("Üdvözöllek a szerveren!"))
+    if err != nil {
+        fyne.Do(func() {
+            logs.Logs.Add(widget.NewLabel("Üzenet küldése sikertelen: " + err.Error()))
+        })
+        conn.Close()
+        return
+    }
+*/
