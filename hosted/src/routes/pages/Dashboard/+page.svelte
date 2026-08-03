@@ -14,56 +14,70 @@
         isOpen = false;
     }
 
+    interface Users {
+        ip: string;
+        name: string;
+    }
+
+    interface WSResponse<T> {
+        type: string,
+        data: T
+    }
+
+    let usersList = $state<Users[]>([]);
+
     let chat: WebSocket;
 
     function startHandShake() {
         chat = new WebSocket(`ws://loginpage.local:${port}/setws`);
 
         chat.onopen = () => {
-            console.log("Chat tube is opened");
-        };
+            console.log("WebSocket is active.")
+        }
 
-        chat.onclose = () => {
-            console.log("Chat tube is closed");
-        };
+        chat.onmessage = (event) => {
+            try {
+                const res = JSON.parse(event.data)
+
+                if (res.type === "USER_NAME_LIST") {
+                    const payload = res as WSResponse<Users[]>;
+                    usersList = payload.data;
+                }
+            }
+            catch (err) {
+                alert("Cannot fetch user list.")
+            }
+        }
 
         chat.onerror = (error) => {
             console.error("WebSocket error:", error);
         };
     }
 
-    interface Users {
-        ip: string;
-        name: string;
-    }
-
-    let usersList = $state<Users[]>([]);
-
-    async function fetchUserNames() {
-        try {
-            const response = await fetch(
-                `http://loginpage.local:${port}/getusers`,
-            );
-
-            const data: Users[] = await response.json();
-
-            usersList = Object.values(data);
-        } catch (err) {
-            alert("Failed to fetch users " + err);
-        }
-    }
-
     onMount(async () => {
-        //fetch user datas
-        fetchUserNames();
 
-        //chat
+        //chat and name list
         startHandShake();
     });
 
     onDestroy(() => {
         chat?.close();
     });
+
+    //deprecated?
+    // async function fetchUserNames() {
+    //     try {
+    //         const response = await fetch(
+    //             `http://loginpage.local:${port}/getusers`,
+    //         );
+
+    //         const data: Users[] = await response.json();
+
+    //         usersList = Object.values(data);
+    //     } catch (err) {
+    //         alert("Failed to fetch users " + err);
+    //     }
+    // }
 </script>
 
 <div class="layout-container">
@@ -194,7 +208,7 @@
     }
 
     .close-btn {
-        display: block; 
+        display: block;
         margin-left: auto;
         background: none;
         border: none;
