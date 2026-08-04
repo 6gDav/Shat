@@ -61,6 +61,7 @@
         justify-content: space-between;
         align-items: center;
         gap: 15px;
+        margin-bottom: 20px;
     }
 
     .username-div > input {
