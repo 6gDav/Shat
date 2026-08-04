@@ -119,7 +119,10 @@ func SetAPIendpoint() {
 			Name string `json:"name"`
 		}
 
-		defer r.Body.Close()
+		defer func() {
+			r.Body.Close()
+			chat.BroadcastUserNameList()
+		}()
 
 		errdecode := json.NewDecoder(r.Body).Decode(&data)
 		if errdecode != nil {

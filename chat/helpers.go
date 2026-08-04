@@ -37,7 +37,7 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + ip))
 	})
 
-	broadcastUserNameList()
+	BroadcastUserNameList()
 	defer func() {
 		conn.Close()
 
@@ -50,7 +50,7 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 		fyne.Do(func() {
 			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
 		})
-		broadcastUserNameList()
+		BroadcastUserNameList()
 	}()
 
 	for {
@@ -65,7 +65,7 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 	}
 }
 
-func broadcastUserNameList() {
+func BroadcastUserNameList() {
 	var names []string
 
 	ClientsMu.RLock()

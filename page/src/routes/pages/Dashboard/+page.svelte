@@ -14,11 +14,6 @@
         isOpen = false;
     }
 
-    interface Users {
-        ip: string;
-        name: string;
-    }
-
     interface WSResponse<T> {
         type: string;
         data: T;
@@ -59,27 +54,14 @@
 
     onMount(async () => {
         //chat and name list
-        startHandShake();
+        $effect(() => {
+            startHandShake();
+        },)
     });
 
     onDestroy(() => {
         chat?.close();
     });
-
-    //deprecated?
-    // async function fetchUserNames() {
-    //     try {
-    //         const response = await fetch(
-    //             `http://loginpage.local:${port}/getusers`,
-    //         );
-
-    //         const data: Users[] = await response.json();
-
-    //         usersList = Object.values(data);
-    //     } catch (err) {
-    //         alert("Failed to fetch users " + err);
-    //     }
-    // }
 </script>
 
 <div class="layout-container">
