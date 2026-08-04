@@ -24,7 +24,7 @@
         data: T;
     }
 
-    let usersList = $state<Users[]>([]);
+    let usersList = $state<string[]>([]);
 
     let chat: WebSocket;
 
@@ -35,12 +35,16 @@
             console.log("WebSocket is active.");
         };
 
-        chat.onmessage = (event) => {
+        chat.onmessage = async (event) => {
             try {
-                const res = JSON.parse(event.data);
+                const textData = typeof event.data === "string" 
+                ? event.data 
+                : await event.data.text();
+
+            const res = JSON.parse(textData);
 
                 if (res.type === "USER_NAME_LIST") {
-                    const payload = res as WSResponse<Users[]>;
+                    const payload = res as WSResponse<string[]>;
                     usersList = payload.data;
                 }
             } catch (err) {
@@ -107,7 +111,7 @@
         <nav class="sidebar-nav">
             {#each usersList as userEL}
                 <a href="#" class="nav-item" onclick={toggleSidebar}>
-                    {userEL.name}
+                    {userEL}
                 </a>
             {/each}
         </nav>

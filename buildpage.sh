@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd hosted 
+cd page 
 
 bun run build 
 
