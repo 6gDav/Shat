@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import ActivityIndicator from "$lib/components/activityindicator.svelte";
-    import { port } from "$lib/components/port.svelte";
+    import { port, mDNSname } from "$lib/components/port.svelte";
     import { user } from "$lib/components/userName.svelte";
 
     let nameText = $state<string>();
@@ -18,7 +18,7 @@
 
         try {
             const response = await fetch(
-                `http://loginpage.local:${port}/submit`,
+                `http://${mDNSname}:${port}/submit`,
                 {
                     method: "POST",
                     headers: {

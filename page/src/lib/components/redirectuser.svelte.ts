@@ -1,10 +1,10 @@
 import { goto } from "$app/navigation";
 import { user } from "$lib/components/userName.svelte"; 
-import { port } from "$lib/components/port.svelte";
+import { port, mDNSname } from "$lib/components/port.svelte";
 
 async function redirectUser() {
     try {
-        let response = await fetch(`http://loginpage.local:${port}/redirectuser`);
+        let response = await fetch(`http://${mDNSname}:${port}/redirectuser`);
         let shouldRedirect = await response.json();
 
         if (shouldRedirect.redirect && shouldRedirect.userName) {

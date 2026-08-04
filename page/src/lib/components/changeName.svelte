@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { port } from "$lib/components/port.svelte";
+    import { port, mDNSname } from "$lib/components/port.svelte";
     import { user } from "$lib/components/userName.svelte";
 
     let newName = $state(user.userName ?? "");
@@ -14,7 +14,7 @@
         try {
             if (newName && newName != user.userName) {
                 const response = await fetch(
-                    `http://loginpage.local:${port}/submitnewusername`,
+                    `http://${mDNSname}:${port}/submitnewusername`,
                     {
                         method: "PATCH",
                         headers: {

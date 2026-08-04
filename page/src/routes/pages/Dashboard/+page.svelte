@@ -2,7 +2,7 @@
     import { user } from "$lib/components/userName.svelte";
     import ChangeUserName from "$lib/components/changeName.svelte";
     import { onDestroy, onMount } from "svelte";
-    import { port } from "$lib/components/port.svelte";
+    import { port, mDNSname } from "$lib/components/port.svelte";
 
     let isOpen = $state(false);
 
@@ -20,8 +20,8 @@
     }
 
     interface WSResponse<T> {
-        type: string,
-        data: T
+        type: string;
+        data: T;
     }
 
     let usersList = $state<Users[]>([]);
@@ -29,25 +29,24 @@
     let chat: WebSocket;
 
     function startHandShake() {
-        chat = new WebSocket(`ws://loginpage.local:${port}/setws`);
+        chat = new WebSocket(`ws://${mDNSname}:${port}/setws`);
 
         chat.onopen = () => {
-            console.log("WebSocket is active.")
-        }
+            console.log("WebSocket is active.");
+        };
 
         chat.onmessage = (event) => {
             try {
-                const res = JSON.parse(event.data)
+                const res = JSON.parse(event.data);
 
                 if (res.type === "USER_NAME_LIST") {
                     const payload = res as WSResponse<Users[]>;
                     usersList = payload.data;
                 }
+            } catch (err) {
+                alert("Cannot fetch user list.");
             }
-            catch (err) {
-                alert("Cannot fetch user list.")
-            }
-        }
+        };
 
         chat.onerror = (error) => {
             console.error("WebSocket error:", error);
@@ -55,7 +54,6 @@
     }
 
     onMount(async () => {
-
         //chat and name list
         startHandShake();
     });
