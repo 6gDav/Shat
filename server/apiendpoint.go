@@ -24,7 +24,7 @@ var HttpServer *http.Server
 
 func SetAPIendpoint() {
 	mux := http.NewServeMux()
-	fileServer := http.FileServer(http.Dir("./hosted/build"))
+	fileServer := http.FileServer(http.Dir("./page/build"))
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fileServer.ServeHTTP(w, r)
