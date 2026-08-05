@@ -1,8 +1,7 @@
 <script lang="ts">
     import { user } from "$lib/components/userName.svelte";
     import ChangeUserName from "$lib/components/changeName.svelte";
-    import { onDestroy, onMount } from "svelte";
-    import { port, mDNSname } from "$lib/components/port.svelte";
+    import {manageConnection, usersList } from "$lib/components/manageWebSocketConn.svelte"
 
     let isOpen = $state(false);
 
@@ -14,54 +13,8 @@
         isOpen = false;
     }
 
-    interface WSResponse<T> {
-        type: string;
-        data: T;
-    }
+    manageConnection()
 
-    let usersList = $state<string[]>([]);
-
-    let chat: WebSocket;
-
-    function startHandShake() {
-        chat = new WebSocket(`ws://${mDNSname}:${port}/setws`);
-
-        chat.onopen = () => {
-            console.log("WebSocket is active.");
-        };
-
-        chat.onmessage = async (event) => {
-            try {
-                const textData = typeof event.data === "string" 
-                ? event.data 
-                : await event.data.text();
-
-            const res = JSON.parse(textData);
-
-                if (res.type === "USER_NAME_LIST") {
-                    const payload = res as WSResponse<string[]>;
-                    usersList = payload.data;
-                }
-            } catch (err) {
-                alert("Cannot fetch user list.");
-            }
-        };
-
-        chat.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-    }
-
-    onMount(async () => {
-        //chat and name list
-        $effect(() => {
-            startHandShake();
-        },)
-    });
-
-    onDestroy(() => {
-        chat?.close();
-    });
 </script>
 
 <div class="layout-container">
