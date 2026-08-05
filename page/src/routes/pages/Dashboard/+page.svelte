@@ -192,7 +192,7 @@
     }
 
     .close-btn {
-        display: block;
+        display: none;
         margin-left: auto;
         background: none;
         border: none;
