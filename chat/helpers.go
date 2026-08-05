@@ -49,8 +49,8 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 
 		fyne.Do(func() {
 			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
+			BroadcastUserNameList()
 		})
-		BroadcastUserNameList()
 	}()
 
 	for {
