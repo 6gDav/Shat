@@ -1,7 +1,11 @@
 <script lang="ts">
-    import { user } from "$lib/components/userName.svelte";
+    import {
+        manageConnection,
+        usersList,
+    } from "$lib/components/manageWebSocketConn.svelte";
+
     import ChangeUserName from "$lib/components/changeName.svelte";
-    import {manageConnection, usersList } from "$lib/components/manageWebSocketConn.svelte"
+    import Chat from "$lib/components/chatUI.svelte";
 
     let isOpen = $state(false);
 
@@ -13,8 +17,14 @@
         isOpen = false;
     }
 
-    manageConnection()
+    let selectedUser = $state<string | null>(null);
 
+    function selectUser(user: string) {
+        selectedUser = user;
+        isOpen = false;
+    }
+
+    manageConnection();
 </script>
 
 <div class="layout-container">
@@ -45,16 +55,28 @@
 
         <nav class="sidebar-nav">
             {#each usersList as userEL}
-                <a href="#" class="nav-item" onclick={toggleSidebar}>
+                <button
+                    class="nav-item"
+                    class:active={selectedUser === userEL}
+                    onclick={() => selectUser(userEL)}
+                >
                     {userEL}
-                </a>
+                </button>
             {/each}
         </nav>
     </aside>
-    <main>{user.userName}</main>
+    <main>
+        {#if selectedUser}
+            <Chat userName={selectedUser} />
+        {/if}
+    </main>
 </div>
 
 <style>
+    main {
+        flex: 1;
+    }
+    
     .layout-container {
         display: flex;
         width: 100vw;
@@ -85,13 +107,6 @@
         align-items: center;
     }
 
-    .sidebar-header h2 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-
     .sidebar-nav {
         display: flex;
         flex-direction: column;
@@ -110,6 +125,12 @@
         font-size: 0.95rem;
         transition: all 0.2s ease;
         background-color: #002169;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
     }
 
     .nav-item:hover {
