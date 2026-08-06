@@ -65,18 +65,14 @@
             {/each}
         </nav>
     </aside>
-    <main>
+    <div class="chat-wrapper">
         {#if selectedUser}
             <Chat userName={selectedUser} />
         {/if}
-    </main>
+    </div>
 </div>
 
 <style>
-    main {
-        flex: 1;
-    }
-    
     .layout-container {
         display: flex;
         width: 100vw;
@@ -184,6 +180,12 @@
         font-size: 50px;
         display: flex;
         justify-content: center;
+    }
+
+    .chat-wrapper {
+        flex: 1;
+        height: 100vh;
+        display: flex;
     }
 
     @media (max-width: 765px) {
