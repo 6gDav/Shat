@@ -5,7 +5,7 @@ if (isClient) {
   initialName = sessionStorage.getItem("userName") || "";
 }
 
-let nameState = $state(initialName);
+let nameState = $state<string>(initialName);
 
 export const user = {
   get userName() {

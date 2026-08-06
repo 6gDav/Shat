@@ -3,6 +3,7 @@
         manageConnection,
         usersList,
     } from "$lib/components/manageWebSocketConn.svelte";
+    import { user } from "$lib/components/userName.svelte";
 
     import ChangeUserName from "$lib/components/changeName.svelte";
     import Chat from "$lib/components/chatUI.svelte";
@@ -23,6 +24,10 @@
         selectedUser = user;
         isOpen = false;
     }
+
+    $effect(() => {
+        selectedUser = user.userName;
+    });
 
     manageConnection();
 </script>
