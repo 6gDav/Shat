@@ -7,7 +7,7 @@
             alert("Write something if you want to send a message...");
         } else {
             console.log("Send message");
-
+            messageText = "";
         }
     }
 </script>
