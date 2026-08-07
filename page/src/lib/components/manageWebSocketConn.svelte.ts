@@ -29,12 +29,11 @@ function startHandShake() {
                 const rawData = res.data as Record<string, string>;
 
                 const parsedUsers: UserObj[] = Object.entries(rawData).map(([ip, name]) => ({
-                    ip,
-                    name
+                    ip: ip,
+                    name: String(name)
                 }));
 
-                usersList.length = 0;
-                usersList.push(...parsedUsers);
+                usersList.splice(0, usersList.length, ...parsedUsers);
             }
         } catch (err) {
             alert("Cannot fetch user list.");
@@ -55,7 +54,7 @@ export function manageConnection() {
         };
     });
 
-    onDestroy(() => {
-        chat?.close();
-    });
+    // onDestroy(() => {
+    //     chat?.close();
+    // });
 }

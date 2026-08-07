@@ -66,7 +66,7 @@
                     onclick={() => selectUser(userEL.name)}
                     title={userEL.ip}
                 >
-                    {userEL}
+                    {userEL.name}
                 </button>
             {/each}
         </nav>
