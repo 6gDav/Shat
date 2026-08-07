@@ -66,19 +66,19 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 }
 
 func BroadcastUserNameList() {
-	var names []string
+	var users = make(map[string]string)
 
 	ClientsMu.RLock()
 	for _, val := range Clients {
 		if val.Conn != nil {
-			names = append(names, val.Name)
+			users[val.IP] = val.Name
 		}
 	}
 	ClientsMu.RUnlock()
 
 	payload := WSResponse{
 		Type: "USER_NAME_LIST",
-		Data: names,
+		Data: users,
 	}
 
 	namesData, err := json.Marshal(payload)
