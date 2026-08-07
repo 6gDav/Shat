@@ -1,12 +1,12 @@
 import { onDestroy, onMount } from "svelte";
 import { mDNSname, port } from "./port.svelte";
 
-interface WSResponse<T> {
-    type: string;
-    data: T;
-}
+interface UserObj {
+    ip: string,
+    name: string
+};
 
-export let usersList = $state<string[]>([]);
+export let usersList = $state<UserObj[]>([]);
 
 let chat: WebSocket;
 
@@ -26,10 +26,15 @@ function startHandShake() {
             const res = JSON.parse(textData);
 
             if (res.type === "USER_NAME_LIST") {
-                const payload = res as WSResponse<string[]>;
-                
+                const rawData = res.data as Record<string, string>;
+
+                const parsedUsers: UserObj[] = Object.entries(rawData).map(([ip, name]) => ({
+                    ip,
+                    name
+                }));
+
                 usersList.length = 0;
-                usersList.push(...payload.data);
+                usersList.push(...parsedUsers);
             }
         } catch (err) {
             alert("Cannot fetch user list.");
@@ -42,11 +47,12 @@ function startHandShake() {
 }
 
 export function manageConnection() {
-    onMount(async () => {
+    onMount(() => {
         //chat and name list
-        $effect(() => {
-            startHandShake();
-        },)
+        startHandShake();
+        return () => {
+            chat?.close();
+        };
     });
 
     onDestroy(() => {

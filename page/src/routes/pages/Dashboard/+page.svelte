@@ -62,8 +62,9 @@
             {#each usersList as userEL}
                 <button
                     class="nav-item"
-                    class:active={selectedUser === userEL}
-                    onclick={() => selectUser(userEL)}
+                    class:active={selectedUser === userEL.name}
+                    onclick={() => selectUser(userEL.name)}
+                    title={userEL.ip}
                 >
                     {userEL}
                 </button>
