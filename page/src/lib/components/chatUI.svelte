@@ -1,5 +1,14 @@
 <script lang="ts">
     let { userName } = $props();
+    let messageText = $state<string>();
+
+    function sendMessageText() {
+        if (!messageText?.trim()) {
+            alert("Write something if you want to send a message...")
+        } else {
+            console.log("Send message")
+        }
+    }
 </script>
 
 <main class="chat-main">
@@ -54,7 +63,8 @@
     </div>
     
     <div class="input-container">
-        <input type="text" placeholder="Write something..." />
+        <input type="text" placeholder="Write something..." bind:value={messageText}/>
+        <button onclick={sendMessageText}>Send</button>
     </div>
 </main>
 
@@ -104,10 +114,15 @@
     }
 
     input {
-        width: 100%;
+        width: 80%;
         padding: 12px 16px;
         border-radius: 8px;
         border: 1px solid #ccc;
         box-sizing: border-box;
+    }
+    button {
+        background-color: #6366f1;
+        border-radius: 15px;
+        width: 20%;
     }
 </style>
