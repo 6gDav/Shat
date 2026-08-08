@@ -52,7 +52,10 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 			BroadcastUserNameList()
 		})
 	}()
+	manageChat(conn, ip)
+}
 
+func manageChat(conn *websocket.Conn, ip string) {
 	for {
 		var msg map[string]string
 		err := conn.ReadJSON(&msg)
