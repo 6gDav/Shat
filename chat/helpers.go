@@ -28,46 +28,6 @@ func validateClientExistence(exists bool, conn *websocket.Conn) bool {
 	return true
 }
 
-func manageConnection(client *Client, conn *websocket.Conn, ip string) {
-	ClientsMu.Lock()
-	client.Conn = conn
-	ClientsMu.Unlock()
-
-	fyne.Do(func() {
-		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + ip))
-	})
-
-	BroadcastUserNameList()
-	defer func() {
-		conn.Close()
-
-		ClientsMu.Lock()
-		if c, ok := Clients[ip]; ok && c.Conn == conn {
-			c.Conn = nil
-		}
-		ClientsMu.Unlock()
-
-		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
-			BroadcastUserNameList()
-		})
-	}()
-	manageChat(conn, ip)
-}
-
-func manageChat(conn *websocket.Conn, ip string) {
-	for {
-		var msg map[string]string
-		err := conn.ReadJSON(&msg)
-		if err != nil {
-			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Client disconnected on this IP address: " + ip))
-			})
-			break
-		}
-	}
-}
-
 func BroadcastUserNameList() {
 	var users = make(map[string]string)
 
