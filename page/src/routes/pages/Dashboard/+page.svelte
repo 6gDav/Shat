@@ -18,11 +18,12 @@
         isOpen = false;
     }
 
-    let selectedUser = $state<string | null>(null);
+    let selectedUser = $state<string>();
+    let selectedIp = $state<string>();
 
-    function selectUser(user: string) {
-        selectedUser = user;
-        isOpen = false;
+    function selectUser(user: { name: string; ip: string }) {
+        selectedUser = user.name;
+        selectedIp = user.ip;
     }
 
     $effect(() => {
@@ -63,7 +64,7 @@
                 <button
                     class="nav-item"
                     class:active={selectedUser === userEL.name}
-                    onclick={() => selectUser(userEL.name)}
+                    onclick={() => selectUser(userEL)}
                     title={userEL.ip}
                 >
                     {userEL.name}
@@ -72,8 +73,8 @@
         </nav>
     </aside>
     <div class="chat-wrapper">
-        {#if selectedUser}
-            <Chat userName={selectedUser} />
+        {#if selectedUser && selectedIp}
+            <Chat userName={selectedUser} userIp={selectedIp} />
         {/if}
     </div>
 </div>

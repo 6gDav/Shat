@@ -1,5 +1,5 @@
 <script lang="ts">
-    let { userName } = $props();
+    let { userName, userIp } = $props();
     let messageText = $state<string>();
 
     function sendMessageText() {
@@ -14,7 +14,7 @@
 
 <main class="chat-main">
     <div class="title-container">
-        <h1 id="name-title">{userName}</h1>
+        <h1 id="name-title">{userName} <span><i>{userIp}</i></span></h1>
     </div>
 
     <div class="messages-list">
