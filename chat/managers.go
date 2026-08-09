@@ -45,5 +45,42 @@ func manageChat(conn *websocket.Conn, ip string) {
 			})
 			break
 		}
+
+		targetIP := msg["target_ip"]
+		text := msg["text"]
+
+		outMsg := map[string]string{
+			"from": ip,
+			"text": text,
+		}
+
+		ClientsMu.RLock()
+		senderClient := Clients[ip]
+		targetClient := Clients[targetIP]
+		ClientsMu.RUnlock()
+
+		if targetClient != nil && targetClient.Conn != nil {
+			err := targetClient.Conn.WriteJSON(outMsg)
+			if err != nil {
+				fyne.Do(func() {
+					logs.Logs.Add(widget.NewLabel("Erroc occured while trying to send the messge " + err.Error()))
+				})
+			}
+		}
+
+		if senderClient != nil && senderClient.Conn != nil {
+			_ = senderClient.Conn.WriteJSON(outMsg)
+		}
 	}
 }
+
+// func BroadcastMessage(msg map[string]string) {
+// 	ClientsMu.Lock()
+// 	defer ClientsMu.Unlock()
+
+// 	for _, client := range Clients {
+// 		if client.Conn != nil {
+// 			_ = client.Conn.WriteJSON(msg)
+// 		}
+// 	}
+// }
