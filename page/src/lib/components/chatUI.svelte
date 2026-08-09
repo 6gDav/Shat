@@ -1,7 +1,7 @@
 <script lang="ts">
     import { messages, sendChatMessage } from "./manageWebSocketConn.svelte"; 
 
-    let { userName, userIp } = $props<{ userName: string; userIp: string }>();
+    let { userName, selectedIp } = $props<{ userName: string; selectedIp: string }>();
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
 
@@ -10,7 +10,7 @@
             alert("Write something if you want to send a message...");
             return;
         }
-        sendChatMessage(userIp, messageText.trim());
+        sendChatMessage(selectedIp, messageText.trim());
         messageText = "";
     }
 
@@ -29,15 +29,15 @@
 
 <main class="chat-main">
     <div class="title-container">
-        <h1 id="name-title">{userName} <span><i>{userIp}</i></span></h1>
+        <h1 id="name-title">{userName} <span><i>{selectedIp}</i></span></h1>
     </div>
 
     <div class="messages-list" bind:this={chatContainer}>
         {#each messages as msg}
             <div 
                 class="message-bubble" 
-                class:sent={msg.from !== userIp} 
-                class:received={msg.from === userIp}
+                class:sent={msg.from !== selectedIp} 
+                class:received={msg.from === selectedIp}
             >
                 <div class="message-text">{msg.text}</div>
             </div>

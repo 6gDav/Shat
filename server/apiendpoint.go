@@ -103,6 +103,14 @@ func SetAPIendpoint() {
 
 		//Return 200 (Ok)
 		w.WriteHeader(http.StatusOK)
+
+		response := map[string]string{
+			"ip": ip,
+		}
+
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			logs.Logs.Add(widget.NewLabel("Failed to send ip andress to the client side: " + err.Error()))
+		}
 	})
 
 	mux.HandleFunc("PATCH /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
@@ -143,11 +151,6 @@ func SetAPIendpoint() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	//HandShaking
-	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
-		chat.HandShake(w, r, &upgrader)
-	})
-
 	mux.HandleFunc("GET /getusers", func(w http.ResponseWriter, r *http.Request) {
 		chat.ClientsMu.Lock()
 		err := json.NewEncoder(w).Encode(chat.Clients)
@@ -157,6 +160,11 @@ func SetAPIendpoint() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the user data: " + err.Error()))
 		}
+	})
+
+	//HandShaking
+	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
+		chat.HandShake(w, r, &upgrader)
 	})
 
 	portStart(mux)

@@ -47,6 +47,7 @@
         defaultValue={user.userName}
         bind:value={newName}
     />
+    <p><i>{user.initialIp}</i></p>
     <button onclick={changeName}>Change Usermame</button>
 </div>
 

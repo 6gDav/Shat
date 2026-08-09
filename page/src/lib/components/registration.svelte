@@ -4,6 +4,7 @@
     import { port, mDNSname } from "$lib/components/port.svelte";
     import { user } from "$lib/components/userName.svelte";
 
+
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
 
@@ -31,7 +32,11 @@
             if (!response.ok) {
                 throw new Error("Submit user name is unsuccesfull.");
             }
+
+            const responseData = await response.json();
+
             user.userName = nameText;
+            user.initialIp = responseData.ip
 
             console.log("Registration is succesfull");
             goto("/pages/Dashboard");
