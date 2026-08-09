@@ -6,7 +6,13 @@ interface UserObj {
     name: string
 };
 
+interface ChatMessage {
+    from: string;
+    text: string;
+}
+
 export let usersList = $state<UserObj[]>([]);
+export let messages = $state<ChatMessage[]>([]);
 
 let chat: WebSocket;
 
@@ -34,6 +40,11 @@ function startHandShake() {
                 }));
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
+            } else if (res.text && res.from) {
+                messages.push({
+                    from: res.from,
+                    text: res.text
+                });
             }
         } catch (err) {
             alert("Cannot fetch user list.");
@@ -57,4 +68,16 @@ export function manageConnection() {
     // onDestroy(() => {
     //     chat?.close();
     // });
+}
+
+export function sendChatMessage(targetIp: string, text: string) {
+    if (chat && chat.readyState === WebSocket.OPEN) {
+        const payload = JSON.stringify({
+            target_ip: targetIp,
+            text: text
+        });
+        chat.send(payload);
+    } else {
+        alert("The connection is inactive");
+    }
 }

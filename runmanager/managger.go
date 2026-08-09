@@ -62,7 +62,7 @@ func StopServer() {
 			errMsg := fmt.Sprintf("Error occured while trying to stop the server: %v", err)
 			logs.Logs.Add(widget.NewLabel(errMsg))
 		} else {
-			logs.Logs.Add(widget.NewLabel("HTTP serves succesfully shot down..  "))
+			logs.Logs.Add(widget.NewLabel("HTTP serves succesfully shot down..."))
 		}
 		server.HttpServer = nil
 	}

@@ -1,15 +1,30 @@
 <script lang="ts">
-    let { userName, userIp } = $props();
-    let messageText = $state<string>();
+    import { messages, sendChatMessage } from "./manageWebSocketConn.svelte"; 
+
+    let { userName, userIp } = $props<{ userName: string; userIp: string }>();
+    let messageText = $state<string>("");
+    let chatContainer = $state<HTMLDivElement>();
 
     function sendMessageText() {
         if (!messageText?.trim()) {
             alert("Write something if you want to send a message...");
-        } else {
-            console.log("Send message");
-            messageText = "";
+            return;
+        }
+        sendChatMessage(userIp, messageText.trim());
+        messageText = "";
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+        if (e.key === "Enter") {
+            sendMessageText();
         }
     }
+
+    $effect(() => {
+        if (messages.length && chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    });
 </script>
 
 <main class="chat-main">
@@ -17,50 +32,16 @@
         <h1 id="name-title">{userName} <span><i>{userIp}</i></span></h1>
     </div>
 
-    <div class="messages-list">
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
-        <div class="message-bubble">Hi</div>
+    <div class="messages-list" bind:this={chatContainer}>
+        {#each messages as msg}
+            <div 
+                class="message-bubble" 
+                class:sent={msg.from !== userIp} 
+                class:received={msg.from === userIp}
+            >
+                <div class="message-text">{msg.text}</div>
+            </div>
+        {/each}
     </div>
 
     <div class="input-container">
@@ -68,6 +49,7 @@
             type="text"
             placeholder="Write something..."
             bind:value={messageText}
+            onkeydown={handleKeyDown}
         />
         <button onclick={sendMessageText}>Send</button>
     </div>
@@ -99,10 +81,30 @@
     .messages-list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.75rem;
         flex: 1;
         overflow-y: auto;
         padding-right: 0.5rem;
+    }
+
+    .message-bubble {
+        max-width: 60%;
+        border-radius: 15px;
+        padding: 0.75rem 1rem;
+        word-break: break-word;
+        color: white;
+    }
+
+    .sent {
+        align-self: flex-end;
+        background-color: #6366f1;
+        border-bottom-right-radius: 2px;
+    }
+
+    .received {
+        align-self: flex-start;
+        background-color: #374151;
+        border-bottom-left-radius: 2px;
     }
 
     .input-container {
@@ -112,13 +114,6 @@
         display: flex;
         gap: 0.75rem;
         align-items: center;
-    }
-
-    .message-bubble {
-        width: 25%;
-        border-radius: 15px;
-        background-color: #6366f1;
-        padding: 0.5rem 1rem;
     }
 
     input {
