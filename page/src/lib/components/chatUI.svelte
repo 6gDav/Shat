@@ -1,5 +1,6 @@
 <script lang="ts">
     import { messages, sendChatMessage } from "./manageWebSocketConn.svelte"; 
+    import { user } from "./userName.svelte";
 
     let { userName, selectedIp } = $props<{ userName: string; selectedIp: string }>();
     let messageText = $state<string>("");
@@ -10,7 +11,7 @@
             alert("Write something if you want to send a message...");
             return;
         }
-        sendChatMessage(selectedIp, messageText.trim());
+        sendChatMessage(user.initialIp ,selectedIp, messageText.trim());
         messageText = "";
     }
 

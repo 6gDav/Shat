@@ -74,7 +74,7 @@
     </aside>
     <div class="chat-wrapper">
         {#if selectedUser && selectedIp}
-            <Chat user={selectedUser} selectedIp={selectedIp} />
+            <Chat userName={selectedUser} selectedIp={selectedIp} />
         {/if}
     </div>
 </div>
