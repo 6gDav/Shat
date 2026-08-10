@@ -39,6 +39,7 @@ func manageChat(conn *websocket.Conn, ip string) {
 	defer conn.Close()
 
 	for {
+		//in
 		var msg map[string]string
 		err := conn.ReadJSON(&msg)
 		if err != nil {
@@ -51,13 +52,12 @@ func manageChat(conn *websocket.Conn, ip string) {
 		targetIP := msg["target_ip"]
 		text := msg["text"]
 
-		roomID := generateRoomID(ip, targetIP)
-
+		//out
 		outMsg := map[string]string{
 			"from":    ip,
 			"to":      targetIP,
 			"text":    text,
-			"room_id": roomID,
+			"room_id": generateRoomID(ip, targetIP),
 		}
 
 		ClientsMu.RLock()

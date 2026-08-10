@@ -8,9 +8,11 @@
 
     let currentChatMessages = $derived(
         messages.filter(msg => {
-            const involvesMe = msg.from === user.initialIp || msg.to === user.initialIp;
-            const involvesSelectedUser = msg.from === selectedIp || msg.to === selectedIp;
-            return involvesMe && involvesSelectedUser;
+            const usersIpAddress = msg.roomId.split("_");
+            const user1isIn = usersIpAddress[0] == user.initialIp ||  usersIpAddress[0] == selectedIp;
+            const user2isIn = usersIpAddress[1] == user.initialIp ||  usersIpAddress[1] == selectedIp;
+
+            return user1isIn && user2isIn;
         })
     );
 
