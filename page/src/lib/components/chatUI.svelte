@@ -1,19 +1,22 @@
 <script lang="ts">
-    import { messages, sendChatMessage } from "./manageWebSocketConn.svelte"; 
+    import { messages, sendChatMessage } from "./manageWebSocketConn.svelte";
     import { user } from "./userName.svelte";
 
-    let { userName, selectedIp } = $props<{ userName: string; selectedIp: string }>();
+    let { userName, selectedIp } = $props<{
+        userName: string;
+        selectedIp: string;
+    }>();
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
 
     let currentChatMessages = $derived(
-        messages.filter(msg => {
-            const usersIpAddress = msg.roomId.split("_");
-            const user1isIn = usersIpAddress[0] == user.initialIp ||  usersIpAddress[0] == selectedIp;
-            const user2isIn = usersIpAddress[1] == user.initialIp ||  usersIpAddress[1] == selectedIp;
+        messages.filter((msg) => {
+            const expectedRoomId = [user.initialIp, selectedIp]
+                .sort()
+                .join("_");
 
-            return user1isIn && user2isIn;
-        })
+            return msg.roomId === expectedRoomId;
+        }),
     );
 
     function sendMessageText() {
@@ -45,9 +48,9 @@
 
     <div class="messages-list" bind:this={chatContainer}>
         {#each currentChatMessages as msg}
-            <div 
-                class="message-bubble" 
-                class:sent={msg.from === user.initialIp} 
+            <div
+                class="message-bubble"
+                class:sent={msg.from === user.initialIp}
                 class:received={msg.from === selectedIp}
             >
                 <div class="message-text">{msg.text}</div>
