@@ -78,7 +78,6 @@
                 </div>
             {:else}
                 {#each usersList as userEL}
-                    <button class="nav-item" title={"Group"}> Group </button>
                     <button
                         class="nav-item"
                         class:active={selectedUser === userEL.name}
