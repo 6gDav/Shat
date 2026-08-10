@@ -61,6 +61,7 @@
 
         <nav class="sidebar-nav">
             {#each usersList as userEL}
+                <button class="nav-item" title={"Group"}> Group </button>
                 <button
                     class="nav-item"
                     class:active={selectedUser === userEL.name}
@@ -74,7 +75,7 @@
     </aside>
     <div class="chat-wrapper">
         {#if selectedUser && selectedIp}
-            <Chat userName={selectedUser} selectedIp={selectedIp} />
+            <Chat userName={selectedUser} {selectedIp} />
         {/if}
     </div>
 </div>
