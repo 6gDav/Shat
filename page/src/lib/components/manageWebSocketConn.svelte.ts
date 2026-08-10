@@ -8,7 +8,9 @@ interface UserObj {
 
 interface ChatMessage {
     from: string;
+    to: string;
     text: string;
+    roomId: string;
 }
 
 export let usersList = $state<UserObj[]>([]);
@@ -43,7 +45,9 @@ function startHandShake() {
             } else if (res.text && res.from) {
                 messages.push({
                     from: res.from,
-                    text: res.text
+                    to: res.to,
+                    text: res.text,
+                    roomId: res.room_id
                 });
             }
         } catch (err) {
@@ -70,13 +74,19 @@ export function manageConnection() {
     // });
 }
 
+function getRoomId(ip1: string, ip2: string): string {
+    return [ip1, ip2].sort().join("_");
+}
+
 export function sendChatMessage(senderIp: string, targetIp: string, text: string) {
     if (chat && chat.readyState === WebSocket.OPEN) {
         const payload = JSON.stringify({
-            sender_ip: senderIp,
+            from: senderIp,
             target_ip: targetIp,
-            text: text
+            text: text,
+            room_id: getRoomId(senderIp, targetIp)
         });
+
         chat.send(payload);
     } else {
         alert("The connection is inactive");

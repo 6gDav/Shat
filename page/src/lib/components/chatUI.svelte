@@ -6,12 +6,20 @@
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
 
+    let currentChatMessages = $derived(
+        messages.filter(msg => {
+            const involvesMe = msg.from === user.initialIp || msg.to === user.initialIp;
+            const involvesSelectedUser = msg.from === selectedIp || msg.to === selectedIp;
+            return involvesMe && involvesSelectedUser;
+        })
+    );
+
     function sendMessageText() {
         if (!messageText?.trim()) {
             alert("Write something if you want to send a message...");
             return;
         }
-        sendChatMessage(user.initialIp ,selectedIp, messageText.trim());
+        sendChatMessage(user.initialIp, selectedIp, messageText.trim());
         messageText = "";
     }
 
@@ -22,7 +30,7 @@
     }
 
     $effect(() => {
-        if (messages.length && chatContainer) {
+        if (currentChatMessages.length && chatContainer) {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     });
@@ -34,10 +42,10 @@
     </div>
 
     <div class="messages-list" bind:this={chatContainer}>
-        {#each messages as msg}
+        {#each currentChatMessages as msg}
             <div 
                 class="message-bubble" 
-                class:sent={msg.from !== selectedIp} 
+                class:sent={msg.from === user.initialIp} 
                 class:received={msg.from === selectedIp}
             >
                 <div class="message-text">{msg.text}</div>

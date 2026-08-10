@@ -36,6 +36,8 @@ func manageConnection(client *Client, conn *websocket.Conn, ip string) {
 }
 
 func manageChat(conn *websocket.Conn, ip string) {
+	defer conn.Close()
+
 	for {
 		var msg map[string]string
 		err := conn.ReadJSON(&msg)
@@ -49,9 +51,13 @@ func manageChat(conn *websocket.Conn, ip string) {
 		targetIP := msg["target_ip"]
 		text := msg["text"]
 
+		roomID := generateRoomID(ip, targetIP)
+
 		outMsg := map[string]string{
-			"from": ip,
-			"text": text,
+			"from":    ip,
+			"to":      targetIP,
+			"text":    text,
+			"room_id": roomID,
 		}
 
 		ClientsMu.RLock()
@@ -63,7 +69,7 @@ func manageChat(conn *websocket.Conn, ip string) {
 			err := targetClient.Conn.WriteJSON(outMsg)
 			if err != nil {
 				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("Erroc occured while trying to send the messge " + err.Error()))
+					logs.Logs.Add(widget.NewLabel("Error occurred while trying to send message: " + err.Error()))
 				})
 			}
 		}
@@ -72,6 +78,13 @@ func manageChat(conn *websocket.Conn, ip string) {
 			_ = senderClient.Conn.WriteJSON(outMsg)
 		}
 	}
+}
+
+func generateRoomID(ip1, ip2 string) string {
+	if ip1 < ip2 {
+		return ip1 + "_" + ip2
+	}
+	return ip2 + "_" + ip1
 }
 
 // func BroadcastMessage(msg map[string]string) {
