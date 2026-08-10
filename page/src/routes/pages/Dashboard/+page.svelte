@@ -7,6 +7,10 @@
 
     import ChangeUserName from "$lib/components/changeName.svelte";
     import Chat from "$lib/components/chatUI.svelte";
+    import Activityindicator from "$lib/components/activityindicator.svelte";
+
+    // Kezdetben fut a töltésjelző
+    let runActivityIndicator = $state<boolean>(true);
 
     let isOpen = $state(false);
 
@@ -25,6 +29,14 @@
         selectedUser = user.name;
         selectedIp = user.ip;
     }
+
+    $effect(() => {
+        if (usersList && usersList.length > 0) {
+            runActivityIndicator = false;
+        } else {
+            runActivityIndicator = true;
+        }
+    });
 
     $effect(() => {
         selectedUser = user.userName;
@@ -60,17 +72,23 @@
         <ChangeUserName />
 
         <nav class="sidebar-nav">
-            {#each usersList as userEL}
-                <button class="nav-item" title={"Group"}> Group </button>
-                <button
-                    class="nav-item"
-                    class:active={selectedUser === userEL.name}
-                    onclick={() => selectUser(userEL)}
-                    title={userEL.ip}
-                >
-                    {userEL.name}
-                </button>
-            {/each}
+            {#if runActivityIndicator}
+                <div class="overlay">
+                    <Activityindicator />
+                </div>
+            {:else}
+                {#each usersList as userEL}
+                    <button class="nav-item" title={"Group"}> Group </button>
+                    <button
+                        class="nav-item"
+                        class:active={selectedUser === userEL.name}
+                        onclick={() => selectUser(userEL)}
+                        title={userEL.ip}
+                    >
+                        {userEL.name}
+                    </button>
+                {/each}
+            {/if}
         </nav>
     </aside>
     <div class="chat-wrapper">
@@ -194,6 +212,18 @@
         flex: 1;
         height: 100vh;
         display: flex;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
     }
 
     @media (max-width: 765px) {

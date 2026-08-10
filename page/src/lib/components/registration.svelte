@@ -118,6 +118,7 @@
         align-items: center;
         z-index: 10;
     }
+    
     @media (min-width: 768px) {
         .container {
             transform: scale(1.3);
