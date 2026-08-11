@@ -68,6 +68,7 @@ func (cs *ManageChat) manageChat() {
 
 		//out
 		outMsg := map[string]string{
+			"type":    "private",
 			"from":    cs.IP,
 			"to":      targetIP,
 			"text":    text,
@@ -94,13 +95,13 @@ func (cs *ManageChat) manageChat() {
 	}
 }
 
-// func BroadcastMessage(msg map[string]string) {
-// 	ClientsMu.Lock()
-// 	defer ClientsMu.Unlock()
+func BroadcastMessage(msg map[string]string) {
+	ClientsMu.Lock()
+	defer ClientsMu.Unlock()
 
-// 	for _, client := range Clients {
-// 		if client.Conn != nil {
-// 			_ = client.Conn.WriteJSON(msg)
-// 		}
-// 	}
-// }
+	for _, client := range Clients {
+		if client.Conn != nil {
+			_ = client.Conn.WriteJSON(msg)
+		}
+	}
+}

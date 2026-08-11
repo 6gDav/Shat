@@ -1,4 +1,4 @@
-import { onDestroy, onMount } from "svelte";
+import { onMount } from "svelte";
 import { mDNSname, port } from "./port.svelte";
 
 interface UserObj {
@@ -7,6 +7,7 @@ interface UserObj {
 };
 
 interface ChatMessage {
+    type: string,
     from: string;
     to: string;
     text: string;
@@ -27,11 +28,7 @@ function startHandShake() {
 
     chat.onmessage = async (event) => {
         try {
-            const textData = typeof event.data === "string"
-                ? event.data
-                : await event.data.text();
-
-            const res = JSON.parse(textData);
+            const res = await fetchingMessageEvent(event)
 
             if (res.type === "USER_NAME_LIST") {
                 const rawData = res.data as Record<string, string>;
@@ -42,8 +39,9 @@ function startHandShake() {
                 }));
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
-            } else if (res.text && res.from) {
+            } else if (res.type === "private" && res.text && res.from) {
                 messages.push({
+                    type: res.type,
                     from: res.from,
                     to: res.to,
                     text: res.text,
@@ -74,10 +72,6 @@ export function manageConnection() {
     // });
 }
 
-function getRoomId(ip1: string, ip2: string): string {
-    return [ip1, ip2].sort().join("_");
-}
-
 export function sendChatMessage(senderIp: string, targetIp: string, text: string) {
     if (chat && chat.readyState === WebSocket.OPEN) {
         const payload = JSON.stringify({
@@ -91,4 +85,16 @@ export function sendChatMessage(senderIp: string, targetIp: string, text: string
     } else {
         alert("The connection is inactive");
     }
+}
+
+function getRoomId(ip1: string, ip2: string): string {
+    return [ip1, ip2].sort().join("_");
+}
+
+async function fetchingMessageEvent(event: MessageEvent<any>) {
+    const textData = typeof event.data === "string"
+        ? event.data
+        : await event.data.text();
+
+    return JSON.parse(textData);
 }

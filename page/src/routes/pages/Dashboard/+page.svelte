@@ -9,9 +9,7 @@
     import Chat from "$lib/components/chatUI.svelte";
     import Activityindicator from "$lib/components/activityindicator.svelte";
 
-    // Kezdetben fut a töltésjelző
     let runActivityIndicator = $state<boolean>(true);
-
     let isOpen = $state(false);
 
     function toggleSidebar() {
@@ -22,12 +20,14 @@
         isOpen = false;
     }
 
+    let combinedIpAdresses = $derived("Group_" + usersList.map((u) => u.ip).join("_"));
+
     let selectedUser = $state<string>();
     let selectedIp = $state<string>();
 
-    function selectUser(user: { name: string; ip: string }) {
-        selectedUser = user.name;
-        selectedIp = user.ip;
+    function selectUser(userParam: { name: string; ip: string }) {
+        selectedUser = userParam.name;
+        selectedIp = userParam.ip;
     }
 
     $effect(() => {
@@ -39,7 +39,9 @@
     });
 
     $effect(() => {
-        selectedUser = user.userName;
+        if (!selectedUser && user.userName) {
+            selectedUser = user.userName;
+        }
     });
 
     manageConnection();
@@ -69,6 +71,7 @@
             >
         </div>
         <h1 id="title">Dashboard</h1>
+
         <ChangeUserName />
 
         <nav class="sidebar-nav">
@@ -77,6 +80,18 @@
                     <Activityindicator />
                 </div>
             {:else}
+                <button
+                    class="nav-item"
+                    class:active={selectedUser === "Group"}
+                    onclick={() =>
+                        selectUser({
+                            name: "Group",
+                            ip: combinedIpAdresses,
+                        })}
+                    title="Group"
+                >
+                    Group
+                </button>
                 {#each usersList as userEL}
                     <button
                         class="nav-item"
@@ -90,6 +105,7 @@
             {/if}
         </nav>
     </aside>
+
     <div class="chat-wrapper">
         {#if selectedUser && selectedIp}
             <Chat userName={selectedUser} {selectedIp} />

@@ -11,11 +11,16 @@
 
     let currentChatMessages = $derived(
         messages.filter((msg) => {
-            const expectedRoomId = [user.initialIp, selectedIp]
-                .sort()
-                .join("_");
+            switch (msg.type) {
+                case "private":
+                    const expectedRoomId = [user.initialIp, selectedIp]
+                        .sort()
+                        .join("_");
 
-            return msg.roomId === expectedRoomId;
+                    return msg.roomId === expectedRoomId;
+                default:
+                    break;
+            }
         }),
     );
 
