@@ -11,11 +11,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type WSResponse struct {
-	Type string `json:"type"`
-	Data any    `json:"data"`
-}
-
 func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgrader) {
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {

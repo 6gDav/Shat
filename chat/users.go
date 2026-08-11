@@ -40,9 +40,9 @@ func BroadcastUserNameList() {
 	}
 	ClientsMu.RUnlock()
 
-	payload := WSResponse{
-		Type: "USER_NAME_LIST",
-		Data: users,
+	payload := map[string]any{
+		"type": "USER_NAME_LIST",
+		"data": users,
 	}
 
 	namesData, err := json.Marshal(payload)
