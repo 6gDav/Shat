@@ -6,9 +6,11 @@
         userName: string;
         selectedIp: string;
     }>();
+
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
 
+    //get chat
     let currentChatMessages = $derived(
         messages.filter((msg) => {
             switch (msg.type) {
@@ -24,12 +26,14 @@
         }),
     );
 
+    //send chat
     function sendMessageText() {
         if (!messageText?.trim()) {
             alert("Write something if you want to send a message...");
             return;
         }
-        sendChatMessage(user.initialIp, selectedIp, messageText.trim());
+
+        sendChatMessage(user.initialIp, selectedIp, messageText.trim(), userName === "Group" ? "group" : "private");
         messageText = "";
     }
 

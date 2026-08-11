@@ -72,9 +72,10 @@ export function manageConnection() {
     // });
 }
 
-export function sendChatMessage(senderIp: string, targetIp: string, text: string) {
+export function sendChatMessage(senderIp: string, targetIp: string, text: string, type: string) {
     if (chat && chat.readyState === WebSocket.OPEN) {
         const payload = JSON.stringify({
+            type: type,
             from: senderIp,
             target_ip: targetIp,
             text: text,

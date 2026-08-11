@@ -63,35 +63,46 @@ func (cs *ManageChat) manageChat() {
 			break
 		}
 
-		targetIP := msg["target_ip"]
-		text := msg["text"]
+		messagetype := msg["type"]
 
-		//out
-		outMsg := map[string]string{
-			"type":    "private",
-			"from":    cs.IP,
-			"to":      targetIP,
-			"text":    text,
-			"room_id": generateRoomID(cs.IP, targetIP),
+		switch messagetype {
+		case "private":
+			cs.privateChat(msg)
+		case "groupe":
+			//grope chat not done yet
 		}
+	}
+}
 
-		ClientsMu.RLock()
-		senderClient := Clients[cs.IP]
-		targetClient := Clients[targetIP]
-		ClientsMu.RUnlock()
+func (cs ManageChat) privateChat(msg map[string]string) {
+	targetIP := msg["target_ip"]
+	text := msg["text"]
 
-		if targetClient != nil && targetClient.Conn != nil {
-			err := targetClient.Conn.WriteJSON(outMsg)
-			if err != nil {
-				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("Error occurred while trying to send message: " + err.Error()))
-				})
-			}
+	//out
+	outMsg := map[string]string{
+		"type":    "private",
+		"from":    cs.IP,
+		"to":      targetIP,
+		"text":    text,
+		"room_id": generateRoomID(cs.IP, targetIP),
+	}
+
+	ClientsMu.RLock()
+	senderClient := Clients[cs.IP]
+	targetClient := Clients[targetIP]
+	ClientsMu.RUnlock()
+
+	if targetClient != nil && targetClient.Conn != nil {
+		err := targetClient.Conn.WriteJSON(outMsg)
+		if err != nil {
+			fyne.Do(func() {
+				logs.Logs.Add(widget.NewLabel("Error occurred while trying to send message: " + err.Error()))
+			})
 		}
+	}
 
-		if senderClient != nil && senderClient.Conn != nil {
-			_ = senderClient.Conn.WriteJSON(outMsg)
-		}
+	if senderClient != nil && senderClient.Conn != nil {
+		_ = senderClient.Conn.WriteJSON(outMsg)
 	}
 }
 
