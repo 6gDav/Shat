@@ -68,7 +68,7 @@ func (cs *ManageChat) manageChat() {
 		switch messagetype {
 		case "private":
 			cs.privateChat(msg)
-		case "groupe":
+		case "group":
 			//grope chat not done yet
 		}
 	}
