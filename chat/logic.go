@@ -39,6 +39,8 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		return
 	}
 
+	chatManagger := NewClientSession(client, conn, ip)
+
 	//start and shotdown connection
-	manageConnection(client, conn, ip)
+	chatManagger.ManageConnection()
 }

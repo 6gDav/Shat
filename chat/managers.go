@@ -8,43 +8,57 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func manageConnection(client *Client, conn *websocket.Conn, ip string) {
+type ManageChat struct {
+	IP     string
+	Conn   *websocket.Conn
+	Client *Client
+}
+
+func NewClientSession(client *Client, conn *websocket.Conn, ip string) *ManageChat {
+	return &ManageChat{
+		IP:     ip,
+		Conn:   conn,
+		Client: client,
+	}
+}
+
+func (cs *ManageChat) ManageConnection() {
 	ClientsMu.Lock()
-	client.Conn = conn
+	cs.Client.Conn = cs.Conn
 	ClientsMu.Unlock()
 
 	fyne.Do(func() {
-		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + ip))
+		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + cs.IP))
 	})
 
 	BroadcastUserNameList()
 	defer func() {
-		conn.Close()
+		cs.Conn.Close()
 
 		ClientsMu.Lock()
-		if c, ok := Clients[ip]; ok && c.Conn == conn {
+		if c, ok := Clients[cs.IP]; ok && c.Conn == cs.Conn {
 			c.Conn = nil
 		}
 		ClientsMu.Unlock()
 
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + ip))
+			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + cs.IP))
 			BroadcastUserNameList()
 		})
 	}()
-	manageChat(conn, ip)
+	cs.manageChat()
 }
 
-func manageChat(conn *websocket.Conn, ip string) {
-	defer conn.Close()
+func (cs *ManageChat) manageChat() {
+	defer cs.Conn.Close()
 
 	for {
 		//in
 		var msg map[string]string
-		err := conn.ReadJSON(&msg)
+		err := cs.Conn.ReadJSON(&msg)
 		if err != nil {
 			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Client disconnected on this IP address: " + ip))
+				logs.Logs.Add(widget.NewLabel("Client disconnected on this IP address: " + cs.IP))
 			})
 			break
 		}
@@ -54,14 +68,14 @@ func manageChat(conn *websocket.Conn, ip string) {
 
 		//out
 		outMsg := map[string]string{
-			"from":    ip,
+			"from":    cs.IP,
 			"to":      targetIP,
 			"text":    text,
-			"room_id": generateRoomID(ip, targetIP),
+			"room_id": generateRoomID(cs.IP, targetIP),
 		}
 
 		ClientsMu.RLock()
-		senderClient := Clients[ip]
+		senderClient := Clients[cs.IP]
 		targetClient := Clients[targetIP]
 		ClientsMu.RUnlock()
 
@@ -78,13 +92,6 @@ func manageChat(conn *websocket.Conn, ip string) {
 			_ = senderClient.Conn.WriteJSON(outMsg)
 		}
 	}
-}
-
-func generateRoomID(ip1, ip2 string) string {
-	if ip1 < ip2 {
-		return ip1 + "_" + ip2
-	}
-	return ip2 + "_" + ip1
 }
 
 // func BroadcastMessage(msg map[string]string) {
