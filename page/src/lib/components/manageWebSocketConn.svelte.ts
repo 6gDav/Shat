@@ -9,7 +9,7 @@ interface UserObj {
 interface ChatMessage {
     type: string,
     from: string;
-    to: string;
+    to?: string;
     text: string;
     roomId: string;
 }
@@ -40,6 +40,14 @@ function startHandShake() {
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
             } else if (res.type === "private" && res.text && res.from) {
+                messages.push({
+                    type: res.type,
+                    from: res.from,
+                    to: res.to,
+                    text: res.text,
+                    roomId: res.room_id
+                });
+            } else if (res.type === "group" && res.text && res.from) {
                 messages.push({
                     type: res.type,
                     from: res.from,
@@ -88,14 +96,14 @@ export function sendChatMessage(senderIp: string, targetIp: string, text: string
     }
 }
 
-function getRoomId(ip1: string, ip2: string): string {
-    return [ip1, ip2].sort().join("_");
-}
-
 async function fetchingMessageEvent(event: MessageEvent<any>) {
     const textData = typeof event.data === "string"
         ? event.data
         : await event.data.text();
 
     return JSON.parse(textData);
+}
+
+function getRoomId(ip1: string, ip2: string): string {
+    return [ip1, ip2].sort().join("_");
 }

@@ -69,7 +69,7 @@ func (cs *ManageChat) manageChat() {
 		case "private":
 			cs.privateChat(msg)
 		case "group":
-			//grope chat not done yet
+			cs.groupChat(msg)
 		}
 	}
 }
@@ -106,13 +106,32 @@ func (cs ManageChat) privateChat(msg map[string]string) {
 	}
 }
 
-func BroadcastMessage(msg map[string]string) {
-	ClientsMu.Lock()
-	defer ClientsMu.Unlock()
+func (cs ManageChat) groupChat(msg map[string]string) {
+	text := msg["text"]
 
+	ClientsMu.RLock()
+	clientsCopy := make([]*Client, 0, len(Clients))
 	for _, client := range Clients {
-		if client.Conn != nil {
-			_ = client.Conn.WriteJSON(msg)
+		if client != nil && client.Conn != nil {
+			clientsCopy = append(clientsCopy, client)
+		}
+	}
+	ClientsMu.RUnlock()
+
+	for _, client := range clientsCopy {
+		outMsg := map[string]string{
+			"type":    "group",
+			"from":    cs.IP,
+			"to":      client.IP,
+			"text":    text,
+			"room_id": "Group",
+		}
+
+		err := client.Conn.WriteJSON(outMsg)
+		if err != nil {
+			fyne.Do(func() {
+				logs.Logs.Add(widget.NewLabel("Error occurred while sending group message: " + err.Error()))
+			})
 		}
 	}
 }

@@ -11,18 +11,21 @@
     let chatContainer = $state<HTMLDivElement>();
 
     //get chat
+    let isGroupView = $derived(userName === "Group");
+
     let currentChatMessages = $derived(
         messages.filter((msg) => {
-            switch (msg.type) {
-                case "private":
-                    const expectedRoomId = [user.initialIp, selectedIp]
-                        .sort()
-                        .join("_");
-
-                    return msg.roomId === expectedRoomId;
-                default:
-                    break;
+            if (isGroupView) {
+                return msg.type === "group" && userName.startsWith("Group");
             }
+            if (msg.type === "private") {
+                const expectedRoomId = [user.initialIp, selectedIp]
+                    .sort()
+                    .join("_");
+                return msg.roomId === expectedRoomId;
+            }
+
+            return false;
         }),
     );
 
@@ -33,7 +36,12 @@
             return;
         }
 
-        sendChatMessage(user.initialIp, selectedIp, messageText.trim(), userName === "Group" ? "group" : "private");
+        sendChatMessage(
+            user.initialIp,
+            selectedIp,
+            messageText.trim(),
+            userName === "Group" ? "group" : "private",
+        );
         messageText = "";
     }
 
