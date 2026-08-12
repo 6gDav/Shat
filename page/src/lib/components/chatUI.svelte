@@ -9,7 +9,6 @@
 
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
-
     //get chat
     let isGroupView = $derived(userName === "Group");
 
@@ -41,6 +40,7 @@
             selectedIp,
             messageText.trim(),
             userName === "Group" ? "group" : "private",
+            user.userName,
         );
         messageText = "";
     }

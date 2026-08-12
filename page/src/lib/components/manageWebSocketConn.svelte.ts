@@ -12,6 +12,7 @@ interface ChatMessage {
     to?: string;
     text: string;
     roomId: string;
+    // userName: string;
 }
 
 export let usersList = $state<UserObj[]>([]);
@@ -30,6 +31,7 @@ function startHandShake() {
         try {
             const res = await fetchingMessageEvent(event)
 
+            //User name List
             if (res.type === "USER_NAME_LIST") {
                 const rawData = res.data as Record<string, string>;
 
@@ -39,21 +41,27 @@ function startHandShake() {
                 }));
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
-            } else if (res.type === "private" && res.text && res.from) {
+            }
+            //private chat 
+            else if (res.type === "private" && res.text && res.from) {
                 messages.push({
                     type: res.type,
                     from: res.from,
                     to: res.to,
                     text: res.text,
-                    roomId: res.room_id
+                    roomId: res.room_id,
+                    // userName: res.userName,
                 });
-            } else if (res.type === "group" && res.text && res.from) {
+            } 
+            //group chat
+            else if (res.type === "group" && res.text && res.from) {
                 messages.push({
                     type: res.type,
                     from: res.from,
                     to: res.to,
                     text: res.text,
-                    roomId: res.room_id
+                    roomId: res.room_id,
+                    // userName: res.userName
                 });
             }
         } catch (err) {
@@ -80,14 +88,15 @@ export function manageConnection() {
     // });
 }
 
-export function sendChatMessage(senderIp: string, targetIp: string, text: string, type: string) {
+export function sendChatMessage(senderIp: string, targetIp: string, text: string, type: string, userName: string) {
     if (chat && chat.readyState === WebSocket.OPEN) {
         const payload = JSON.stringify({
             type: type,
             from: senderIp,
             target_ip: targetIp,
             text: text,
-            room_id: getRoomId(senderIp, targetIp)
+            room_id: getRoomId(senderIp, targetIp),
+            userName: userName
         });
 
         chat.send(payload);
