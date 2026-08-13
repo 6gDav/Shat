@@ -79,7 +79,7 @@
 
         <nav class="sidebar-nav">
             {#if runActivityIndicator}
-                <div class="overlay">
+                <div id="activity-indicator">
                     <Activityindicator />
                 </div>
             {:else}
@@ -116,13 +116,21 @@
             <img
                 id="user-not-found-img"
                 src={UserNotFoundImage}
-                alt="User not found image"
+                alt="User not found"
             />
         {/if}
     </div>
 </div>
 
 <style>
+    #activity-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 1.5rem 0;
+    }
+
     #user-not-found-img {
         width: 650px;
         height: 650px;
@@ -258,6 +266,11 @@
     }
 
     @media (max-width: 765px) {
+        #user-not-found-img {
+            width: 350px;
+            height: 350px;
+        }
+
         .hamburger {
             display: flex;
         }
