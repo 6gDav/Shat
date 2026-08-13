@@ -47,11 +47,18 @@
         defaultValue={user.userName}
         bind:value={newName}
     />
-    <p><i>{user.initialIp}</i></p>
+    <h1 id="ip-title">{user.initialIp}</h1>
     <button onclick={changeName}>Change Usermame</button>
 </div>
 
 <style>
+    #ip-title{
+        font-size: 17px;
+        font-style: italic;
+        margin: 0;
+        padding: 1;
+    }
+
     .username-div {
         background-color: #ffffff;
         color: #2d2d3f;
