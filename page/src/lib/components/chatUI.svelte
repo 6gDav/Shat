@@ -15,7 +15,9 @@
     let currentChatMessages = $derived(
         messages.filter((msg) => {
             if (isGroupView) {
-                return msg.type === "group" && selectedUserName.startsWith("Group");
+                return (
+                    msg.type === "group" && selectedUserName.startsWith("Group")
+                );
             }
             if (msg.type === "private") {
                 const expectedRoomId = [user.initialIp, selectedIp]
@@ -60,7 +62,8 @@
 
 <main class="chat-main">
     <div class="title-container">
-        <h1 id="name-title">{selectedUserName} <span><i>{selectedIp}</i></span></h1>
+        <h1 id="name-title">{selectedUserName}</h1>
+        <h2 id="ip-title">{selectedIp}</h2>
     </div>
 
     <div class="messages-list" bind:this={chatContainer}>
@@ -71,9 +74,7 @@
                 class:received={msg.from !== user.initialIp}
             >
                 <div class="message-text">
-                    <strong class="sender-name"
-                        >{msg.userName}:</strong
-                    >
+                    <strong class="sender-name">{msg.userName}:</strong>
                     {msg.text}
                 </div>
             </div>
@@ -92,6 +93,20 @@
 </main>
 
 <style>
+    #name-title {
+        font-size: 52px;
+        margin: 0;
+        color: #ffffff;
+    }
+
+    #ip-title {
+        font-size: 25px;
+        margin: 0;
+        color: #ffffff;
+        text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
+        font-style: italic;
+    }
+
     .chat-main {
         display: flex;
         flex-direction: column;
@@ -106,12 +121,6 @@
         text-align: center;
         margin-bottom: 2rem;
         flex-shrink: 0;
-    }
-
-    #name-title {
-        font-size: 52px;
-        margin: 0;
-        color: #ffffff;
     }
 
     .messages-list {
