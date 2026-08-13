@@ -14,23 +14,14 @@ type ManageChat struct {
 	Client *Client
 }
 
-type ReturnChatMessage struct {
-	type string
-	from string
-	to   string
-	text string
-	room_id string
-	userName string
+type ChatMessage struct {
+	Type     string `json:"type"`
+	From     string `json:"from"`
+	To       string `json:"to,omitempty"`
+	Text     string `json:"text"`
+	RoomID   string `json:"room_id"`
+	UserName string `json:"username"`
 }
-
-/*
-	"type":     "private",
-	"from":     cs.IP,
-	"to":       targetIP,
-	"text":     text,
-	"room_id":  generateRoomID(cs.IP, targetIP),
-	"username": username,
-*/
 
 func NewClientSession(client *Client, conn *websocket.Conn, ip string) *ManageChat {
 	return &ManageChat{
@@ -98,13 +89,13 @@ func (cs ManageChat) privateChat(msg map[string]string) {
 	username := msg["userName"]
 
 	//out
-	outMsg := map[string]string{
-		"type":     "private",
-		"from":     cs.IP,
-		"to":       targetIP,
-		"text":     text,
-		"room_id":  generateRoomID(cs.IP, targetIP),
-		"username": username,
+	outMsg := ChatMessage{
+		Type:     "private",
+		From:     cs.IP,
+		To:       targetIP,
+		Text:     text,
+		RoomID:   generateRoomID(cs.IP, targetIP),
+		UserName: username,
 	}
 
 	ClientsMu.RLock()
@@ -140,13 +131,13 @@ func (cs ManageChat) groupChat(msg map[string]string) {
 	ClientsMu.RUnlock()
 
 	for _, client := range clientsCopy {
-		outMsg := map[string]string{
-			"type":     "group",
-			"from":     cs.IP,
-			"to":       client.IP,
-			"text":     text,
-			"room_id":  "Group",
-			"username": username,
+		outMsg := ChatMessage{
+			Type:     "group",
+			From:     cs.IP,
+			To:       client.IP,
+			Text:     text,
+			RoomID:   "Group",
+			UserName: username,
 		}
 
 		err := client.Conn.WriteJSON(outMsg)
