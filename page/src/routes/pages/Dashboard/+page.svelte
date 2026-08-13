@@ -8,6 +8,7 @@
     import ChangeUserName from "$lib/components/changeName.svelte";
     import Chat from "$lib/components/chatUI.svelte";
     import Activityindicator from "$lib/components/activityindicator.svelte";
+    import UserNotFoundImage from "$lib/assets/user-not-found.png";
 
     let runActivityIndicator = $state<boolean>(true);
     let isOpen = $state(false);
@@ -20,7 +21,9 @@
         isOpen = false;
     }
 
-    let combinedIpAdresses = $derived("Group_" + usersList.map((u) => u.ip).join("_"));
+    let combinedIpAdresses = $derived(
+        "Group_" + usersList.map((u) => u.ip).join("_"),
+    );
 
     let selectedUser = $state<string>();
     let selectedIp = $state<string>();
@@ -109,11 +112,24 @@
     <div class="chat-wrapper">
         {#if selectedUser && selectedIp}
             <Chat userName={selectedUser} {selectedIp} />
+        {:else}
+            <img
+                id="user-not-found-img"
+                src={UserNotFoundImage}
+                alt="User not found image"
+            />
         {/if}
     </div>
 </div>
 
 <style>
+    #user-not-found-img {
+        width: 650px;
+        height: 650px;
+        display: block;
+        margin: 15% auto 0 auto;
+    }
+
     .layout-container {
         display: flex;
         width: 100vw;
