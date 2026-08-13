@@ -17,7 +17,7 @@ type ManageChat struct {
 type ChatMessage struct {
 	Type     string `json:"type"`
 	From     string `json:"from"`
-	To       string `json:"to,omitempty"`
+	To       string `json:"to"`
 	Text     string `json:"text"`
 	RoomID   string `json:"room_id"`
 	UserName string `json:"username"`

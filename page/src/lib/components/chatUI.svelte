@@ -2,7 +2,7 @@
     import { messages, sendChatMessage } from "./manageWebSocketConn.svelte";
     import { user } from "./userName.svelte";
 
-    let { userName, selectedIp } = $props<{
+    let { userName: selectedUserName, selectedIp } = $props<{
         userName: string;
         selectedIp: string;
     }>();
@@ -10,12 +10,12 @@
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
     //get chat
-    let isGroupView = $derived(userName === "Group");
+    let isGroupView = $derived(selectedUserName === "Group");
 
     let currentChatMessages = $derived(
         messages.filter((msg) => {
             if (isGroupView) {
-                return msg.type === "group" && userName.startsWith("Group");
+                return msg.type === "group" && selectedUserName.startsWith("Group");
             }
             if (msg.type === "private") {
                 const expectedRoomId = [user.initialIp, selectedIp]
@@ -39,7 +39,7 @@
             user.initialIp,
             selectedIp,
             messageText.trim(),
-            userName === "Group" ? "group" : "private",
+            selectedUserName === "Group" ? "group" : "private",
             user.userName,
         );
         messageText = "";
@@ -60,7 +60,7 @@
 
 <main class="chat-main">
     <div class="title-container">
-        <h1 id="name-title">{userName} <span><i>{selectedIp}</i></span></h1>
+        <h1 id="name-title">{selectedUserName} <span><i>{selectedIp}</i></span></h1>
     </div>
 
     <div class="messages-list" bind:this={chatContainer}>
@@ -68,9 +68,14 @@
             <div
                 class="message-bubble"
                 class:sent={msg.from === user.initialIp}
-                class:received={msg.from === selectedIp}
+                class:received={msg.from !== user.initialIp}
             >
-                <div class="message-text">{msg.text}</div>
+                <div class="message-text">
+                    <strong class="sender-name"
+                        >{msg.userName}:</strong
+                    >
+                    {msg.text}
+                </div>
             </div>
         {/each}
     </div>
@@ -145,6 +150,13 @@
         display: flex;
         gap: 0.75rem;
         align-items: center;
+    }
+
+    .sender-name {
+        display: inline-block;
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-right: 0.25rem;
     }
 
     input {

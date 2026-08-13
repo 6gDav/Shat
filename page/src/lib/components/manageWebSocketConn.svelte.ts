@@ -9,10 +9,10 @@ interface UserObj {
 interface ChatMessage {
     type: string,
     from: string;
-    to?: string;
+    to: string;
     text: string;
     roomId: string;
-    // userName: string;
+    userName: string;
 }
 
 export let usersList = $state<UserObj[]>([]);
@@ -50,9 +50,9 @@ function startHandShake() {
                     to: res.to,
                     text: res.text,
                     roomId: res.room_id,
-                    // userName: res.userName,
+                    userName: res.username,
                 });
-            } 
+            }
             //group chat
             else if (res.type === "group" && res.text && res.from) {
                 messages.push({
@@ -61,7 +61,7 @@ function startHandShake() {
                     to: res.to,
                     text: res.text,
                     roomId: res.room_id,
-                    // userName: res.userName
+                    userName: res.username
                 });
             }
         } catch (err) {
