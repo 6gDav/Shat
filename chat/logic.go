@@ -12,11 +12,13 @@ import (
 )
 
 func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgrader) {
+	// Get user IP address
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return
 	}
 
+	// Upgrade HTTP connection to WebSocket
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fyne.Do(func() {
@@ -25,17 +27,26 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		return
 	}
 
-	//managger
 	ClientsMu.Lock()
 	client, exists := Clients[ip]
-	ClientsMu.Unlock()
 
-	if !validateClientExistence(exists, conn) {
+	if !exists {
+		ClientsMu.Unlock()
+		validateClientExistence(false, conn) // Reject if client is not registered
 		return
 	}
 
-	chatManagger := NewClientSession(client, conn, ip)
+	// Close previous connection if it exists
+	if client.Conn != nil {
+		_ = client.Conn.Close()
+	}
 
-	//start and shotdown connection
-	chatManagger.ManageConnection()
+	// Update connection in the struct AND write it back to the map!
+	client.Conn = conn
+	Clients[ip] = client
+	ClientsMu.Unlock()
+
+	// Initialize and start the chat session
+	chatManager := NewClientSession(client, conn, ip)
+	chatManager.ManageConnection()
 }

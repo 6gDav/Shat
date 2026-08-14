@@ -9,6 +9,7 @@ async function redirectUser() {
 
         if (shouldRedirect.redirect && shouldRedirect.userName) {
             user.userName = shouldRedirect.userName;
+            user.initialIp = shouldRedirect.ipAddress;
             goto("/pages/Dashboard");
         }
     } catch (error) {

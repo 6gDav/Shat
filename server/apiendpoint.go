@@ -38,8 +38,9 @@ func SetAPIendpoint() {
 		}
 
 		type RedirectResponse struct {
-			Redirect bool   `json:"redirect"`
-			UserName string `json:"userName,omitempty"`
+			Redirect  bool   `json:"redirect"`
+			UserName  string `json:"userName"`
+			IpAddress string `json:"ipAddress"`
 		}
 
 		var response RedirectResponse
@@ -48,8 +49,9 @@ func SetAPIendpoint() {
 		client, exists := chat.Clients[ip]
 		if exists {
 			response = RedirectResponse{
-				Redirect: true,
-				UserName: client.Name,
+				Redirect:  true,
+				UserName:  client.Name,
+				IpAddress: client.IP,
 			}
 		} else {
 			response = RedirectResponse{
@@ -61,8 +63,6 @@ func SetAPIendpoint() {
 		if response.Redirect {
 			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
 		}
-
-		w.Header().Set("Content-Type", "application/json")
 
 		if err := json.NewEncoder(w).Encode(response); err != nil {
 			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
