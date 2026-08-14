@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"hosting_login_page/history"
 	"hosting_login_page/logs"
 
 	"fyne.io/fyne/v2"
@@ -72,21 +73,23 @@ func (cs *ManageChat) manageChat() {
 			break
 		}
 
+		targetIP := msg["target_ip"]
+		text := msg["text"]
+		username := msg["userName"]
+
 		messagetype := msg["type"]
 
 		switch messagetype {
 		case "private":
-			cs.privateChat(msg)
+			cs.PrivateChat(targetIP, text, username, true)
 		case "group":
 			cs.groupChat(msg)
 		}
 	}
 }
 
-func (cs ManageChat) privateChat(msg map[string]string) {
-	targetIP := msg["target_ip"]
-	text := msg["text"]
-	username := msg["userName"]
+func (cs ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
+	roomId := generateRoomID(cs.IP, targetIP)
 
 	//out
 	outMsg := ChatMessage{
@@ -94,7 +97,7 @@ func (cs ManageChat) privateChat(msg map[string]string) {
 		From:     cs.IP,
 		To:       targetIP,
 		Text:     text,
-		RoomID:   generateRoomID(cs.IP, targetIP),
+		RoomID:   roomId,
 		UserName: username,
 	}
 
@@ -109,6 +112,15 @@ func (cs ManageChat) privateChat(msg map[string]string) {
 			fyne.Do(func() {
 				logs.Logs.Add(widget.NewLabel("Error occurred while trying to send message: " + err.Error()))
 			})
+		}
+
+		if saveChat {
+			history.ChatStoreMu.Lock()
+			history.ChatHistory[roomId] = append(history.ChatHistory[roomId], history.ChatMessage{
+				Ip:      cs.IP,
+				Message: text,
+			})
+			history.ChatStoreMu.Unlock()
 		}
 	}
 
