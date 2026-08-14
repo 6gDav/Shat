@@ -83,7 +83,7 @@ func (cs *ManageChat) manageChat() {
 		case "private":
 			cs.PrivateChat(targetIP, text, username, true)
 		case "group":
-			cs.groupChat(msg)
+			cs.GroupChat(text, username, true)
 		}
 	}
 }
@@ -117,8 +117,9 @@ func (cs ManageChat) PrivateChat(targetIP string, text string, username string, 
 		if saveChat {
 			history.ChatStoreMu.Lock()
 			history.ChatHistory[roomId] = append(history.ChatHistory[roomId], history.ChatMessage{
-				Ip:      cs.IP,
-				Message: text,
+				Ip:       cs.IP,
+				UserName: username,
+				Message:  text,
 			})
 			history.ChatStoreMu.Unlock()
 		}
@@ -129,9 +130,7 @@ func (cs ManageChat) PrivateChat(targetIP string, text string, username string, 
 	}
 }
 
-func (cs ManageChat) groupChat(msg map[string]string) {
-	text := msg["text"]
-	username := msg["userName"]
+func (cs ManageChat) GroupChat(text string, username string, saveChat bool) {
 
 	ClientsMu.RLock()
 	clientsCopy := make([]*Client, 0, len(Clients))
@@ -141,6 +140,16 @@ func (cs ManageChat) groupChat(msg map[string]string) {
 		}
 	}
 	ClientsMu.RUnlock()
+
+	if saveChat {
+		history.ChatStoreMu.Lock()
+		history.ChatHistory["Group"] = append(history.ChatHistory["Group"], history.ChatMessage{
+			Ip:       cs.IP,
+			UserName: username,
+			Message:  text,
+		})
+		history.ChatStoreMu.Unlock()
+	}
 
 	for _, client := range clientsCopy {
 		outMsg := ChatMessage{

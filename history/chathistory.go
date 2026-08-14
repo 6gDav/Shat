@@ -3,8 +3,9 @@ package history
 import "sync"
 
 type ChatMessage struct {
-	Ip      string
-	Message string
+	Ip       string
+	UserName string
+	Message  string
 }
 
 var (
