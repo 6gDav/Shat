@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"hosting_login_page/chat"
 	"hosting_login_page/logs"
-	"net"
 	"net/http"
 
 	"fyne.io/fyne/v2/widget"
@@ -31,7 +30,7 @@ func SetAPIendpoint() {
 	})
 
 	mux.HandleFunc("GET /redirectuser", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := getIpAdress(r)
+		ip, _, err := getIpAddressForEndPints(r)
 		if err != nil {
 			http.Error(w, "Invalid IP address", http.StatusBadRequest)
 			return
@@ -73,7 +72,7 @@ func SetAPIendpoint() {
 	//submit user name
 	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
-		ip, _, _ := getIpAdress(r)
+		ip, _, _ := getIpAddressForEndPints(r)
 
 		//Name fetch
 		var data struct {
@@ -115,7 +114,7 @@ func SetAPIendpoint() {
 
 	mux.HandleFunc("PATCH /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
 		//Ip adress fetch
-		ip, _, err := getIpAdress(r)
+		ip, _, err := getIpAddressForEndPints(r)
 
 		if err != nil {
 			logMsg := fmt.Sprintf("Error occurred while this user %s tried to change username: %v", ip, err)
@@ -168,13 +167,4 @@ func SetAPIendpoint() {
 	})
 
 	portStart(mux)
-}
-
-func getIpAdress(r *http.Request) (string, string, error) {
-	ip, port, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		ip = r.RemoteAddr
-	}
-
-	return ip, port, err
 }

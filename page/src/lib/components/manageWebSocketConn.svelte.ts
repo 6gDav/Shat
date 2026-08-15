@@ -9,7 +9,7 @@ interface UserObj {
 interface ChatMessage {
     type: string,
     from: string;
-    to: string;
+    to?: string;
     text: string;
     roomId: string;
     userName: string;
@@ -41,6 +41,26 @@ function startHandShake() {
                 }));
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
+            }
+            //private chat history
+            else if (res.type === "private_history" && res.text && res.from) {
+                messages.push({
+                    type: res.type,
+                    from: res.from,
+                    text: res.text,
+                    roomId: res.room_id,
+                    userName: res.username,
+                });
+            }
+            //group chat history
+            else if (res.type === "group_history" && res.text && res.from) {
+                messages.push({
+                    type: res.type,
+                    from: res.from,
+                    text: res.text,
+                    roomId: res.room_id,
+                    userName: res.username,
+                });
             }
             //private chat 
             else if (res.type === "private" && res.text && res.from) {

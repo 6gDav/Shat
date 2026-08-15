@@ -3,6 +3,7 @@ package chat
 import (
 	"hosting_login_page/history"
 	"hosting_login_page/logs"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
@@ -60,8 +61,6 @@ func (cs *ManageChat) ManageConnection() {
 }
 
 func (cs *ManageChat) manageChat() {
-	defer cs.Conn.Close()
-
 	for {
 		//in
 		var msg map[string]string
@@ -88,7 +87,7 @@ func (cs *ManageChat) manageChat() {
 	}
 }
 
-func (cs ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
+func (cs *ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
 	roomId := generateRoomID(cs.IP, targetIP)
 
 	//out
@@ -130,7 +129,7 @@ func (cs ManageChat) PrivateChat(targetIP string, text string, username string, 
 	}
 }
 
-func (cs ManageChat) GroupChat(text string, username string, saveChat bool) {
+func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 
 	ClientsMu.RLock()
 	clientsCopy := make([]*Client, 0, len(Clients))
@@ -166,6 +165,38 @@ func (cs ManageChat) GroupChat(text string, username string, saveChat bool) {
 			fyne.Do(func() {
 				logs.Logs.Add(widget.NewLabel("Error occurred while sending group message: " + err.Error()))
 			})
+		}
+	}
+}
+
+func (cs *ManageChat) SendChatHistory() {
+	history.ChatStoreMu.Lock()
+	defer history.ChatStoreMu.Unlock()
+
+	for roomIDKey, messagesValue := range history.ChatHistory {
+		if strings.Contains(roomIDKey, cs.IP) {
+			for _, msg := range messagesValue {
+				outMsg := ChatMessage{
+					Type:     "private_history",
+					From:     msg.Ip,
+					Text:     msg.Message,
+					RoomID:   roomIDKey,
+					UserName: msg.UserName,
+				}
+				_ = cs.Conn.WriteJSON(outMsg)
+			}
+		}
+		if roomIDKey == "Group" {
+			for _, msg := range messagesValue {
+				outMsg := ChatMessage{
+					Type:     "group_history",
+					From:     msg.Ip,
+					Text:     msg.Message,
+					RoomID:   "Group",
+					UserName: msg.UserName,
+				}
+				_ = cs.Conn.WriteJSON(outMsg)
+			}
 		}
 	}
 }

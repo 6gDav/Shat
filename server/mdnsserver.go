@@ -16,7 +16,7 @@ var domainName string = "loginpage"
 var URL string
 
 func SetMDNSserver() {
-	ipAddress, err := getIPAddress()
+	ipAddress, err := getIPAddressFormDNS()
 	if err != nil {
 		logs.Logs.Add(widget.NewLabel("Error occurred while trying to fetch the IP address: " + err.Error()))
 	}
