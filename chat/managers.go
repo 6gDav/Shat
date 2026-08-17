@@ -116,6 +116,7 @@ func (cs *ManageChat) PrivateChat(targetIP string, text string, username string,
 			history.ChatStoreMu.Lock()
 			history.ChatHistory[roomId] = append(history.ChatHistory[roomId], history.ChatMessage{
 				Ip:       cs.IP,
+				Type:     "private",
 				UserName: username,
 				Message:  text,
 			})
@@ -143,6 +144,7 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 		history.ChatStoreMu.Lock()
 		history.ChatHistory["Group"] = append(history.ChatHistory["Group"], history.ChatMessage{
 			Ip:       cs.IP,
+			Type:     "Group",
 			UserName: username,
 			Message:  text,
 		})

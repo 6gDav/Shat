@@ -11,7 +11,7 @@ interface ChatMessage {
     from: string;
     to?: string;
     text: string;
-    roomId: string;
+    roomId?: string;
     userName: string;
 }
 
@@ -35,6 +35,16 @@ function startHandShake() {
 
             const data = await response.json()
 
+            if (Array.isArray(data)) {
+                data.forEach(element => {
+                    messages.push({
+                        type: element.type,
+                        from: element.ip,
+                        text: element.message,
+                        userName: element.username,
+                    });
+                });
+            }
         } catch (err) {
             console.error(err)
         }
