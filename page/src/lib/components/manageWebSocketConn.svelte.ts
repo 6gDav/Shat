@@ -38,7 +38,7 @@ function startHandShake() {
             if (Array.isArray(data)) {
                 const historyMessages: ChatMessage[] = data.map((element: any) => ({
                     type: element.type,
-                    from: element.ip,
+                    from: element.fromip,
                     text: element.message,
                     roomId: element.roomId,
                     userName: element.username,

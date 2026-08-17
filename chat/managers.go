@@ -115,11 +115,11 @@ func (cs *ManageChat) PrivateChat(targetIP string, text string, username string,
 		if saveChat {
 			history.ChatStoreMu.Lock()
 			history.ChatHistory[roomId] = append(history.ChatHistory[roomId], history.ChatMessage{
-				Ip:       cs.IP,
 				Type:     "private",
-				UserName: username,
+				FromIp:   cs.IP,
 				Message:  text,
 				RoomId:   roomId,
+				UserName: username,
 			})
 			history.ChatStoreMu.Unlock()
 		}
@@ -144,11 +144,11 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 	if saveChat {
 		history.ChatStoreMu.Lock()
 		history.ChatHistory["Group"] = append(history.ChatHistory["Group"], history.ChatMessage{
-			Ip:       cs.IP,
 			Type:     "group",
-			UserName: username,
+			FromIp:   cs.IP,
 			Message:  text,
 			RoomId:   "Group",
+			UserName: username,
 		})
 		history.ChatStoreMu.Unlock()
 	}
@@ -171,35 +171,3 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 		}
 	}
 }
-
-// func (cs *ManageChat) SendChatHistory() {
-// 	history.ChatStoreMu.Lock()
-// 	defer history.ChatStoreMu.Unlock()
-
-// 	for roomIDKey, messagesValue := range history.ChatHistory {
-// 		if strings.Contains(roomIDKey, cs.IP) {
-// 			for _, msg := range messagesValue {
-// 				outMsg := ChatMessage{
-// 					Type:     "private_history",
-// 					From:     msg.Ip,
-// 					Text:     msg.Message,
-// 					RoomID:   roomIDKey,
-// 					UserName: msg.UserName,
-// 				}
-// 				_ = cs.Conn.WriteJSON(outMsg)
-// 			}
-// 		}
-// 		if roomIDKey == "Group" {
-// 			for _, msg := range messagesValue {
-// 				outMsg := ChatMessage{
-// 					Type:     "group_history",
-// 					From:     msg.Ip,
-// 					Text:     msg.Message,
-// 					RoomID:   "Group",
-// 					UserName: msg.UserName,
-// 				}
-// 				_ = cs.Conn.WriteJSON(outMsg)
-// 			}
-// 		}
-// 	}
-// }

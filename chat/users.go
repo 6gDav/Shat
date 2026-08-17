@@ -48,7 +48,7 @@ func BroadcastUserNameList() {
 	namesData, err := json.Marshal(payload)
 	if err != nil {
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("JSON marshalling error: " + err.Error()))
+			logs.Logs.Add(widget.NewLabel("Error occured while trying to convert the user list to a proper form " + err.Error()))
 		})
 		return
 	}

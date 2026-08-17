@@ -3,11 +3,11 @@ package history
 import "sync"
 
 type ChatMessage struct {
-	Ip       string `json:"ip"`
 	Type     string `json:"type"`
-	UserName string `json:"username"`
+	FromIp   string `json:"fromip"`
 	Message  string `json:"message"`
 	RoomId   string `json:"roomId"`
+	UserName string `json:"username"`
 }
 
 var (
