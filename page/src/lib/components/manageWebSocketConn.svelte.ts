@@ -23,8 +23,21 @@ let chat: WebSocket;
 function startHandShake() {
     chat = new WebSocket(`ws://${mDNSname}:${port}/setws`);
 
-    chat.onopen = () => {
+    chat.onopen = async () => {
         console.log("WebSocket is active.");
+
+        try {
+            const response = await fetch(`http://${mDNSname}:${port}/restorechathistory`)
+
+            if (!response.ok) {
+                throw new Error("Error occured while trying to fetch the chat history.")
+            }
+
+            const data = await response.json()
+
+        } catch (err) {
+            console.error(err)
+        }
     };
 
     chat.onmessage = async (event) => {
@@ -43,25 +56,25 @@ function startHandShake() {
                 usersList.splice(0, usersList.length, ...parsedUsers);
             }
             //private chat history
-            else if (res.type === "private_history" && res.text && res.from) {
-                messages.push({
-                    type: res.type,
-                    from: res.from,
-                    text: res.text,
-                    roomId: res.room_id,
-                    userName: res.username,
-                });
-            }
-            //group chat history
-            else if (res.type === "group_history" && res.text && res.from) {
-                messages.push({
-                    type: res.type,
-                    from: res.from,
-                    text: res.text,
-                    roomId: res.room_id,
-                    userName: res.username,
-                });
-            }
+            // else if (res.type === "private_history" && res.text && res.from) {
+            //     messages.push({
+            //         type: res.type,
+            //         from: res.from,
+            //         text: res.text,
+            //         roomId: res.room_id,
+            //         userName: res.username,
+            //     });
+            // }
+            // //group chat history
+            // else if (res.type === "group_history" && res.text && res.from) {
+            //     messages.push({
+            //         type: res.type,
+            //         from: res.from,
+            //         text: res.text,
+            //         roomId: res.room_id,
+            //         userName: res.username,
+            //     });
+            // }
             //private chat 
             else if (res.type === "private" && res.text && res.from) {
                 messages.push({

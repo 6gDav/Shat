@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"hosting_login_page/chat"
+	"hosting_login_page/history"
 	"hosting_login_page/logs"
 	"net/http"
+	"strings"
 
 	"fyne.io/fyne/v2/widget"
 	"github.com/gorilla/websocket"
@@ -64,6 +66,31 @@ func SetAPIendpoint() {
 		}
 
 		if err := json.NewEncoder(w).Encode(response); err != nil {
+			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
+			return
+		}
+	})
+
+	mux.HandleFunc("GET /restorechathistory", func(w http.ResponseWriter, r *http.Request) {
+		ip, _, err := getIpAddressForEndPints(r)
+		if err != nil {
+			http.Error(w, "Invalid IP address", http.StatusBadRequest)
+			return
+		}
+
+		var historyList []history.ChatMessage
+
+		history.ChatStoreMu.Lock()
+		defer history.ChatStoreMu.Unlock()
+
+		for ipAddressKey, message := range history.ChatHistory {
+			if strings.Contains(ipAddressKey, ip) {
+				historyList = append(historyList, message...)
+			} else if ipAddressKey == "Group" {
+				historyList = append(historyList, message...)
+			}
+		}
+		if err := json.NewEncoder(w).Encode(historyList); err != nil {
 			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
 			return
 		}
