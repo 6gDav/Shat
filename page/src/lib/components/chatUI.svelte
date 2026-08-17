@@ -207,4 +207,10 @@
     button:active {
         transform: translateY(0);
     }
+
+    @media (max-width: 765px) { 
+        input {
+            width: 65%;
+        }
+    }
 </style>
