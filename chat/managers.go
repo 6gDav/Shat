@@ -119,6 +119,7 @@ func (cs *ManageChat) PrivateChat(targetIP string, text string, username string,
 				Type:     "private",
 				UserName: username,
 				Message:  text,
+				RoomId:   roomId,
 			})
 			history.ChatStoreMu.Unlock()
 		}
@@ -147,6 +148,7 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 			Type:     "Group",
 			UserName: username,
 			Message:  text,
+			RoomId:   "Group",
 		})
 		history.ChatStoreMu.Unlock()
 	}

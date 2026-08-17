@@ -11,7 +11,7 @@ interface ChatMessage {
     from: string;
     to?: string;
     text: string;
-    roomId?: string;
+    roomId: string;
     userName: string;
 }
 
@@ -36,14 +36,17 @@ function startHandShake() {
             const data = await response.json()
 
             if (Array.isArray(data)) {
-                data.forEach(element => {
-                    messages.push({
-                        type: element.type,
-                        from: element.ip,
-                        text: element.message,
-                        userName: element.username,
-                    });
-                });
+                const historyMessages: ChatMessage[] = data.map((element: any) => ({
+                    type: element.type,
+                    from: element.ip,
+                    text: element.message,
+                    roomId: element.roomId,
+                    userName: element.username,
+                }));
+                console.log(historyMessages)
+
+                messages.length = 0;
+                messages.push(...historyMessages);
             }
         } catch (err) {
             console.error(err)
