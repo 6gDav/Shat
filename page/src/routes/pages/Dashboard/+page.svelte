@@ -2,12 +2,11 @@
     import {
         manageConnection,
         usersList,
-    } from "$lib/components/manageWebSocketConn.svelte";
-    import { user } from "$lib/components/userName.svelte";
-
-    import ChangeUserName from "$lib/components/ui/changeName.svelte";
+    } from "$lib/components/logic/manageWebSocketConn.svelte";
+    import { user } from "$lib/components/logic/userName.svelte";
     import Chat from "$lib/components/ui/chatUI.svelte";
     import Activityindicator from "$lib/components/ui/activityindicator.svelte";
+    import ChangeUserName from "$lib/components/ui/changeName.svelte"
     import UserNotFoundImage from "$lib/assets/user-not-found.png";
 
     let runActivityIndicator = $state<boolean>(true);

@@ -1,7 +1,8 @@
 <script lang="ts">
+    import redirectUser from "$lib/components/logic/redirectuser.svelte";
     import Registration from "$lib/components/ui/registration.svelte";
-    import redirectUser from "$lib/components/redirectuser.svelte"
     import { onMount } from "svelte";
+    
     
     onMount(() => {
         redirectUser()

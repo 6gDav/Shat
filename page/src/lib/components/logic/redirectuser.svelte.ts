@@ -1,6 +1,6 @@
 import { goto } from "$app/navigation";
-import { user } from "$lib/components/userName.svelte"; 
-import { port, mDNSname } from "$lib/components/port.svelte";
+import { user } from "$lib/components/logic/userName.svelte"; 
+import { port, mDNSname } from "$lib/components/logic/port.svelte";
 
 async function redirectUser() {
     try {

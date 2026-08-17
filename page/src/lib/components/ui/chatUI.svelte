@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { messages, sendChatMessage } from "../manageWebSocketConn.svelte";
-    import { user } from "../userName.svelte";
+    import { messages, sendChatMessage } from "../logic/manageWebSocketConn.svelte";
+    import { user } from "../logic/userName.svelte";
 
     let { userName: selectedUserName, selectedIp } = $props<{
         userName: string;
