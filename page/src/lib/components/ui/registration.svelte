@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import ActivityIndicator from "$lib/components/activityindicator.svelte";
+    import ActivityIndicator from "$lib/components/ui/activityindicator.svelte";
     import { port, mDNSname } from "$lib/components/port.svelte";
     import { user } from "$lib/components/userName.svelte";
 

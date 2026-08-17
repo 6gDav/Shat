@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Registration from "$lib/components/registration.svelte";
+    import Registration from "$lib/components/ui/registration.svelte";
     import redirectUser from "$lib/components/redirectuser.svelte"
     import { onMount } from "svelte";
     
