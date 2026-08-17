@@ -145,7 +145,7 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 		history.ChatStoreMu.Lock()
 		history.ChatHistory["Group"] = append(history.ChatHistory["Group"], history.ChatMessage{
 			Ip:       cs.IP,
-			Type:     "Group",
+			Type:     "group",
 			UserName: username,
 			Message:  text,
 			RoomId:   "Group",

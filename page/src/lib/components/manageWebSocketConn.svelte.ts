@@ -68,28 +68,8 @@ function startHandShake() {
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
             }
-            //private chat history
-            // else if (res.type === "private_history" && res.text && res.from) {
-            //     messages.push({
-            //         type: res.type,
-            //         from: res.from,
-            //         text: res.text,
-            //         roomId: res.room_id,
-            //         userName: res.username,
-            //     });
-            // }
-            // //group chat history
-            // else if (res.type === "group_history" && res.text && res.from) {
-            //     messages.push({
-            //         type: res.type,
-            //         from: res.from,
-            //         text: res.text,
-            //         roomId: res.room_id,
-            //         userName: res.username,
-            //     });
-            // }
             //private chat 
-            else if (res.type === "private" && res.text && res.from) {
+            else if ((res.type === "private" || res.type === "group") && res.text && res.from) {
                 messages.push({
                     type: res.type,
                     from: res.from,
@@ -97,17 +77,6 @@ function startHandShake() {
                     text: res.text,
                     roomId: res.room_id,
                     userName: res.username,
-                });
-            }
-            //group chat
-            else if (res.type === "group" && res.text && res.from) {
-                messages.push({
-                    type: res.type,
-                    from: res.from,
-                    to: res.to,
-                    text: res.text,
-                    roomId: res.room_id,
-                    userName: res.username
                 });
             }
         } catch (err) {
