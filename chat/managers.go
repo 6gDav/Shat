@@ -87,7 +87,7 @@ func (cs *ManageChat) manageChat() {
 }
 
 func (cs *ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
-	roomId := generateRoomID(cs.IP, targetIP)
+	roomId := GenerateRoomID(cs.IP, targetIP)
 
 	//out
 	outMsg := ChatMessage{

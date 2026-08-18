@@ -1,4 +1,4 @@
-package chat
+package helper
 
 func GenerateRoomID(ip1, ip2 string) string {
 	if ip1 < ip2 {

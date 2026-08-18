@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"hosting_login_page/chat/helper"
 	"hosting_login_page/logs"
 
 	"net"
@@ -32,7 +33,7 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 
 	if !exists {
 		ClientsMu.Unlock()
-		validateClientExistence(false, conn) // Reject if client is not registered
+		helper.ValidateClientExistence(false, conn) // Reject if client is not registered
 		return
 	}
 
