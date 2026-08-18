@@ -34,7 +34,7 @@ func (cs *ManageChat) ManageConnection() {
 	cs.Client.Conn = cs.Conn
 	chat.ClientsMu.Unlock()
 
-	chat.BroadcastUserNameList()
+	broadcastUserNameList()
 	defer func() {
 		cs.Conn.Close()
 
@@ -44,7 +44,7 @@ func (cs *ManageChat) ManageConnection() {
 		}
 		chat.ClientsMu.Unlock()
 
-		chat.BroadcastUserNameList()
+		broadcastUserNameList()
 	}()
 	cs.manageChat()
 }
