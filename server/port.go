@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"hosting_login_page/logs"
-	"net"
+	"hosting_login_page/server/helper"
 	"net/http"
 
 	"fyne.io/fyne/v2"
@@ -14,6 +14,7 @@ import (
 var port int = 3000
 
 func portStart(muxInstance *http.ServeMux) {
+	port := 3000
 	go func() {
 		for i := 0; i < 10; i++ {
 			port = port + i
@@ -30,7 +31,7 @@ func portStart(muxInstance *http.ServeMux) {
 
 			err := HttpServer.ListenAndServe()
 
-			if err != nil && isPortInUse(err) {
+			if err != nil && helper.IsPortInUse(err) {
 				msg := fmt.Sprintf("This port is occupied %d ", port)
 				fyne.Do(func() {
 					logs.Logs.Add(widget.NewLabel(msg))
@@ -53,12 +54,4 @@ func portStart(muxInstance *http.ServeMux) {
 			}
 		}
 	}()
-}
-
-func isPortInUse(err error) bool {
-	var opErr *net.OpError
-	if errors.As(err, &opErr) {
-		return opErr.Op == "listen"
-	}
-	return false
 }

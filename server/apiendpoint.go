@@ -1,197 +1,26 @@
 package server
 
 import (
-	"encoding/json"
-	"fmt"
-	"hosting_login_page/chat"
-	"hosting_login_page/history"
-	"hosting_login_page/logs"
+	"hosting_login_page/server/logic"
 	"net/http"
-	"strings"
-
-	"fyne.io/fyne/v2/widget"
-	"github.com/gorilla/websocket"
 )
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
 
 var HttpServer *http.Server
 
 func SetAPIendpoint() {
 	mux := http.NewServeMux()
-	fileServer := http.FileServer(http.Dir("./page/build"))
 
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		fileServer.ServeHTTP(w, r)
-	})
+	mux.HandleFunc("GET /", logic.ServePage)
 
-	mux.HandleFunc("GET /redirectuser", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := getIpAddressForEndPints(r)
-		if err != nil {
-			http.Error(w, "Invalid IP address", http.StatusBadRequest)
-			return
-		}
+	mux.HandleFunc("GET /redirectuser", logic.RedirectUser)
 
-		type RedirectResponse struct {
-			Redirect  bool   `json:"redirect"`
-			UserName  string `json:"userName"`
-			IpAddress string `json:"ipAddress"`
-		}
+	mux.HandleFunc("GET /restorechathistory", logic.RestoreChatHistory)
 
-		var response RedirectResponse
+	mux.HandleFunc("POST /submit", logic.SubmitUserName)
 
-		chat.ClientsMu.Lock()
-		client, exists := chat.Clients[ip]
-		if exists {
-			response = RedirectResponse{
-				Redirect:  true,
-				UserName:  client.Name,
-				IpAddress: client.IP,
-			}
-		} else {
-			response = RedirectResponse{
-				Redirect: false,
-			}
-		}
-		chat.ClientsMu.Unlock()
+	mux.HandleFunc("PATCH /submitnewusername", logic.SubmitNewUserName)
 
-		if response.Redirect {
-			logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
-		}
-
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
-			return
-		}
-	})
-
-	mux.HandleFunc("GET /restorechathistory", func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := getIpAddressForEndPints(r)
-		if err != nil {
-			http.Error(w, "Invalid IP address", http.StatusBadRequest)
-			return
-		}
-
-		var historyList []history.ChatMessage
-
-		history.ChatStoreMu.Lock()
-		defer history.ChatStoreMu.Unlock()
-
-		for ipAddressKey, message := range history.ChatHistory {
-			if strings.Contains(ipAddressKey, ip) {
-				historyList = append(historyList, message...)
-			} else if ipAddressKey == "Group" {
-				historyList = append(historyList, message...)
-			}
-		}
-		if err := json.NewEncoder(w).Encode(historyList); err != nil {
-			http.Error(w, "JSON encoding error", http.StatusInternalServerError)
-			return
-		}
-	})
-
-	//submit user name
-	mux.HandleFunc("POST /submit", func(w http.ResponseWriter, r *http.Request) {
-		//Ip adress fetch
-		ip, _, _ := getIpAddressForEndPints(r)
-
-		//Name fetch
-		var data struct {
-			Name string `json:"name"`
-		}
-
-		errdecode := json.NewDecoder(r.Body).Decode(&data)
-		if errdecode != nil {
-			logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
-			http.Error(w, "Bad request", http.StatusBadRequest)
-			return
-		}
-		defer r.Body.Close()
-
-		chat.ClientsMu.Lock()
-		if _, exists := chat.Clients[ip]; !exists {
-			chat.Clients[ip] = &chat.Client{
-				IP:   ip,
-				Name: data.Name,
-				Conn: nil,
-			}
-			//Loging out
-			logMsg := fmt.Sprintf("%+v\n", chat.Clients)
-			logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
-		}
-		chat.ClientsMu.Unlock()
-
-		//Return 200 (Ok)
-		w.WriteHeader(http.StatusOK)
-
-		response := map[string]string{
-			"ip": ip,
-		}
-
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			logs.Logs.Add(widget.NewLabel("Failed to send ip andress to the client side: " + err.Error()))
-		}
-	})
-
-	mux.HandleFunc("PATCH /submitnewusername", func(w http.ResponseWriter, r *http.Request) {
-		//Ip adress fetch
-		ip, _, err := getIpAddressForEndPints(r)
-
-		if err != nil {
-			logMsg := fmt.Sprintf("Error occurred while this user %s tried to change username: %v", ip, err)
-			logs.Logs.Add(widget.NewLabel(logMsg))
-		}
-
-		//Name fetch
-		var data struct {
-			Name string `json:"name"`
-		}
-
-		defer func() {
-			r.Body.Close()
-			chat.BroadcastUserNameList()
-		}()
-
-		errdecode := json.NewDecoder(r.Body).Decode(&data)
-		if errdecode != nil {
-			logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
-			http.Error(w, "Bad request", http.StatusBadRequest)
-			return
-		}
-
-		chat.ClientsMu.Lock()
-		if client, exists := chat.Clients[ip]; exists {
-			client.Name = data.Name
-			logMessage := fmt.Sprintf("User name change on IP %s: The new name is: %s", ip, data.Name)
-			logs.Logs.Add(widget.NewLabel(logMessage))
-		}
-		chat.ClientsMu.Unlock()
-
-		//Return 200 (Ok)
-		w.WriteHeader(http.StatusOK)
-	})
-
-	mux.HandleFunc("GET /getusers", func(w http.ResponseWriter, r *http.Request) {
-		chat.ClientsMu.Lock()
-		err := json.NewEncoder(w).Encode(chat.Clients)
-		chat.ClientsMu.Unlock()
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			logs.Logs.Add(widget.NewLabel("Error occured while trying to send the user data: " + err.Error()))
-		}
-	})
-
-	//HandShaking
-	mux.HandleFunc("GET /setws", func(w http.ResponseWriter, r *http.Request) {
-		chat.HandShake(w, r, &upgrader)
-	})
+	mux.HandleFunc("GET /setws", logic.WSHandsShake)
 
 	portStart(mux)
 }

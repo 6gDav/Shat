@@ -1,12 +1,11 @@
-package server
+package helper
 
 import (
 	"fmt"
 	"net"
-	"net/http"
 )
 
-func getIPAddressFormDNS() (net.IP, error) {
+func GetIPAddressFormDNS() (net.IP, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return nil, err
@@ -21,13 +20,4 @@ func getIPAddressFormDNS() (net.IP, error) {
 	}
 
 	return nil, fmt.Errorf("No active non-loopback IPv4 address found")
-}
-
-func getIpAddressForEndPints(r *http.Request) (string, string, error) {
-	ip, port, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		ip = r.RemoteAddr
-	}
-
-	return ip, port, err
 }
