@@ -14,7 +14,7 @@
         try {
             if (newName && newName != user.userName) {
                 const response = await fetch(
-                    `http://${mDNSname}:${port}/submitnewusername`,
+                    `http://${mDNSname}:${port}/user/new/name`,
                     {
                         method: "PATCH",
                         headers: {

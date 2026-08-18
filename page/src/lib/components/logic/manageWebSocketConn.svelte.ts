@@ -21,13 +21,13 @@ export let messages = $state<ChatMessage[]>([]);
 let chat: WebSocket;
 
 function startHandShake() {
-    chat = new WebSocket(`ws://${mDNSname}:${port}/setws`);
+    chat = new WebSocket(`ws://${mDNSname}:${port}/ws`);
 
     chat.onopen = async () => {
         console.log("WebSocket is active.");
 
         try {
-            const response = await fetch(`http://${mDNSname}:${port}/restorechathistory`)
+            const response = await fetch(`http://${mDNSname}:${port}/chats/history`)
 
             if (!response.ok) {
                 throw new Error("Error occured while trying to fetch the chat history.")

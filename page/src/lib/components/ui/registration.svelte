@@ -18,8 +18,7 @@
         }
 
         try {
-            const response = await fetch(
-                `http://${mDNSname}:${port}/submit`,
+            const response = await fetch(`http://${mDNSname}:${port}/user/username`,
                 {
                     method: "POST",
                     headers: {

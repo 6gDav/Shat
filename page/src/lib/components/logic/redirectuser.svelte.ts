@@ -4,7 +4,7 @@ import { port, mDNSname } from "$lib/components/logic/port.svelte";
 
 async function redirectUser() {
     try {
-        let response = await fetch(`http://${mDNSname}:${port}/redirectuser`);
+        let response = await fetch(`http://${mDNSname}:${port}/user/redirect`);
         let shouldRedirect = await response.json();
 
         if (shouldRedirect.redirect && shouldRedirect.userName) {

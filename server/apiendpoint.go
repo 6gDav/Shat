@@ -12,15 +12,15 @@ func SetAPIendpoint() {
 
 	mux.HandleFunc("GET /", logic.ServePage)
 
-	mux.HandleFunc("GET /redirectuser", logic.RedirectUser)
+	mux.HandleFunc("GET /user/redirect", logic.RedirectUser)
 
-	mux.HandleFunc("GET /restorechathistory", logic.RestoreChatHistory)
+	mux.HandleFunc("GET /chats/history", logic.RestoreChatHistory)
 
-	mux.HandleFunc("POST /submit", logic.SubmitUserName)
+	mux.HandleFunc("POST /user/username", logic.SubmitUserName)
 
-	mux.HandleFunc("PATCH /submitnewusername", logic.SubmitNewUserName)
+	mux.HandleFunc("PATCH /user/new/name", logic.SubmitNewUserName)
 
-	mux.HandleFunc("GET /setws", logic.WSHandsShake)
+	mux.HandleFunc("GET /ws", logic.WSHandsShake)
 
 	portStart(mux)
 }
