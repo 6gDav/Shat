@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 	"hosting_login_page/chat/helper"
 	"hosting_login_page/logs"
 
@@ -29,27 +29,27 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		return
 	}
 
-	chat.ClientsMu.Lock()
-	client, exists := chat.Clients[ip]
+	client.ClientsMu.Lock()
+	user, exists := client.Clients[ip]
 
 	if !exists {
-		chat.ClientsMu.Unlock()
+		client.ClientsMu.Unlock()
 		helper.ValidateClientExistence(false, conn) // Reject if client is not registered
 		return
 	}
 
 	// Close previous connection if it exists
-	if client.Conn != nil {
-		_ = client.Conn.Close()
+	if user.Conn != nil {
+		_ = user.Conn.Close()
 	}
 
 	// Update connection in the struct AND write it back to the map!
-	client.Conn = conn
-	chat.Clients[ip] = client
-	chat.ClientsMu.Unlock()
+	user.Conn = conn
+	client.Clients[ip] = user
+	client.ClientsMu.Unlock()
 
 	// Initialize and start the chat session
-	chatManager := NewClientSession(client, conn, ip)
+	chatManager := NewClientSession(user, conn, ip)
 	//chatManager.SendChatHistory()
 	chatManager.ManageConnection()
 }

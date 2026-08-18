@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 
 	"github.com/gorilla/websocket"
 )
@@ -9,7 +9,7 @@ import (
 type ManageChat struct {
 	IP     string
 	Conn   *websocket.Conn
-	Client *chat.Client
+	Client *client.Client
 }
 
 type ChatMessage struct {
@@ -21,7 +21,7 @@ type ChatMessage struct {
 	UserName string `json:"username"`
 }
 
-func NewClientSession(client *chat.Client, conn *websocket.Conn, ip string) *ManageChat {
+func NewClientSession(client *client.Client, conn *websocket.Conn, ip string) *ManageChat {
 	return &ManageChat{
 		IP:     ip,
 		Conn:   conn,
@@ -30,21 +30,21 @@ func NewClientSession(client *chat.Client, conn *websocket.Conn, ip string) *Man
 }
 
 func (cs *ManageChat) ManageConnection() {
-	chat.ClientsMu.Lock()
+	client.ClientsMu.Lock()
 	cs.Client.Conn = cs.Conn
-	chat.ClientsMu.Unlock()
+	client.ClientsMu.Unlock()
 
-	broadcastUserNameList()
+	BroadcastUserNameList()
 	defer func() {
 		cs.Conn.Close()
 
-		chat.ClientsMu.Lock()
-		if c, ok := chat.Clients[cs.IP]; ok && c.Conn == cs.Conn {
+		client.ClientsMu.Lock()
+		if c, ok := client.Clients[cs.IP]; ok && c.Conn == cs.Conn {
 			c.Conn = nil
 		}
-		chat.ClientsMu.Unlock()
+		client.ClientsMu.Unlock()
 
-		broadcastUserNameList()
+		BroadcastUserNameList()
 	}()
 	cs.manageChat()
 }

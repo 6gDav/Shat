@@ -2,7 +2,8 @@ package logic
 
 import (
 	"encoding/json"
-	"hosting_login_page/chat"
+
+	"hosting_login_page/chat/client"
 	"hosting_login_page/logs"
 
 	"fyne.io/fyne/v2"
@@ -10,16 +11,16 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func broadcastUserNameList() {
+func BroadcastUserNameList() {
 	var users = make(map[string]string)
 
-	chat.ClientsMu.RLock()
-	for _, val := range chat.Clients {
+	client.ClientsMu.RLock()
+	for _, val := range client.Clients {
 		if val.Conn != nil {
 			users[val.IP] = val.Name
 		}
 	}
-	chat.ClientsMu.RUnlock()
+	client.ClientsMu.RUnlock()
 
 	payload := map[string]any{
 		"type": "USER_NAME_LIST",
@@ -34,10 +35,10 @@ func broadcastUserNameList() {
 		return
 	}
 
-	chat.ClientsMu.RLock()
-	defer chat.ClientsMu.RUnlock()
+	client.ClientsMu.RLock()
+	defer client.ClientsMu.RUnlock()
 
-	for ip, client := range chat.Clients {
+	for ip, client := range client.Clients {
 		if client.Conn != nil {
 			err := client.Conn.WriteMessage(websocket.TextMessage, namesData)
 			if err != nil {

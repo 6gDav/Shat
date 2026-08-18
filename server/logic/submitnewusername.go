@@ -3,7 +3,8 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
+	"hosting_login_page/chat/logic"
 	"hosting_login_page/logs"
 	"hosting_login_page/server/helper"
 	"net/http"
@@ -27,7 +28,7 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
 		r.Body.Close()
-		chat.BroadcastUserNameList()
+		logic.BroadcastUserNameList()
 	}()
 
 	errdecode := json.NewDecoder(r.Body).Decode(&data)
@@ -36,11 +37,11 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	chat.ClientsMu.Lock()
-	if client, exists := chat.Clients[ip]; exists {
+	client.ClientsMu.Lock()
+	if client, exists := client.Clients[ip]; exists {
 		client.Name = data.Name
 	}
-	chat.ClientsMu.Unlock()
+	client.ClientsMu.Unlock()
 
 	//Return 200 (Ok)
 	w.WriteHeader(http.StatusOK)

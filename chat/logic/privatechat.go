@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 	"hosting_login_page/chat/helper"
 	"hosting_login_page/history"
 	"hosting_login_page/logs"
@@ -23,10 +23,10 @@ func (cs *ManageChat) PrivateChat(targetIP string, text string, username string,
 		UserName: username,
 	}
 
-	chat.ClientsMu.RLock()
-	senderClient := chat.Clients[cs.IP]
-	targetClient := chat.Clients[targetIP]
-	chat.ClientsMu.RUnlock()
+	client.ClientsMu.RLock()
+	senderClient := client.Clients[cs.IP]
+	targetClient := client.Clients[targetIP]
+	client.ClientsMu.RUnlock()
 
 	if targetClient != nil && targetClient.Conn != nil {
 		err := targetClient.Conn.WriteJSON(outMsg)

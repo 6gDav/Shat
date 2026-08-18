@@ -3,7 +3,7 @@ package components
 import (
 	"context"
 	"fmt"
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 	"hosting_login_page/logs"
 	"hosting_login_page/server"
 	"time"
@@ -25,7 +25,7 @@ func ClosingHTTP() {
 		server.HttpServer = nil
 	}
 
-	chat.ClientsMu.Lock()
-	clear(chat.Clients)
-	chat.ClientsMu.Unlock()
+	client.ClientsMu.Lock()
+	clear(client.Clients)
+	client.ClientsMu.Unlock()
 }

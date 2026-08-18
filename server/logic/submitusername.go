@@ -2,8 +2,7 @@ package logic
 
 import (
 	"encoding/json"
-	"fmt"
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 	"hosting_login_page/logs"
 	"hosting_login_page/server/helper"
 	"net/http"
@@ -27,18 +26,15 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	chat.ClientsMu.Lock()
-	if _, exists := chat.Clients[ip]; !exists {
-		chat.Clients[ip] = &chat.Client{
+	client.ClientsMu.Lock()
+	if _, exists := client.Clients[ip]; !exists {
+		client.Clients[ip] = &client.Client{
 			IP:   ip,
 			Name: data.Name,
 			Conn: nil,
 		}
-		//Loging out
-		logMsg := fmt.Sprintf("%+v\n", chat.Clients)
-		logs.Logs.Add(widget.NewLabel("New user connected to the server:  " + logMsg))
 	}
-	chat.ClientsMu.Unlock()
+	client.ClientsMu.Unlock()
 
 	//Return 200 (Ok)
 	w.WriteHeader(http.StatusOK)

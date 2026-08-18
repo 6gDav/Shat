@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/client"
 	"hosting_login_page/history"
 	"hosting_login_page/logs"
 
@@ -11,14 +11,14 @@ import (
 
 func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 
-	chat.ClientsMu.RLock()
-	clientsCopy := make([]*chat.Client, 0, len(chat.Clients))
-	for _, client := range chat.Clients {
+	client.ClientsMu.RLock()
+	clientsCopy := make([]*client.Client, 0, len(client.Clients))
+	for _, client := range client.Clients {
 		if client != nil && client.Conn != nil {
 			clientsCopy = append(clientsCopy, client)
 		}
 	}
-	chat.ClientsMu.RUnlock()
+	client.ClientsMu.RUnlock()
 
 	if saveChat {
 		history.ChatStoreMu.Lock()
