@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"hosting_login_page/chat/helper"
 	"hosting_login_page/history"
 	"hosting_login_page/logs"
 
@@ -37,10 +38,6 @@ func (cs *ManageChat) ManageConnection() {
 	cs.Client.Conn = cs.Conn
 	ClientsMu.Unlock()
 
-	fyne.Do(func() {
-		logs.Logs.Add(widget.NewLabel("Client connected on this IP address: " + cs.IP))
-	})
-
 	BroadcastUserNameList()
 	defer func() {
 		cs.Conn.Close()
@@ -51,10 +48,7 @@ func (cs *ManageChat) ManageConnection() {
 		}
 		ClientsMu.Unlock()
 
-		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("The connection was interrupted on this IP address: " + cs.IP))
-			BroadcastUserNameList()
-		})
+		BroadcastUserNameList()
 	}()
 	cs.manageChat()
 }
@@ -65,9 +59,6 @@ func (cs *ManageChat) manageChat() {
 		var msg map[string]string
 		err := cs.Conn.ReadJSON(&msg)
 		if err != nil {
-			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Client disconnected on this IP address: " + cs.IP))
-			})
 			break
 		}
 
@@ -87,7 +78,7 @@ func (cs *ManageChat) manageChat() {
 }
 
 func (cs *ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
-	roomId := GenerateRoomID(cs.IP, targetIP)
+	roomId := helper.GenerateRoomID(cs.IP, targetIP)
 
 	//out
 	outMsg := ChatMessage{

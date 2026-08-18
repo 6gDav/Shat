@@ -47,7 +47,7 @@ func SetMDNSserver() {
 	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
 
 	parsedURL, _ := url.Parse(vuildedURL)
-	logs.Logs.Add(widget.NewHyperlink("Click to navigate to the page: ", parsedURL))
+	logs.Logs.Add(widget.NewHyperlink("Click to navigate to the page", parsedURL))
 
 	// sigChan := make(chan os.Signal, 1)
 	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

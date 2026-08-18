@@ -32,7 +32,6 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 
 	errdecode := json.NewDecoder(r.Body).Decode(&data)
 	if errdecode != nil {
-		logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
@@ -40,8 +39,6 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 	chat.ClientsMu.Lock()
 	if client, exists := chat.Clients[ip]; exists {
 		client.Name = data.Name
-		logMessage := fmt.Sprintf("User name change on IP %s: The new name is: %s", ip, data.Name)
-		logs.Logs.Add(widget.NewLabel(logMessage))
 	}
 	chat.ClientsMu.Unlock()
 

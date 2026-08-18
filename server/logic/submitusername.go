@@ -22,7 +22,6 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 
 	errdecode := json.NewDecoder(r.Body).Decode(&data)
 	if errdecode != nil {
-		logs.Logs.Add(widget.NewLabel("Failed to read JSON from IP address " + ip))
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
@@ -37,7 +36,7 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 		}
 		//Loging out
 		logMsg := fmt.Sprintf("%+v\n", chat.Clients)
-		logs.Logs.Add(widget.NewLabel("New user connected to teh server:  " + logMsg))
+		logs.Logs.Add(widget.NewLabel("New user connected to the server:  " + logMsg))
 	}
 	chat.ClientsMu.Unlock()
 

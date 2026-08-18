@@ -3,11 +3,8 @@ package logic
 import (
 	"encoding/json"
 	"hosting_login_page/chat"
-	"hosting_login_page/logs"
 	"hosting_login_page/server/helper"
 	"net/http"
-
-	"fyne.io/fyne/v2/widget"
 )
 
 func RedirectUser(w http.ResponseWriter, r *http.Request) {
@@ -39,10 +36,6 @@ func RedirectUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	chat.ClientsMu.Unlock()
-
-	if response.Redirect {
-		logs.Logs.Add(widget.NewLabel("User redirected to dashboard IP: " + ip))
-	}
 
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, "JSON encoding error", http.StatusInternalServerError)

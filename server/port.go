@@ -14,7 +14,6 @@ import (
 var port int = 3000
 
 func portStart(muxInstance *http.ServeMux) {
-	port := 3000
 	go func() {
 		for i := 0; i < 10; i++ {
 			port = port + i
