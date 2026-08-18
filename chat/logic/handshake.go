@@ -1,6 +1,7 @@
-package chat
+package logic
 
 import (
+	"hosting_login_page/chat"
 	"hosting_login_page/chat/helper"
 	"hosting_login_page/logs"
 
@@ -28,11 +29,11 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 		return
 	}
 
-	ClientsMu.Lock()
-	client, exists := Clients[ip]
+	chat.ClientsMu.Lock()
+	client, exists := chat.Clients[ip]
 
 	if !exists {
-		ClientsMu.Unlock()
+		chat.ClientsMu.Unlock()
 		helper.ValidateClientExistence(false, conn) // Reject if client is not registered
 		return
 	}
@@ -44,8 +45,8 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 
 	// Update connection in the struct AND write it back to the map!
 	client.Conn = conn
-	Clients[ip] = client
-	ClientsMu.Unlock()
+	chat.Clients[ip] = client
+	chat.ClientsMu.Unlock()
 
 	// Initialize and start the chat session
 	chatManager := NewClientSession(client, conn, ip)

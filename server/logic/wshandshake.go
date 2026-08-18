@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat"
+	"hosting_login_page/chat/logic"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -16,5 +16,5 @@ var upgrader = websocket.Upgrader{
 }
 
 func WSHandsShake(w http.ResponseWriter, r *http.Request) {
-	chat.HandShake(w, r, &upgrader)
+	logic.HandShake(w, r, &upgrader)
 }
