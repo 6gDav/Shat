@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bytes"
 	"encoding/json"
 	"hosting_login_page/history"
 	"net/http"
@@ -23,7 +24,7 @@ func TestServePage(t *testing.T) {
 }
 
 func TestRedirectUser(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req := httptest.NewRequest(http.MethodGet, "/user/redirect", nil)
 	req.RemoteAddr = "192.0.2.1:1234" //TEST-NET-1 an IP address for tests
 
 	rec := httptest.NewRecorder()
@@ -75,7 +76,7 @@ func TestRestoreChatHistory(t *testing.T) {
 	}
 	history.ChatStoreMu.Unlock()
 
-	req := httptest.NewRequest(http.MethodGet, "/restore-history", nil)
+	req := httptest.NewRequest(http.MethodGet, "/chats/history", nil)
 
 	req.RemoteAddr = testIP + ":12345"
 
@@ -91,5 +92,21 @@ func TestRestoreChatHistory(t *testing.T) {
 	err := json.Unmarshal(rec.Body.Bytes(), &responseList)
 	if err != nil {
 		t.Fatalf("The response is not a the valid form: %v", err)
+	}
+}
+
+func TestSubmitUserName(t *testing.T) {
+	requestBody := []byte(`{"name": "John Doe"}`)
+
+	req, _ := http.NewRequest(http.MethodPost, "/user/username", bytes.NewBuffer(requestBody))
+
+	req.RemoteAddr = "192.0.2.1:1234"
+
+	rr := httptest.NewRecorder()
+
+	SubmitUserName(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Expected 200, got %d.", http.StatusOK)
 	}
 }
