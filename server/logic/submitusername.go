@@ -3,11 +3,8 @@ package logic
 import (
 	"encoding/json"
 	"hosting_login_page/chat/client"
-	"hosting_login_page/logs"
 	"hosting_login_page/server/helper"
 	"net/http"
-
-	"fyne.io/fyne/v2/widget"
 )
 
 func SubmitUserName(w http.ResponseWriter, r *http.Request) {
@@ -38,12 +35,4 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 
 	//Return 200 (Ok)
 	w.WriteHeader(http.StatusOK)
-
-	response := map[string]string{
-		"ip": ip,
-	}
-
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		logs.Logs.Add(widget.NewLabel("Failed to send ip andress to the client side: " + err.Error()))
-	}
 }

@@ -110,3 +110,19 @@ func TestSubmitUserName(t *testing.T) {
 		t.Fatalf("Expected 200, got %d.", http.StatusOK)
 	}
 }
+
+func TestSubmitNewUserName(t *testing.T) {
+	requestBody := []byte(`{"name": "John Doe2"}`)
+
+	req, _ := http.NewRequest(http.MethodPost, "/user/new/name", bytes.NewBuffer(requestBody))
+
+	req.RemoteAddr = "192.0.2.1:1234"
+
+	rr := httptest.NewRecorder()
+
+	SubmitUserName(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Expected 200, got %d.", http.StatusOK)
+	}
+}
