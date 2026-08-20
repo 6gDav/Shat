@@ -16,7 +16,7 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 	ip, _, err := helper.GetIpAddressForEndPints(r)
 
 	if err != nil {
-		logMsg := fmt.Sprintf("Error occurred while this user %s tried to change username: %v", ip, err)
+		logMsg := fmt.Sprintf("Failed to change username for %s: %v.", ip, err)
 		logs.Logs.Add(widget.NewLabel(logMsg))
 	}
 

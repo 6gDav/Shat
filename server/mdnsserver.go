@@ -20,7 +20,7 @@ func SetMDNSserver() {
 
 	ipAddress, err := helper.GetIPAddressFormDNS()
 	if err != nil {
-		logs.Logs.Add(widget.NewLabel("Error occurred while trying to fetch the IP address: " + err.Error()))
+		logs.Logs.Add(widget.NewLabel("Failed to fetch IP address: " + err.Error()))
 	}
 
 	fullDomainName := domainName + ".local"
@@ -35,7 +35,7 @@ func SetMDNSserver() {
 		[]string{"txtv=1"},
 	)
 	if err != nil {
-		logs.Logs.Add(widget.NewLabel("Establish mDNS service is unsuccessful: " + err.Error()))
+		logs.Logs.Add(widget.NewLabel("Failed to establish mDNS service: %v " + err.Error()))
 	}
 
 	var errServer error
@@ -46,8 +46,8 @@ func SetMDNSserver() {
 
 	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, port)
 	URL = vuildedURL
-	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
+	logs.Logs.Add(widget.NewLabel("Web page is available at this link: " + vuildedURL))
 
 	parsedURL, _ := url.Parse(vuildedURL)
-	logs.Logs.Add(widget.NewHyperlink("Click here to navigate to the page", parsedURL))
+	logs.Logs.Add(widget.NewHyperlink("Click here to open the web page!", parsedURL))
 }

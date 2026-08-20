@@ -45,7 +45,7 @@ func (cs *ManageChat) GroupChat(text string, username string, saveChat bool) {
 		err := client.Conn.WriteJSON(outMsg)
 		if err != nil {
 			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Error occurred while sending group message: " + err.Error()))
+				logs.Logs.Add(widget.NewLabel("Failed to send group message: " + err.Error()))
 			})
 		}
 	}

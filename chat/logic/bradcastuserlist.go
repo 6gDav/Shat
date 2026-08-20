@@ -2,6 +2,7 @@ package logic
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"hosting_login_page/chat/client"
 	"hosting_login_page/logs"
@@ -30,7 +31,7 @@ func BroadcastUserNameList() {
 	namesData, err := json.Marshal(payload)
 	if err != nil {
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("Error occured while trying to convert the user list to a proper form " + err.Error()))
+			logs.Logs.Add(widget.NewLabel("Error occurred while trying to convert the user list to a proper form " + err.Error()))
 		})
 		return
 	}
@@ -43,7 +44,7 @@ func BroadcastUserNameList() {
 			err := client.Conn.WriteMessage(websocket.TextMessage, namesData)
 			if err != nil {
 				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("Failed to send list to IP " + ip + ": " + err.Error()))
+					logs.Logs.Add(widget.NewLabel(fmt.Sprintf("Failed to send user list to IP %s: %v", ip, err)))
 				})
 			}
 		}

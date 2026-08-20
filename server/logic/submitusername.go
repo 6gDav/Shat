@@ -41,6 +41,6 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		logs.Logs.Add(widget.NewLabel("Failed to send ip andress to the client side: " + err.Error()))
+		logs.Logs.Add(widget.NewLabel("Failed to send IP address to client: " + err.Error()))
 	}
 }

@@ -14,11 +14,11 @@ func ClosingmDNS() {
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
-		logs.Logs.Add(widget.NewLabel("mDNS Server successfully shot down..."))
+		logs.Logs.Add(widget.NewLabel("mDNS server successfully shut down..."))
 	}
 
 	client.ClientsMu.Lock()
-	for ip, client := range client.Clients {
+	for _, client := range client.Clients {
 		if client.Conn != nil {
 
 			client.Conn.WriteControl(
@@ -28,7 +28,6 @@ func ClosingmDNS() {
 			)
 			client.Conn.Close()
 			client.Conn = nil
-			logs.Logs.Add(widget.NewLabel("Closing WebSocket connection on this ip adress: " + ip))
 		}
 	}
 	client.ClientsMu.Unlock()

@@ -22,7 +22,7 @@ func HandShake(w http.ResponseWriter, r *http.Request, upgrader *websocket.Upgra
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fyne.Do(func() {
-			logs.Logs.Add(widget.NewLabel("Error occurred while trying to set the Upgrader: " + err.Error()))
+			logs.Logs.Add(widget.NewLabel("Unable to start live connection: " + err.Error()))
 		})
 		return
 	}

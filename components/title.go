@@ -6,7 +6,7 @@ import (
 )
 
 func TitleElement() *widget.Label {
-	title := widget.NewLabelWithStyle("ChatApp", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
+	title := widget.NewLabelWithStyle("Shat", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
 	return title
 }

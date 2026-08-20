@@ -16,7 +16,7 @@ func QRCodeButtonElement(fyneApp fyne.App) *widget.Button {
 
 		image, err := qrcode.CreateQRCode()
 		if err != nil {
-			logs.Logs.Add(widget.NewLabel("Error occured while trying to create QR code: " + err.Error()))
+			logs.Logs.Add(widget.NewLabel("Failed to generate QR code: " + err.Error()))
 		}
 
 		qrCodeWindow := fyneApp.NewWindow("QR Code")

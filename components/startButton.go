@@ -13,12 +13,12 @@ func StartButtonElement() *widget.Button {
 
 	button = widget.NewButton("Start", func() {
 		if clicked {
-			logs.Logs.Add(widget.NewLabel("Servers stopped..."))
+			logs.Logs.Add(widget.NewLabel("All servers stopped"))
 			clicked = false
 			button.SetText("Start")
 			runmanager.StopServer()
 		} else {
-			logs.Logs.Add(widget.NewLabel("Servers started..."))
+			logs.Logs.Add(widget.NewLabel("All servers started"))
 			clicked = true
 			button.SetText("Stop")
 			runmanager.StartServer()

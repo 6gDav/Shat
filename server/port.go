@@ -31,7 +31,7 @@ func portStart(muxInstance *http.ServeMux) {
 			err := HttpServer.ListenAndServe()
 
 			if err != nil && helper.IsPortInUse(err) {
-				msg := fmt.Sprintf("This port is occupied %d ", port)
+				msg := fmt.Sprintf("This port is already in use: %d ", port)
 				fyne.Do(func() {
 					logs.Logs.Add(widget.NewLabel(msg))
 				})
@@ -40,14 +40,14 @@ func portStart(muxInstance *http.ServeMux) {
 
 			if errors.Is(err, http.ErrServerClosed) {
 				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("HTTP server shot down"))
+					logs.Logs.Add(widget.NewLabel("HTTP server shut down due to received signal."))
 				})
 				break
 			}
 
 			if err != nil {
 				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("Error occured: " + err.Error()))
+					logs.Logs.Add(widget.NewLabel("Error occurred: " + err.Error()))
 				})
 				break
 			}

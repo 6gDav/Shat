@@ -31,7 +31,7 @@ func (cs *ManageChat) PrivateChat(targetIP string, text string, username string,
 		err := targetClient.Conn.WriteJSON(outMsg)
 		if err != nil {
 			fyne.Do(func() {
-				logs.Logs.Add(widget.NewLabel("Error occurred while trying to send message: " + err.Error()))
+				logs.Logs.Add(widget.NewLabel("Error occurred while sending message: " + err.Error()))
 			})
 		}
 
