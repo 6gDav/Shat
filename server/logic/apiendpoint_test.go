@@ -7,7 +7,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
+
+	"github.com/gorilla/websocket"
 )
 
 func TestServePage(t *testing.T) {
@@ -124,5 +127,22 @@ func TestSubmitNewUserName(t *testing.T) {
 
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Expected 200, got %d.", http.StatusOK)
+	}
+}
+
+func TestWSHandsShake(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(WSHandsShake))
+	defer server.Close()
+
+	wsURL := "ws" + strings.TrimPrefix(server.URL, "http")
+
+	ws, resp, err := websocket.DefaultDialer.Dial(wsURL, nil)
+	if err != nil {
+		t.Fatalf("Unsuccesfull WS Handshake %v", err)
+	}
+	defer ws.Close()
+
+	if resp.StatusCode != http.StatusSwitchingProtocols {
+		t.Fatalf("Expected 101, got %d.", http.StatusOK)
 	}
 }
