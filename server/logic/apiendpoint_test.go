@@ -38,11 +38,7 @@ func TestRedirectUser(t *testing.T) {
 		t.Fatalf("Expected 200, got %d. Body: %s", rec.Code, rec.Body.String())
 	}
 
-	var got struct {
-		Redirect  bool   `json:"redirect"`
-		UserName  string `json:"userName"`
-		IpAddress string `json:"ipAddress"`
-	}
+	var got RedirectResponse
 
 	if err := json.Unmarshal(rec.Body.Bytes(), &got); err != nil {
 		t.Fatalf("Failed to decode response JSON: %v", err)

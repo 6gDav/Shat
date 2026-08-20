@@ -13,20 +13,23 @@ import (
 )
 
 var MdnsServer *mdns.Server
-var domainName string = "loginpage"
 var URL string
 
 func SetMDNSserver() {
+	domainName := "shat"
+
 	ipAddress, err := helper.GetIPAddressFormDNS()
 	if err != nil {
 		logs.Logs.Add(widget.NewLabel("Error occurred while trying to fetch the IP address: " + err.Error()))
 	}
 
+	fullDomainName := domainName + ".local"
+
 	service, err := mdns.NewMDNSService(
 		domainName,
 		"_http._tcp",
 		"local.",
-		"loginpage.local.",
+		fullDomainName+".",
 		port,
 		[]net.IP{ipAddress},
 		[]string{"txtv=1"},
@@ -46,5 +49,5 @@ func SetMDNSserver() {
 	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
 
 	parsedURL, _ := url.Parse(vuildedURL)
-	logs.Logs.Add(widget.NewHyperlink("Click to navigate to the page", parsedURL))
+	logs.Logs.Add(widget.NewHyperlink("Click here to navigate to the page", parsedURL))
 }

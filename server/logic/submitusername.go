@@ -17,8 +17,8 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 		Name string `json:"name"`
 	}
 
-	errdecode := json.NewDecoder(r.Body).Decode(&data)
-	if errdecode != nil {
+	errDecode := json.NewDecoder(r.Body).Decode(&data)
+	if errDecode != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}

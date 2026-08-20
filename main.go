@@ -12,7 +12,7 @@ import (
 
 func main() {
 	mainApp := app.New()
-	mainWindow := mainApp.NewWindow("ChatApp")
+	mainWindow := mainApp.NewWindow("Shat")
 
 	header := components.TitleElement()
 
