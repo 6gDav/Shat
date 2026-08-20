@@ -31,7 +31,7 @@
             return false;
         }),
     );
-    
+
     function sendMessageText() {
         if (!messageText?.trim()) {
             alert("Write something if you want to send a message...");
@@ -171,15 +171,18 @@
 
     input {
         flex: 1;
+        min-width: 0; 
         padding: 0.75rem 1rem;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.15);
         color: #000000;
-        font-size: 0.95rem;
+        font-size: 16px; 
         font-family: inherit;
         outline: none;
         transition: all 0.2s ease;
         box-sizing: border-box;
+        -webkit-appearance: none;
+        appearance: none;
     }
 
     button {
