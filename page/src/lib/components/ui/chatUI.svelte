@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { messages, sendChatMessage } from "../logic/manageWebSocketConn.svelte";
+    import {
+        messages,
+        sendChatMessage,
+    } from "../logic/manageWebSocketConn.svelte";
     import { user } from "../logic/userName.svelte";
 
     let { userName: selectedUserName, selectedIp } = $props<{
@@ -9,7 +12,6 @@
 
     let messageText = $state<string>("");
     let chatContainer = $state<HTMLDivElement>();
-    //get chat
     let isGroupView = $derived(selectedUserName === "Group");
 
     let currentChatMessages = $derived(
@@ -29,8 +31,7 @@
             return false;
         }),
     );
-
-    //send chat
+    
     function sendMessageText() {
         if (!messageText?.trim()) {
             alert("Write something if you want to send a message...");
@@ -208,7 +209,7 @@
         transform: translateY(0);
     }
 
-    @media (max-width: 765px) { 
+    @media (max-width: 765px) {
         input {
             width: 65%;
         }

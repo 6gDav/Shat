@@ -57,7 +57,6 @@ function startHandShake() {
         try {
             const res = await fetchingMessageEvent(event)
 
-            //User name List
             if (res.type === "USER_NAME_LIST") {
                 const rawData = res.data as Record<string, string>;
 
@@ -68,7 +67,6 @@ function startHandShake() {
 
                 usersList.splice(0, usersList.length, ...parsedUsers);
             }
-            //private chat 
             else if ((res.type === "private" || res.type === "group") && res.text && res.from) {
                 messages.push({
                     type: res.type,
@@ -91,16 +89,11 @@ function startHandShake() {
 
 export function manageConnection() {
     onMount(() => {
-        //chat and name list
         startHandShake();
         return () => {
             chat?.close();
         };
     });
-
-    // onDestroy(() => {
-    //     chat?.close();
-    // });
 }
 
 export function sendChatMessage(senderIp: string, targetIp: string, text: string, type: string, userName: string) {

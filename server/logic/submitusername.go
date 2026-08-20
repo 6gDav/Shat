@@ -11,10 +11,8 @@ import (
 )
 
 func SubmitUserName(w http.ResponseWriter, r *http.Request) {
-	//Ip adress fetch
 	ip, _, _ := helper.GetIpAddressForEndPints(r)
 
-	//Name fetch
 	var data struct {
 		Name string `json:"name"`
 	}
@@ -36,7 +34,6 @@ func SubmitUserName(w http.ResponseWriter, r *http.Request) {
 	}
 	client.ClientsMu.Unlock()
 
-	//Return 200 (Ok)
 	w.WriteHeader(http.StatusOK)
 
 	response := map[string]string{

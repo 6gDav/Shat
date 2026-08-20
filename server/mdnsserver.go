@@ -41,16 +41,10 @@ func SetMDNSserver() {
 		logs.Logs.Add(widget.NewLabel("Error occurred while trying to start the mDNS server: " + err.Error()))
 	}
 
-	//fmt.Printf("Web page is here: http://loginpage.local:%d\n", Port)
 	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, port)
 	URL = vuildedURL
 	logs.Logs.Add(widget.NewLabel("Web page is available on this link: " + vuildedURL))
 
 	parsedURL, _ := url.Parse(vuildedURL)
 	logs.Logs.Add(widget.NewHyperlink("Click to navigate to the page", parsedURL))
-
-	// sigChan := make(chan os.Signal, 1)
-	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	// <-sigChan
-	// fmt.Println("\nShutting down server...")
 }

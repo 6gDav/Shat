@@ -13,7 +13,6 @@ import (
 func (cs *ManageChat) PrivateChat(targetIP string, text string, username string, saveChat bool) {
 	roomId := helper.GenerateRoomID(cs.IP, targetIP)
 
-	//out
 	outMsg := ChatMessage{
 		Type:     "private",
 		From:     cs.IP,

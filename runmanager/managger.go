@@ -11,9 +11,6 @@ func StartServer() {
 }
 
 func StopServer() {
-	//Closing mDNS service
 	components.ClosingmDNS()
-
-	//Closing HTTP connections
 	components.ClosingHTTP()
 }

@@ -4,12 +4,6 @@
 
     let newName = $state(user.userName ?? "");
 
-    $effect(() => {
-        if (user.userName && !newName) {
-            newName = user.userName;
-        }
-    });
-
     async function changeName() {
         try {
             if (newName && newName != user.userName) {
@@ -38,6 +32,12 @@
             alert("Error occured while trying to change the username " + error);
         }
     }
+
+    $effect(() => {
+        if (user.userName && !newName) {
+            newName = user.userName;
+        }
+    });
 </script>
 
 <div class="username-div">
@@ -52,7 +52,7 @@
 </div>
 
 <style>
-    #ip-title{
+    #ip-title {
         font-size: 17px;
         font-style: italic;
         margin: 0;

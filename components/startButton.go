@@ -10,7 +10,6 @@ import (
 func StartButtonElement() *widget.Button {
 	var clicked bool = false
 	var button *widget.Button
-	//initialText := "Start"
 
 	button = widget.NewButton("Start", func() {
 		if clicked {

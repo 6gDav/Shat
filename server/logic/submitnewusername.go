@@ -13,7 +13,6 @@ import (
 )
 
 func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
-	//Ip adress fetch
 	ip, _, err := helper.GetIpAddressForEndPints(r)
 
 	if err != nil {
@@ -21,7 +20,6 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 		logs.Logs.Add(widget.NewLabel(logMsg))
 	}
 
-	//Name fetch
 	var data struct {
 		Name string `json:"name"`
 	}
@@ -43,6 +41,5 @@ func SubmitNewUserName(w http.ResponseWriter, r *http.Request) {
 	}
 	client.ClientsMu.Unlock()
 
-	//Return 200 (Ok)
 	w.WriteHeader(http.StatusOK)
 }

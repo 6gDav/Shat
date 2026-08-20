@@ -1,9 +1,10 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import ActivityIndicator from "$lib/components/ui/activityindicator.svelte";
+    
     import { port, mDNSname } from "$lib/components/logic/port.svelte";
     import { user } from "$lib/components/logic/userName.svelte";
-
+    
+    import ActivityIndicator from "$lib/components/ui/activityindicator.svelte";
 
     let nameText = $state<string>();
     let runActivityIndicator = $state<boolean>(false);
@@ -18,7 +19,8 @@
         }
 
         try {
-            const response = await fetch(`http://${mDNSname}:${port}/user/username`,
+            const response = await fetch(
+                `http://${mDNSname}:${port}/user/username`,
                 {
                     method: "POST",
                     headers: {
@@ -35,7 +37,7 @@
             const responseData = await response.json();
 
             user.userName = nameText;
-            user.initialIp = responseData.ip
+            user.initialIp = responseData.ip;
 
             console.log("Registration is succesfull");
             goto("/pages/Dashboard");
@@ -117,7 +119,7 @@
         align-items: center;
         z-index: 10;
     }
-    
+
     @media (min-width: 768px) {
         .container {
             transform: scale(1.3);
