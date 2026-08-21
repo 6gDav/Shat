@@ -14,7 +14,7 @@ func ClosingmDNS() {
 	if server.MdnsServer != nil {
 		server.MdnsServer.Shutdown()
 		server.MdnsServer = nil
-		logs.Logs.Add(widget.NewLabel("mDNS server successfully shut down..."))
+		logs.Logs.Add(widget.NewLabel("DNS server successfully shut down..."))
 	}
 
 	client.ClientsMu.Lock()

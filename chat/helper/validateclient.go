@@ -6,7 +6,7 @@ func ValidateClientExistence(exists bool, conn *websocket.Conn) bool {
 	if !exists {
 		errPayload := map[string]string{
 			"type":    "error",
-			"message": "Please submit your name first",
+			"message": "Please submit your name first!",
 		}
 		_ = conn.WriteJSON(errPayload)
 

@@ -40,7 +40,7 @@ func portStart(muxInstance *http.ServeMux) {
 
 			if errors.Is(err, http.ErrServerClosed) {
 				fyne.Do(func() {
-					logs.Logs.Add(widget.NewLabel("HTTP server shut down due to received signal."))
+					logs.Logs.Add(widget.NewLabel("Server shut down due to received signal."))
 				})
 				break
 			}

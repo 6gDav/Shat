@@ -35,13 +35,13 @@ func SetMDNSserver() {
 		[]string{"txtv=1"},
 	)
 	if err != nil {
-		logs.Logs.Add(widget.NewLabel("Failed to establish mDNS service: %v " + err.Error()))
+		logs.Logs.Add(widget.NewLabel("Failed to establish DNS service: %v " + err.Error()))
 	}
 
 	var errServer error
 	MdnsServer, errServer = mdns.NewServer(&mdns.Config{Zone: service})
 	if errServer != nil {
-		logs.Logs.Add(widget.NewLabel("Error occurred while trying to start the mDNS server: " + err.Error()))
+		logs.Logs.Add(widget.NewLabel("Error occurred while trying to start the DNS server: " + err.Error()))
 	}
 
 	vuildedURL := fmt.Sprintf("http://%s.local:%d", domainName, port)
