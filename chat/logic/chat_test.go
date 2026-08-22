@@ -4,14 +4,12 @@ import (
 	"hosting_login_page/chat/client"
 	"hosting_login_page/chat/helper"
 	"hosting_login_page/history"
-	"hosting_login_page/logs"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2/container"
 	"github.com/gorilla/websocket"
 )
 
@@ -49,9 +47,6 @@ func setupTestWS(t *testing.T) (*websocket.Conn, *websocket.Conn, func()) {
 }
 
 func TestChat_PrivateChat(t *testing.T) {
-	if logs.Logs == nil {
-		logs.Logs = container.NewVBox()
-	}
 	history.ChatHistory = make(map[string][]history.ChatMessage)
 	client.Clients = make(map[string]*client.Client)
 
@@ -112,5 +107,77 @@ func TestChat_PrivateChat(t *testing.T) {
 
 	if savedMessages[0].Message != msgText || savedMessages[0].FromIp != senderIP {
 		t.Errorf("Saved history entry mismatch: %+v", savedMessages[0])
+	}
+}
+
+func TestChat_GroupChat(t *testing.T) {
+	history.ChatHistory = make(map[string][]history.ChatMessage)
+	client.Clients = make(map[string]*client.Client)
+
+	senderIP := "192.168.1.10"
+	member1IP := "192.168.1.20"
+	member2IP := "192.168.1.30"
+	username := "SenderUser"
+	msgText := "Group lorem ipsum message"
+	saveChat := true
+
+	senderServerConn, senderClientConn, cleanupSender := setupTestWS(t)
+	defer cleanupSender()
+
+	m1ServerConn, m1ClientConn, cleanupM1 := setupTestWS(t)
+	defer cleanupM1()
+
+	m2ServerConn, m2ClientConn, cleanupM2 := setupTestWS(t)
+	defer cleanupM2()
+
+	client.ClientsMu.Lock()
+	client.Clients[senderIP] = &client.Client{IP: senderIP, Conn: senderServerConn}
+	client.Clients[member1IP] = &client.Client{IP: member1IP, Conn: m1ServerConn}
+	client.Clients[member2IP] = &client.Client{IP: member2IP, Conn: m2ServerConn}
+	client.ClientsMu.Unlock()
+
+	defer func() {
+		client.ClientsMu.Lock()
+		delete(client.Clients, senderIP)
+		delete(client.Clients, member1IP)
+		delete(client.Clients, member2IP)
+		client.ClientsMu.Unlock()
+	}()
+
+	cs := &ManageChat{IP: senderIP}
+	cs.GroupChat(msgText, username, saveChat)
+
+	receivers := []struct {
+		name       string
+		clientConn *websocket.Conn
+		expectedTo string
+	}{
+		{"Sender", senderClientConn, senderIP},
+		{"Member 1", m1ClientConn, member1IP},
+		{"Member 2", m2ClientConn, member2IP},
+	}
+
+	for _, r := range receivers {
+		var receivedMsg ChatMessage
+		_ = r.clientConn.SetReadDeadline(time.Now().Add(1 * time.Second))
+		if err := r.clientConn.ReadJSON(&receivedMsg); err != nil {
+			t.Fatalf("%s did not receive group message: %v", r.name, err)
+		}
+
+		if receivedMsg.Type != "group" || receivedMsg.Text != msgText || receivedMsg.From != senderIP || receivedMsg.To != r.expectedTo || receivedMsg.RoomID != "Group" {
+			t.Errorf("%s received invalid group message payload: %+v", r.name, receivedMsg)
+		}
+	}
+
+	history.ChatStoreMu.Lock()
+	savedMessages, exists := history.ChatHistory["Group"]
+	history.ChatStoreMu.Unlock()
+
+	if !exists || len(savedMessages) != 1 {
+		t.Fatalf("Expected exactly 1 group history message, found %d", len(savedMessages))
+	}
+
+	if savedMessages[0].Message != msgText || savedMessages[0].FromIp != senderIP || savedMessages[0].RoomId != "Group" {
+		t.Errorf("Group history entry mismatch: %+v", savedMessages[0])
 	}
 }
