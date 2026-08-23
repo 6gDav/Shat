@@ -1,6 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { svelteTesting } from '@testing-library/svelte/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -23,6 +24,11 @@ export default defineConfig({
 				precompress: false,
 				strict: true
 			})
-		})
-	]
+		}),
+		svelteTesting()
+	],
+    test: {
+        environment: 'jsdom',
+        globals: true
+    }
 });
