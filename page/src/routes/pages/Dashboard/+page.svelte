@@ -6,7 +6,7 @@
     import { user } from "$lib/components/logic/userName.svelte";
     import Chat from "$lib/components/ui/chatUI.svelte";
     import Activityindicator from "$lib/components/ui/activityindicator.svelte";
-    import ChangeUserName from "$lib/components/ui/changeName.svelte"
+    import ChangeUserName from "$lib/components/ui/changeName.svelte";
     // @ts-ignore
     import UserNotFoundImage from "$lib/assets/user-not-found.png";
 
@@ -44,6 +44,7 @@
     $effect(() => {
         if (!selectedUser && user.userName) {
             selectedUser = user.userName;
+            //selectedIp = user.initialIp;
         }
     });
 
@@ -237,10 +238,6 @@
         line-height: 1;
     }
 
-    .overlay {
-        display: none;
-    }
-
     #title {
         font-size: 50px;
         display: flex;
@@ -289,14 +286,6 @@
 
         .sidebar.open {
             transform: translateX(0);
-        }
-
-        .overlay {
-            display: block;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 95;
         }
     }
 </style>
