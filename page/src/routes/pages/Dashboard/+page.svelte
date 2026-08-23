@@ -7,6 +7,7 @@
     import Chat from "$lib/components/ui/chatUI.svelte";
     import Activityindicator from "$lib/components/ui/activityindicator.svelte";
     import ChangeUserName from "$lib/components/ui/changeName.svelte"
+    // @ts-ignore
     import UserNotFoundImage from "$lib/assets/user-not-found.png";
 
     let runActivityIndicator = $state<boolean>(true);
