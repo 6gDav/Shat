@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "embed"
+
 	"hosting_login_page/components"
 
 	"fyne.io/fyne/v2"
@@ -10,8 +12,15 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+//go:embed components/appIcon.png
+var iconBytes []byte
+
 func main() {
 	mainApp := app.New()
+
+	icon := fyne.NewStaticResource("appIcon.png", iconBytes)
+	mainApp.SetIcon(icon)
+
 	mainWindow := mainApp.NewWindow("Shat")
 
 	header := components.TitleElement()
