@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"hosting_login_page/chat/client"
-	"hosting_login_page/logs"
+	"Shat/chat/client"
+	"Shat/logs"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"

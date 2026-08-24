@@ -1,8 +1,8 @@
 package logic
 
 import (
+	"Shat/chat/client"
 	"encoding/json"
-	"hosting_login_page/chat/client"
 	"net/http"
 	"net/http/httptest"
 	"strings"

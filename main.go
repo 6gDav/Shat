@@ -3,7 +3,7 @@ package main
 import (
 	_ "embed"
 
-	"hosting_login_page/components"
+	"Shat/components"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"

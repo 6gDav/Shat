@@ -1,7 +1,7 @@
 package server
 
 import (
-	"hosting_login_page/server/logic"
+	"Shat/server/logic"
 	"net/http"
 )
 

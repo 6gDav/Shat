@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"hosting_login_page/chat/client"
-	"hosting_login_page/chat/helper"
-	"hosting_login_page/logs"
+	"Shat/chat/client"
+	"Shat/chat/helper"
+	"Shat/logs"
 
 	"net"
 	"net/http"

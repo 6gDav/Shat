@@ -1,9 +1,9 @@
 package components
 
 import (
-	"hosting_login_page/chat/client"
-	"hosting_login_page/logs"
-	"hosting_login_page/server"
+	"Shat/chat/client"
+	"Shat/logs"
+	"Shat/server"
 	"time"
 
 	"fyne.io/fyne/v2/widget"

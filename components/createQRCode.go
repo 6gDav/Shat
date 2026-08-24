@@ -1,9 +1,9 @@
 package components
 
 import (
+	"Shat/logs"
+	"Shat/qrcode"
 	"bytes"
-	"hosting_login_page/logs"
-	"hosting_login_page/qrcode"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"

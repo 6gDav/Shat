@@ -1,8 +1,8 @@
 package components
 
 import (
-	"hosting_login_page/logs"
-	"hosting_login_page/runmanager"
+	"Shat/logs"
+	"Shat/runmanager"
 
 	"fyne.io/fyne/v2/widget"
 )

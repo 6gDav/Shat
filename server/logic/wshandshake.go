@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"hosting_login_page/chat/logic"
+	"Shat/chat/logic"
 	"net/http"
 
 	"github.com/gorilla/websocket"

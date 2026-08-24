@@ -1,4 +1,4 @@
-module hosting_login_page
+module Shat
 
 go 1.26.2
 

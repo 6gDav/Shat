@@ -1,7 +1,7 @@
 package components
 
 import (
-	"hosting_login_page/logs"
+	"Shat/logs"
 
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"

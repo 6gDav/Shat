@@ -1,10 +1,10 @@
 package server
 
 import (
+	"Shat/logs"
+	"Shat/server/helper"
 	"errors"
 	"fmt"
-	"hosting_login_page/logs"
-	"hosting_login_page/server/helper"
 	"net/http"
 
 	"fyne.io/fyne/v2"

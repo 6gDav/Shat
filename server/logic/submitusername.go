@@ -1,10 +1,10 @@
 package logic
 
 import (
+	"Shat/chat/client"
+	"Shat/logs"
+	"Shat/server/helper"
 	"encoding/json"
-	"hosting_login_page/chat/client"
-	"hosting_login_page/logs"
-	"hosting_login_page/server/helper"
 	"net/http"
 
 	"fyne.io/fyne/v2/widget"

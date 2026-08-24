@@ -1,7 +1,7 @@
 package qrcode
 
 import (
-	"hosting_login_page/server"
+	"Shat/server"
 
 	"github.com/skip2/go-qrcode"
 )

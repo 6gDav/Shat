@@ -1,8 +1,8 @@
 package runmanager
 
 import (
-	"hosting_login_page/runmanager/components"
-	"hosting_login_page/server"
+	"Shat/runmanager/components"
+	"Shat/server"
 )
 
 func StartServer() {

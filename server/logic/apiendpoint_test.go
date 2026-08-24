@@ -1,9 +1,9 @@
 package logic
 
 import (
+	"Shat/history"
 	"bytes"
 	"encoding/json"
-	"hosting_login_page/history"
 	"net/http"
 	"net/http/httptest"
 	"os"
