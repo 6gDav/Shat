@@ -59,4 +59,64 @@ There is 2 option what you see here.
 3. **Log Message Container** - Logs, notifications, and errors will be shown here.
     * The website link will also be shown here.
 
- 
+<hr>
+
+### 🧑‍💻 User
+
+After navigation to the hosted page by: <br>
+- **Scanning the QR code**  <br>
+Or
+- **Navigating to the [`http://shat.local:3000`](http://shat.local:3000) in a browser:** 
+
+This page will appear in front of you.
+
+<p align="center">
+    <img src="components/docs/regpage.png" alt="Registration page" width="200">
+</p>
+
+In the input field, just enter an ID or something that is specific to you. 
+
+<hr>
+
+By pressing Enter, you will be navigated to this page.
+
+<p align="center">
+    <img src="components/docs/dashboard.png" alt="Dashboard page" width="200">
+</p>
+
+Here you find a possibility to cahnge your name. <br>
+
+<p align="center">
+    <img src="components/docs/changeuser.png" alt="Change user name" width="200">
+</p>
+
+You will see here the *group* chat and a list of the other users.
+
+<p align="center">
+    <img src="components/docs/userlist.png" alt="User list" width="200">
+</p>
+
+Select the targeted user you want to chat with.  <br>
+Or choose the *group* chat if you want to chat with every one. <br>
+> There is a possibility to talk with yourself.
+
+<hr>
+
+Once you select a user, this will appear in front of you.
+
+<p align="center">
+    <img src="components/docs/chat.png" alt="Chat" width="200">
+</p>
+
+This layout is very similar to the other one, so you won't get lost.
+
+<hr>
+
+### 🤏 Small feauteres
+
+* If you disconnect by closing the browser or just the tab, your progress won't be lost. However, your name will disappear from the user list, and your friends won't be able to send you messages while you are away.
+
+* If you return, your data will remain intact.
+
+* You cannot re-register unless the host stops the server, which will reset all processes.
+
