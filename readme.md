@@ -132,3 +132,289 @@ This layout is very similar to the other one, so you won't get lost.
    * **[TypeScript](https://www.typescriptlang.org/)** (Main programming language of the web page.)
 
 *In the beginning, I wanted to build something lightweight that didn't consume a lot of resources, with easy-to-understand code, which is why I chose Go and Svelte over Rust and React.*
+
+## 🌳 File tree
+```
+├── Shat.app
+│   └── Contents
+│       ├── MacOS
+│       │   └── Shat
+│       ├── Resources
+│       │   └── icon.icns
+│       └── Info.plist
+├── chat
+│   ├── client
+│   │   └── client.go
+│   ├── helper
+│   │   ├── generateroomid.go
+│   │   └── validateclient.go
+│   └── logic
+│       ├── bradcastuserlist.go
+│       ├── bradcastuserlist_test.go
+│       ├── chat_test.go
+│       ├── chatsessionmanagger.go
+│       ├── groupchat.go
+│       ├── handshake.go
+│       ├── privatechat.go
+│       └── wstest_test.go
+├── components
+│   ├── docs
+│   │   ├── appIcon.png
+│   │   ├── changeuser.png
+│   │   ├── chat.png
+│   │   ├── dashboard.png
+│   │   ├── greedingscreen.png
+│   │   ├── regpage.png
+│   │   ├── star.png
+│   │   └── userlist.png
+│   ├── createQRCode.go
+│   ├── logScrollConainer.go
+│   ├── startButton.go
+│   └── title.go
+├── history
+│   └── chathistory.go
+├── logs
+│   └── log.go
+├── page
+│   ├── .svelte-kit
+│   │   ├── generated
+│   │   │   ├── client
+│   │   │   │   ├── nodes
+│   │   │   │   │   ├── 0.js
+│   │   │   │   │   ├── 1.js
+│   │   │   │   │   ├── 2.js
+│   │   │   │   │   ├── 3.js
+│   │   │   │   │   └── 4.js
+│   │   │   │   ├── app.js
+│   │   │   │   └── matchers.js
+│   │   │   ├── client-optimized
+│   │   │   │   ├── nodes
+│   │   │   │   │   ├── 0.js
+│   │   │   │   │   ├── 1.js
+│   │   │   │   │   ├── 2.js
+│   │   │   │   │   ├── 3.js
+│   │   │   │   │   └── 4.js
+│   │   │   │   ├── app.js
+│   │   │   │   └── matchers.js
+│   │   │   ├── server
+│   │   │   │   └── internal.js
+│   │   │   ├── shared
+│   │   │   │   └── error-template.js
+│   │   │   ├── root.js
+│   │   │   └── root.svelte
+│   │   ├── output
+│   │   │   ├── client
+│   │   │   │   ├── .vite
+│   │   │   │   │   └── manifest.json
+│   │   │   │   ├── _app
+│   │   │   │   │   ├── immutable
+│   │   │   │   │   │   ├── assets
+│   │   │   │   │   │   │   ├── 3.DYjz4xrY.css
+│   │   │   │   │   │   │   ├── _page.CVyOT5ku.css
+│   │   │   │   │   │   │   ├── activityindicator.D_KqRG2p.css
+│   │   │   │   │   │   │   ├── app.vvP9JiAJ.css
+│   │   │   │   │   │   │   ├── favicon.CpsdKg1U.svg
+│   │   │   │   │   │   │   └── user-not-found.xxHnkdOs.png
+│   │   │   │   │   │   ├── chunks
+│   │   │   │   │   │   │   ├── BFVidDbq.js
+│   │   │   │   │   │   │   ├── Bjy-W4x2.js
+│   │   │   │   │   │   │   ├── C2-x1RC8.js
+│   │   │   │   │   │   │   ├── i9yqHFOd.js
+│   │   │   │   │   │   │   ├── td7rEt7v.js
+│   │   │   │   │   │   │   └── xihTtKlq.js
+│   │   │   │   │   │   ├── entry
+│   │   │   │   │   │   │   ├── app.DypKf9yx.js
+│   │   │   │   │   │   │   └── start.r0mt0D6Q.js
+│   │   │   │   │   │   └── nodes
+│   │   │   │   │   │       ├── 0.VrdAjs1c.js
+│   │   │   │   │   │       ├── 1.D2XYKPcH.js
+│   │   │   │   │   │       ├── 2.CWwXNVXd.js
+│   │   │   │   │   │       ├── 3.DcJKH2_Z.js
+│   │   │   │   │   │       └── 4.D8KpMEiy.js
+│   │   │   │   │   └── version.json
+│   │   │   │   └── robots.txt
+│   │   │   ├── prerendered
+│   │   │   │   └── pages
+│   │   │   │       ├── pages
+│   │   │   │       │   ├── Dashboard
+│   │   │   │       │   │   └── index.html
+│   │   │   │       │   └── Login
+│   │   │   │       │       └── index.html
+│   │   │   │       └── index.html
+│   │   │   └── server
+│   │   │       ├── .vite
+│   │   │       │   └── manifest.json
+│   │   │       ├── _app
+│   │   │       │   └── immutable
+│   │   │       │       └── assets
+│   │   │       │           ├── _page.CVyOT5ku.css
+│   │   │       │           ├── _page.n2HVJryx.css
+│   │   │       │           ├── activityindicator.D_KqRG2p.css
+│   │   │       │           ├── app.vvP9JiAJ.css
+│   │   │       │           ├── favicon.CpsdKg1U.svg
+│   │   │       │           └── user-not-found.xxHnkdOs.png
+│   │   │       ├── chunks
+│   │   │       │   ├── _page.js
+│   │   │       │   ├── activityindicator.js
+│   │   │       │   ├── client.js
+│   │   │       │   ├── env.js
+│   │   │       │   ├── exports.js
+│   │   │       │   ├── index-server.js
+│   │   │       │   ├── internal.js
+│   │   │       │   ├── internal2.js
+│   │   │       │   ├── server.js
+│   │   │       │   ├── shared.js
+│   │   │       │   └── utils.js
+│   │   │       ├── entries
+│   │   │       │   ├── fallbacks
+│   │   │       │   │   └── error.svelte.js
+│   │   │       │   └── pages
+│   │   │       │       ├── pages
+│   │   │       │       │   ├── Dashboard
+│   │   │       │       │   │   └── _page.svelte.js
+│   │   │       │       │   └── Login
+│   │   │       │       │       └── _page.svelte.js
+│   │   │       │       ├── _layout.svelte.js
+│   │   │       │       ├── _layout.ts.js
+│   │   │       │       └── _page.svelte.js
+│   │   │       ├── nodes
+│   │   │       │   ├── 0.js
+│   │   │       │   ├── 1.js
+│   │   │       │   ├── 2.js
+│   │   │       │   ├── 3.js
+│   │   │       │   └── 4.js
+│   │   │       ├── stylesheets
+│   │   │       ├── env.js
+│   │   │       ├── index.js
+│   │   │       ├── internal.js
+│   │   │       ├── manifest-full.js
+│   │   │       ├── manifest.js
+│   │   │       └── remote-entry.js
+│   │   ├── types
+│   │   │   ├── src
+│   │   │   │   └── routes
+│   │   │   │       ├── pages
+│   │   │   │       │   ├── Dashboard
+│   │   │   │       │   │   └── $types.d.ts
+│   │   │   │       │   └── Login
+│   │   │   │       │       └── $types.d.ts
+│   │   │   │       └── $types.d.ts
+│   │   │   └── route_meta_data.json
+│   │   ├── ambient.d.ts
+│   │   ├── env.d.ts
+│   │   ├── non-ambient.d.ts
+│   │   └── tsconfig.json
+│   ├── cypress
+│   │   ├── e2e
+│   │   │   ├── dashboard.cy.ts
+│   │   │   └── login.cy.ts
+│   │   ├── fixtures
+│   │   │   └── example.json
+│   │   ├── screenshots
+│   │   └── support
+│   │       ├── commands.ts
+│   │       └── e2e.ts
+│   ├── src
+│   │   ├── lib
+│   │   │   ├── assets
+│   │   │   │   ├── favicon.svg
+│   │   │   │   └── user-not-found.png
+│   │   │   ├── components
+│   │   │   │   ├── logic
+│   │   │   │   │   ├── manageWebSocketConn.svelte.ts
+│   │   │   │   │   ├── port.svelte.ts
+│   │   │   │   │   ├── redirectuser.svelte.ts
+│   │   │   │   │   └── userName.svelte.ts
+│   │   │   │   └── ui
+│   │   │   │       ├── activityindicator.svelte
+│   │   │   │       ├── changeName.svelte
+│   │   │   │       ├── chatUI.svelte
+│   │   │   │       └── registration.svelte
+│   │   │   ├── index.ts
+│   │   │   └── utils.ts
+│   │   ├── routes
+│   │   │   ├── pages
+│   │   │   │   ├── Dashboard
+│   │   │   │   │   ├── +page.svelte
+│   │   │   │   │   └── dashboard.test.ts
+│   │   │   │   └── Login
+│   │   │   │       ├── +page.svelte
+│   │   │   │       └── login.test.ts
+│   │   │   ├── +layout.svelte
+│   │   │   ├── +layout.ts
+│   │   │   └── +page.svelte
+│   │   ├── app.css
+│   │   ├── app.d.ts
+│   │   ├── app.html
+│   │   └── vitest-setup.ts
+│   ├── static
+│   │   └── robots.txt
+│   ├── .gitignore
+│   ├── .npmrc
+│   ├── README.md
+│   ├── bun.lock
+│   ├── components.json
+│   ├── cypress.config.ts
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── qrcode
+│   └── createQRCode.go
+├── readme
+├── runmanager
+│   ├── components
+│   │   ├── closinghttp.go
+│   │   └── closingmdns.go
+│   └── managger.go
+├── server
+│   ├── helper
+│   │   ├── ipaddressforhttp.go
+│   │   ├── ipadressfordns.go
+│   │   └── isportinuse.go
+│   ├── logic
+│   │   ├── apiendpoint_test.go
+│   │   ├── redirectuser.go
+│   │   ├── restorechatdata.go
+│   │   ├── servepage.go
+│   │   ├── submitnewusername.go
+│   │   ├── submitusername.go
+│   │   └── wshandshake.go
+│   ├── apiendpoint.go
+│   ├── mdnsserver.go
+│   └── port.go
+├── assets.go
+├── buildpage.sh
+├── go.mod
+├── go.sum
+├── main.go
+└── readme.md
+```
+
+## 👨‍💻 Actual Development
+
+
+To start development just clone this repository. 
+```bash
+git clone 
+```
+Or download the ZIP.
+
+<hr>
+
+Start dev server with this command.
+```bash
+go run .
+```
+
+Build the project.
+```bash
+fyne package -icon components/appIcon.png
+```
+
+
+> May be needed to download all necessary dependencies.
+```bash
+go mod download
+```
+
+# 🪪 License
