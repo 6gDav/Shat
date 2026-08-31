@@ -120,3 +120,15 @@ This layout is very similar to the other one, so you won't get lost.
 
 * You cannot re-register unless the host stops the server, which will reset all processes.
 
+## <a name="fordevelopers"></a> 🛠️ Developer Guidance
+
+**Just a heads up:** *like 99% of developers out there, I used AI and premade code during development.*
+
+## 📚 Tech Stack 
+
+* **[Fyne](https://fyne.io/)** (The main application and its UI.)
+    * **[Go](https://go.dev/)** (The application and the backend programming language.)
+* **[SvelteKit](https://svelte.dev/docs/kit/introduction)** (Framework of the web page.)
+   * **[TypeScript](https://www.typescriptlang.org/)** (Main programming language of the web page.)
+
+*In the beginning, I wanted to build something lightweight that didn't consume a lot of resources, with easy-to-understand code, which is why I chose Go and Svelte over Rust and React.*
