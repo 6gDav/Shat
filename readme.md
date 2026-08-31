@@ -418,3 +418,5 @@ go mod download
 ```
 
 # 🪪 License
+
+This project is licensed under the GNU General Public License version 2 - see the [LICENSE](LICENSE) file for details.
