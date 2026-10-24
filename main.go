@@ -12,7 +12,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-//go:embed components/appIcon.png
+//go:embed components/docs/appIcon.png
 var iconBytes []byte
 
 func main() {
